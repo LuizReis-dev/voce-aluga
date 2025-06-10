@@ -2,6 +2,7 @@ package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,5 +36,10 @@ public class UsuarioService implements UserDetailsService {
 
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
+    }
+
+    public Usuario findById(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 }
