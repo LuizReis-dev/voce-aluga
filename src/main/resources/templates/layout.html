@@ -16,15 +16,7 @@
     </script>
 </head>
 <body class="flex h-screen bg-gray-100">
-<!-- Mensagem de sucesso -->
-<div th:if="${success}" class="mb-4 px-4 py-3 rounded bg-green-100 text-green-800 shadow">
-    <p th:text="${success}"></p>
-</div>
 
-<!-- Mensagem de erro -->
-<div th:if="${error}" class="mb-4 px-4 py-3 rounded bg-red-100 text-red-800 shadow">
-    <p th:text="${error}"></p>
-</div>
 <!-- Sidebar -->
 <div id="sidebar" class="bg-white w-64 transition-all duration-300 shadow-md flex flex-col">
     <div class="flex items-center justify-between p-4 border-b">
@@ -71,6 +63,14 @@
         <span class="text-gray-700 font-medium">Olá, <span th:text="${usuarioLogado.nome}">Usuário !</span></span>
     </header>
 
+    <div th:if="${success}" class="mb-4 px-4 py-3 rounded bg-green-100 text-green-800 shadow">
+        <p th:text="${success}"></p>
+    </div>
+
+    <!-- Mensagem de erro -->
+    <div th:if="${error}" class="mb-4 px-4 py-3 rounded bg-red-100 text-red-800 shadow">
+        <p th:text="${error}"></p>
+    </div>
     <!-- Conteúdo Principal -->
     <main class="p-6 overflow-auto">
         <div th:replace="${conteudo} :: content"></div>
