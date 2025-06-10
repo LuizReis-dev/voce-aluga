@@ -103,6 +103,9 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public void deletarUsuario(Integer id) {
+        if(usuarioLogado().getId().equals(id)) {
+            throw new RuntimeException("Você não pode se auto deletar!");
+        }
         usuarioRepository.deleteById(id);
     }
 }
