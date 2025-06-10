@@ -68,7 +68,7 @@ public class UsuarioService implements UserDetailsService {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         Operador operador = new Operador();
-        operador.setCargo("Administrador");
+        operador.setCargo("Operador");
         operador.setFilial(usuarioLogado().getOperador().getFilial());
         operador.setUsuario(usuario);
 
@@ -99,5 +99,10 @@ public class UsuarioService implements UserDetailsService {
         }
 
         return usuarioRepository.save(existente);
+    }
+
+    @Transactional
+    public void deletarUsuario(Integer id) {
+        usuarioRepository.deleteById(id);
     }
 }

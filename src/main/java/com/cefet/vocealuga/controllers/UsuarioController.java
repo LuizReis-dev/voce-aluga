@@ -4,10 +4,7 @@ import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -63,6 +60,18 @@ public class UsuarioController {
             }
 
             return "redirect:/usuarios/cadastro";
+        }
+    }
+
+    @PostMapping("/usuarios/{id}/excluir")
+    public String deletarUsuario(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            usuarioService.deletarUsuario(id);
+            redirectAttributes.addFlashAttribute("success", "Usuário deletado com sucesso!");
+            return "redirect:/usuarios";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao deletar o usuário: " + e.getMessage());
+            return "redirect:/usuarios";
         }
     }
 

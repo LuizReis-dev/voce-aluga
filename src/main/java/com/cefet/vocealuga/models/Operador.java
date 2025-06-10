@@ -14,7 +14,7 @@ public class Operador {
     @JoinColumn(name = "usuario_id", unique = true, nullable = false)
     private Usuario usuario;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "filial_id")
     private Filial filial;
 
