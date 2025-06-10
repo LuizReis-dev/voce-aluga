@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "usuario")
 public class Usuario implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,14 +23,17 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
     @Column(name = "data_de_nascimento", nullable = false)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     @Column(length = 20)
     private String telefone;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
+    private Operador operador;
 
     public Usuario() {
     }
 
-    public Usuario(Integer id, String nome, String cpf, String email, String senha, Date dataNascimento, String telefone) {
+    public Usuario(Integer id, String nome, String cpf, String email, String senha, LocalDate dataNascimento, String telefone) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -80,11 +83,11 @@ public class Usuario implements UserDetails {
         this.senha = senha;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
@@ -94,6 +97,14 @@ public class Usuario implements UserDetails {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public Operador getOperador() {
+        return operador;
+    }
+
+    public void setOperador(Operador operador) {
+        this.operador = operador;
     }
 
     @Override
