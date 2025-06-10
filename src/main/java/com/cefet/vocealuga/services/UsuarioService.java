@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public class UsuarioService implements UserDetailsService {
 
+    private static Usuario usuarioLogado;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -35,11 +36,14 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario usuarioLogado() {
-        var usuario =  (Usuario) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-        return findById(usuario.getId());
+        if(usuarioLogado == null) {
+            var usuario = (Usuario) SecurityContextHolder
+                            .getContext()
+                            .getAuthentication()
+                            .getPrincipal();
+            usuarioLogado = findById(usuario.getId());
+        }
+        return usuarioLogado;
     }
 
     public List<Usuario> findAll() {
