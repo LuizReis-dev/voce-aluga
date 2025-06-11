@@ -19,8 +19,8 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model, Principal principal) {
-        Usuario usuario = usuarioService.usuarioLogado();
-        model.addAttribute("usuario", usuario);
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("conteudo", "home");
         return "layout";
     }
