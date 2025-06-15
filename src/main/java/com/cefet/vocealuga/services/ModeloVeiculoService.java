@@ -29,4 +29,9 @@ public class ModeloVeiculoService {
     public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo) {
         return modeloVeiculoRepository.save(modeloVeiculo);
     }
+
+    @Transactional
+    public void deletarModelo(Integer id) {
+        modeloVeiculoRepository.deleteById(id);
+    }
 }

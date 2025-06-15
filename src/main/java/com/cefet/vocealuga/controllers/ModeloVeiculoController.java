@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -68,5 +67,17 @@ public class ModeloVeiculoController {
         model.addAttribute("modelo", modelo);
         model.addAttribute("conteudo", "/modelos-veiculos/cadastro");
         return "layout";
+    }
+
+    @PostMapping("/modelos-veiculos/{id}/excluir")
+    public String deletarModelo(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            modeloVeiculoService.deletarModelo(id);
+            redirectAttributes.addFlashAttribute("success", "Modelo deletado com sucesso!");
+            return "redirect:/modelos-veiculos";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao deletar o modelo de veículo: " + e.getMessage());
+            return "redirect:/modelos-veiculos";
+        }
     }
 }
