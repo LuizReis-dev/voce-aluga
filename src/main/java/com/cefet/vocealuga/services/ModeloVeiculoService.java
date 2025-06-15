@@ -4,8 +4,15 @@ import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ModeloVeiculoService {
@@ -26,8 +33,21 @@ public class ModeloVeiculoService {
     }
 
     @Transactional
-    public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo) {
-        return modeloVeiculoRepository.save(modeloVeiculo);
+    public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
+        try {
+            if (!imagem.isEmpty()) {
+                String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
+                Path pasta = Paths.get("uploads");
+                Files.createDirectories(pasta);
+                Path caminho = pasta.resolve(nomeArquivo);
+                Files.copy(imagem.getInputStream(), caminho, StandardCopyOption.REPLACE_EXISTING);
+                modeloVeiculo.setImagem(nomeArquivo);
+            }
+            return modeloVeiculoRepository.save(modeloVeiculo);
+        }
+         catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional

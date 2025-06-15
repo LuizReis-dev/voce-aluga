@@ -6,9 +6,8 @@ import com.cefet.vocealuga.services.ModeloVeiculoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -43,15 +42,17 @@ public class ModeloVeiculoController {
     }
 
     @PostMapping("/modelos-veiculos")
-    public String salvarModelo(ModeloVeiculo modelo, RedirectAttributes redirectAttributes) {
+    public String salvarModelo(@ModelAttribute ModeloVeiculo modelo, @RequestParam("imagemFile") MultipartFile imagem, RedirectAttributes redirectAttributes) {
         try {
-            modeloVeiculoService.salvar(modelo);
+            System.out.println();
+            modeloVeiculoService.salvar(modelo, imagem);
             redirectAttributes.addFlashAttribute("success", "Modelo Veículo salvo com sucesso!");
             return "redirect:/modelos-veiculos";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erro ao salvar o usuário: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Erro ao salvar o modelo: " + e.getMessage());
             if(modelo.getId() != null) {
-                return "redirect:/modelo-veiculos/" +modelo.getId()+"/editar";
+                return "redirect:/modelos-veiculos/" +modelo.getId()+"/editar";
             }
 
             return "redirect:/modelos-veiculos/cadastro";

@@ -14,6 +14,7 @@ public class ModeloVeiculo {
     private String marca;
     private String modelo;
     private Integer ano;
+    private String imagem;
 
     @OneToMany(mappedBy = "modelo")
     private List<Veiculo> veiculos = new ArrayList<>();
@@ -58,6 +59,14 @@ public class ModeloVeiculo {
 
     public void setAno(Integer ano) {
         this.ano = ano;
+    }
+
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
     }
 
     public List<Veiculo> getVeiculos() {
