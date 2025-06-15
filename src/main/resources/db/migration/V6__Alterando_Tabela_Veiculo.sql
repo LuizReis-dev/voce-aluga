@@ -1,0 +1,1 @@
+ALTER TABLE `modelo_veiculo` MODIFY `id` INT AUTO_INCREMENT;

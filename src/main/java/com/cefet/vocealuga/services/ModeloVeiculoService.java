@@ -2,6 +2,7 @@ package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,5 +18,15 @@ public class ModeloVeiculoService {
 
     public List<ModeloVeiculo> findAll() {
         return modeloVeiculoRepository.findAll();
+    }
+
+    public ModeloVeiculo findById(int id) {
+        return modeloVeiculoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
+    }
+
+    @Transactional
+    public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo) {
+        return modeloVeiculoRepository.save(modeloVeiculo);
     }
 }
