@@ -5,6 +5,8 @@ public class CompraVeiculoDTO {
     private String placa;
     private String chassi;
     private Double valor;
+    private String cor;
+    private Integer quilometragem;
 
     public CompraVeiculoDTO() {
     }
@@ -46,5 +48,21 @@ public class CompraVeiculoDTO {
 
     public void setValor(Double valor) {
         this.valor = valor;
+    }
+
+    public Integer getQuilometragem() {
+        return quilometragem;
+    }
+
+    public void setQuilometragem(Integer quilometragem) {
+        this.quilometragem = quilometragem;
+    }
+
+    public String getCor() {
+        return cor;
+    }
+
+    public void setCor(String cor) {
+        this.cor = cor;
     }
 }

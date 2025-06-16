@@ -7,7 +7,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700" for="modelo">Modelo:</label>
             <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" th:field="*{modeloId}"
-                    name="modelo" id="modelo">
+                    name="modelo" id="modelo" required>
                 <option value="" disabled selected>Selecione um modelo</option>
                 <option th:each="modelo : ${modelos}"
                         th:value="${modelo.id}"
@@ -37,6 +37,27 @@
                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
         </div>
 
+        <!-- COR -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700" for="cor">Cor:</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" th:field="*{cor}"
+                    name="cor" id="cor" required>
+                <option value="" disabled selected>Selecione uma cor</option>
+                <option value="PRETO">Preto</option>
+                <option value="BRANCO">Branco</option>
+                <option value="PRATA">Prata</option>
+                <option value="VERMELHO">Vermelho</option>
+
+            </select>
+        </div>
+
+        <!-- QUILOMETRAGEM -->
+        <div>
+            <label for="quilometragem" class="block text-sm font-medium text-gray-700">Quilometragem</label>
+            <input type="number" id="quilometragem" th:field="*{quilometragem}" required
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                   value="0"/>
+        </div>
         <!-- Botões -->
         <div class="flex justify-end space-x-2">
             <button type="submit"

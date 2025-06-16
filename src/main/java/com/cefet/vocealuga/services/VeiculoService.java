@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,7 +40,8 @@ public class VeiculoService {
         veiculo.setChassi(compraVeiculoDTO.getChassi());
         veiculo.setFilial(usuarioLogado.getOperador().getFilial());
         veiculo.setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);
-
+        veiculo.setCor(compraVeiculoDTO.getCor());
+        veiculo.setQuilometragem(compraVeiculoDTO.getQuilometragem());
         veiculoRepository.save(veiculo);
 
         GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
