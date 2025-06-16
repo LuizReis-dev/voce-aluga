@@ -30,6 +30,12 @@ public class VeiculoService {
         return veiculoRepository.findAllByFilial(usuarioLogado.getOperador().getFilial());
     }
 
+    public List<Veiculo> findAllByModelo(Integer modeloId) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return veiculoRepository.findAllByFilialAndModeloId(usuarioLogado.getOperador().getFilial(), modeloId);
+    }
+
+
     @Transactional
     public void compra(CompraVeiculoDTO compraVeiculoDTO) {
         ModeloVeiculo modeloVeiculo = modeloVeiculoService.findById(compraVeiculoDTO.getModeloId());

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,13 +21,11 @@ import java.util.List;
 @Controller
 public class VeiculoController {
 
-    private final VeiculoRepository veiculoRepository;
     private final UsuarioService usuarioService;
     private final ModeloVeiculoService modeloVeiculoService;
     private final VeiculoService veiculoService;
 
-    public VeiculoController(VeiculoRepository veiculoRepository, UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService, VeiculoService veiculoService) {
-        this.veiculoRepository = veiculoRepository;
+    public VeiculoController(UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService, VeiculoService veiculoService) {
         this.usuarioService = usuarioService;
         this.modeloVeiculoService = modeloVeiculoService;
         this.veiculoService = veiculoService;
@@ -35,7 +34,7 @@ public class VeiculoController {
     @GetMapping("/veiculos")
     public String listarVeiculos(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
-        List<Veiculo> veiculos = this.veiculoRepository.findAll();
+        List<Veiculo> veiculos = this.veiculoService.findAll();
         model.addAttribute("veiculos", veiculos);
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("conteudo", "/veiculos/listagem");
@@ -51,6 +50,17 @@ public class VeiculoController {
         model.addAttribute("compraVeiculoDTO", new CompraVeiculoDTO());
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("conteudo", "/veiculos/compra");
+
+        return "layout";
+    }
+
+    @GetMapping("/veiculos/{id}/modelo")
+    public String listarPorModelo(Model model, @PathVariable Integer id) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<Veiculo> veiculos = this.veiculoService.findAllByModelo(id);
+        model.addAttribute("veiculos", veiculos);
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("conteudo", "/veiculos/listagem");
 
         return "layout";
     }

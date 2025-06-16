@@ -32,6 +32,11 @@
                 </td>
                 <td class="px-4 py-2" th:text="${modelo.quantidade}"></td>
                 <td class="px-4 py-2 space-x-2">
+                    <a th:href="@{/veiculos/{id}/modelo(id=${modelo.id})}"
+                       class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
+                        Listar Veículos
+                    </a>
+
                     <a th:href="@{/modelos-veiculos/{id}/editar(id=${modelo.id})}"
                        class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
                         Editar

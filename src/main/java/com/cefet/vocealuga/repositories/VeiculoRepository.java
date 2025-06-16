@@ -9,4 +9,6 @@ import java.util.List;
 public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 
     List<Veiculo> findAllByFilial(Filial filial);
+    List<Veiculo> findAllByFilialAndModeloId(Filial filial, Integer modeloId);
+
 }
