@@ -21,7 +21,7 @@
 <!-- Sidebar -->
 <div id="sidebar" class="bg-white w-64 transition-all duration-300 shadow-md flex flex-col">
     <div class="flex items-center justify-between p-4 border-b">
-        <span class="text-xl font-semibold sidebar-label"></span>
+        <span class="text-xl font-semibold sidebar-label" th:text="${usuarioLogado.operador.filial.nome}"></span>
         <button onclick="toggleSidebar()" class="focus:outline-none">
             <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
