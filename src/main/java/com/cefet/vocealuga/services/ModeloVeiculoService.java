@@ -27,9 +27,13 @@ public class ModeloVeiculoService {
         this.usuarioService = usuarioService;
     }
 
-    public List<ModeloVeiculoDTO> findAll() {
+    public List<ModeloVeiculoDTO> findAllQuantidade() {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         return modeloVeiculoRepository.listarModelosComQuantidade(usuarioLogado.getOperador().getFilial().getId());
+    }
+
+    public List<ModeloVeiculo> findAll() {
+        return modeloVeiculoRepository.findAll();
     }
 
     public ModeloVeiculo findById(int id) {

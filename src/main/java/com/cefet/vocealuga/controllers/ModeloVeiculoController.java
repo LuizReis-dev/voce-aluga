@@ -26,7 +26,7 @@ public class ModeloVeiculoController {
     @GetMapping("/modelos-veiculos")
     public String modeloVeiculos(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
-        List<ModeloVeiculoDTO> modelos = modeloVeiculoService.findAll();
+        List<ModeloVeiculoDTO> modelos = modeloVeiculoService.findAllQuantidade();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("modelos", modelos);
         model.addAttribute("conteudo", "/modelos-veiculos/listagem");
@@ -45,7 +45,6 @@ public class ModeloVeiculoController {
     @PostMapping("/modelos-veiculos")
     public String salvarModelo(@ModelAttribute ModeloVeiculo modelo, @RequestParam("imagemFile") MultipartFile imagem, RedirectAttributes redirectAttributes) {
         try {
-            System.out.println();
             modeloVeiculoService.salvar(modelo, imagem);
             redirectAttributes.addFlashAttribute("success", "Modelo Veículo salvo com sucesso!");
             return "redirect:/modelos-veiculos";

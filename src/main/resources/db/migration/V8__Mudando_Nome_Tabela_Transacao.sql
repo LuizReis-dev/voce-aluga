@@ -1,4 +1,3 @@
-DROP TABLE gerenciamentotransacoes;
 
 CREATE TABLE gerenciamento_transacao_veiculo (
      id INT AUTO_INCREMENT PRIMARY KEY,

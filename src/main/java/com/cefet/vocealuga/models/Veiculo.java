@@ -20,6 +20,9 @@ public class Veiculo {
     private String chassi;
     private String placa;
     private String cor;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_veiculo", nullable = false)
+    private EstadoVeiculo estadoVeiculo;
     private Integer quilometragem;
     private LocalDate ultimaManutencao;
 
@@ -71,6 +74,14 @@ public class Veiculo {
 
     public void setCor(String cor) {
         this.cor = cor;
+    }
+
+    public EstadoVeiculo getEstadoVeiculo() {
+        return estadoVeiculo;
+    }
+
+    public void setEstadoVeiculo(EstadoVeiculo estadoVeiculo) {
+        this.estadoVeiculo = estadoVeiculo;
     }
 
     public Integer getQuilometragem() {
