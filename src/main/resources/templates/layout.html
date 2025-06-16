@@ -14,6 +14,7 @@
             labels.forEach(label => label.classList.toggle("hidden"));
         }
     </script>
+    <link rel="stylesheet" href="/css/table.css"/>
 </head>
 <body class="flex h-screen bg-gray-100">
 
@@ -80,6 +81,10 @@
     </main>
 </div>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="/js/table.js"></script>
 <script>
     function toggleDropdown() {
         const menu = document.getElementById('dropdown-menu');
@@ -87,6 +92,7 @@
         menu.classList.toggle('hidden');
         icon.classList.toggle('rotate-180');
     }
+
 </script>
 </body>
 </html>

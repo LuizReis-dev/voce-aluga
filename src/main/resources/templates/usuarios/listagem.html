@@ -11,7 +11,7 @@
 
     <!-- Tabela -->
     <div class="overflow-x-auto bg-white rounded shadow">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tabela-grid">
             <thead class="bg-gray-50 text-left text-gray-600 font-semibold">
             <tr>
                 <th class="px-4 py-3">Nome</th>
@@ -25,7 +25,7 @@
                 <td class="px-4 py-2" th:text="${usuario.nome}"></td>
                 <td class="px-4 py-2" th:text="${usuario.email}"></td>
                 <td class="px-4 py-2" th:text="${usuario.cpf}"></td>
-                <td class="px-4 py-2 text-center space-x-2">
+                <td class="px-4 py-2 space-x-2">
                     <a th:href="@{/usuarios/{id}/editar(id=${usuario.id})}"
                        class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
                         Editar
