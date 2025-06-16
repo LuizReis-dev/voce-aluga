@@ -37,7 +37,7 @@
             <span class="sidebar-label">Dashboard</span>
         </a>
         <div>
-            <button onclick="toggleDropdown()" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+            <button onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M12 4v16m8-8H4" />
@@ -52,8 +52,25 @@
 
             <div id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
                 <a href="/usuarios" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Usuários</a>
-                <a href="/modelos-veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Modelos de Veículos</a>
+            </div>
 
+            <button onclick="toggleDropdown('dropdown-menu-veiculos', 'dropdown-icon-veiculos')"
+                    class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 10h18M3 14h18M5 6h14M5 18h14" />
+                    </svg>
+                    <span class="sidebar-label">Veículos</span>
+                </div>
+                <svg id="dropdown-icon-veiculos" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
+                     stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" />
+                </svg>
+            </button>
+
+            <div id="dropdown-menu-veiculos" class="ml-7 mt-2 space-y-1 hidden">
+                <a href="/modelos-veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Modelos de Veículos</a>
+                <a href="/veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Veículos</a>
             </div>
         </div>
 
@@ -86,13 +103,13 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="/js/table.js"></script>
 <script>
-    function toggleDropdown() {
-        const menu = document.getElementById('dropdown-menu');
-        const icon = document.getElementById('dropdown-icon');
+    function toggleDropdown(menuId, iconId) {
+        const menu = document.getElementById(menuId);
+        const icon = document.getElementById(iconId);
+        if (!menu || !icon) return;
         menu.classList.toggle('hidden');
         icon.classList.toggle('rotate-180');
     }
-
 </script>
 </body>
 </html>

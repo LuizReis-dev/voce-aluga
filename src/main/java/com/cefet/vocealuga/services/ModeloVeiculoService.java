@@ -1,6 +1,8 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
+import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,16 @@ import java.util.UUID;
 public class ModeloVeiculoService {
 
     private final ModeloVeiculoRepository modeloVeiculoRepository;
+    private final UsuarioService usuarioService;
 
-    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository) {
+    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService) {
         this.modeloVeiculoRepository = modeloVeiculoRepository;
+        this.usuarioService = usuarioService;
     }
 
-    public List<ModeloVeiculo> findAll() {
-        return modeloVeiculoRepository.findAll();
+    public List<ModeloVeiculoDTO> findAll() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return modeloVeiculoRepository.listarModelosComQuantidade(usuarioLogado.getOperador().getFilial().getId());
     }
 
     public ModeloVeiculo findById(int id) {

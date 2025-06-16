@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.controllers;
 
+import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
@@ -25,7 +26,7 @@ public class ModeloVeiculoController {
     @GetMapping("/modelos-veiculos")
     public String modeloVeiculos(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
-        List<ModeloVeiculo> modelos = modeloVeiculoService.findAll();
+        List<ModeloVeiculoDTO> modelos = modeloVeiculoService.findAll();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("modelos", modelos);
         model.addAttribute("conteudo", "/modelos-veiculos/listagem");
