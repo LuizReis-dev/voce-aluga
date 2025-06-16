@@ -26,7 +26,8 @@ public class VeiculoService {
     }
 
     public List<Veiculo> findAll() {
-        return veiculoRepository.findAll();
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return veiculoRepository.findAllByFilial(usuarioLogado.getOperador().getFilial());
     }
 
     @Transactional
