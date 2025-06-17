@@ -8,8 +8,11 @@ import com.cefet.vocealuga.repositories.VeiculoRepository;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.services.VeiculoService;
+import jakarta.validation.Valid;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,11 +69,25 @@ public class VeiculoController {
     }
 
     @PostMapping("/veiculos/compra")
-    public String registrarCompra(@ModelAttribute CompraVeiculoDTO compraVeiculoDTO, RedirectAttributes redirectAttributes) {
+    public String registrarCompra(@ModelAttribute @Valid CompraVeiculoDTO compraVeiculoDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: verifique os dados informados.");
+            redirectAttributes.addFlashAttribute("compraVeiculoDTO", compraVeiculoDTO);
+
+            List<String> mensagensErro = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toList();
+
+            redirectAttributes.addFlashAttribute("erros", mensagensErro);
+
+            return "redirect:/veiculos/compra";
+        }
+
         try {
             veiculoService.compra(compraVeiculoDTO);
             redirectAttributes.addFlashAttribute("success", "Veículo salvo com sucesso!");
-            return "redirect:/veiculos/compra";
+            return "redirect:/veiculos/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: " + e.getMessage());
             return "redirect:/veiculos/compra";
