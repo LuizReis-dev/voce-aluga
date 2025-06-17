@@ -39,6 +39,15 @@ public class VeiculoService {
     @Transactional
     public void compra(CompraVeiculoDTO compraVeiculoDTO) {
         ModeloVeiculo modeloVeiculo = modeloVeiculoService.findById(compraVeiculoDTO.getModeloId());
+
+        if(veiculoRepository.existsByPlaca(compraVeiculoDTO.getPlaca())) {
+            throw new IllegalArgumentException("Já existe um veículo com esta placa");
+        }
+
+        if(veiculoRepository.existsByChassi(compraVeiculoDTO.getChassi())) {
+            throw new IllegalArgumentException("Já existe um veículo com este chassi");
+        }
+
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         Veiculo veiculo = new Veiculo();
 

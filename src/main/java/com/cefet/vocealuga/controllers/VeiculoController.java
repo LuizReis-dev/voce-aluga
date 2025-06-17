@@ -70,11 +70,10 @@ public class VeiculoController {
         try {
             veiculoService.compra(compraVeiculoDTO);
             redirectAttributes.addFlashAttribute("success", "Veículo salvo com sucesso!");
-            return "redirect:/veiculos";
+            return "redirect:/veiculos/compra";
         } catch (Exception e) {
-            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: " + e.getMessage());
-            return "redirect:/veiculos";
+            return "redirect:/veiculos/compra";
         }
     }
 }
