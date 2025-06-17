@@ -22,8 +22,8 @@
                 <th class="px-4 py-3 text-center">Ações</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 text-gray-700" th:each="modelo : ${modelos}">
-            <tr>
+            <tbody class="divide-y divide-gray-100 text-gray-700" >
+            <tr th:each="modelo : ${modelos}">
                 <td class="px-4 py-2" th:text="${modelo.marca}"></td>
                 <td class="px-4 py-2" th:text="${modelo.modelo}"></td>
                 <td class="px-4 py-2" th:text="${modelo.ano}"></td>

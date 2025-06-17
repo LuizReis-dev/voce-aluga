@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    console.log($('#tabela-grid').length)
     $('#tabela-grid').DataTable({
         language: {
             "decimal":        "",

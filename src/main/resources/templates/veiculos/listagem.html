@@ -18,8 +18,8 @@
                     <th class="px-4 py-3">Estado</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 text-gray-700" th:each="veiculo : ${veiculos}">
-                <tr>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+                <tr th:each="veiculo : ${veiculos}">
                     <td class="px-4 py-2" th:text="${veiculo.modelo.marca + ' ' + veiculo.modelo.modelo + ' - ' + veiculo.modelo.ano}"></td>
                     <td class="px-4 py-2" th:text="${veiculo.placa}"></td>
                     <td class="px-4 py-2" th:text="${veiculo.chassi}"></td>

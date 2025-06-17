@@ -20,8 +20,8 @@
                 <th class="px-4 py-3 text-center">Ações</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 text-gray-700" th:each="usuario : ${usuarios}">
-            <tr>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+            <tr th:each="usuario : ${usuarios}">
                 <td class="px-4 py-2" th:text="${usuario.nome}"></td>
                 <td class="px-4 py-2" th:text="${usuario.email}"></td>
                 <td class="px-4 py-2" th:text="${usuario.cpf}"></td>
