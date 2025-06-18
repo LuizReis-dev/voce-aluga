@@ -23,62 +23,62 @@ public class ModeloVeiculoController {
         this.modeloVeiculoService = modeloVeiculoService;
     }
 
-    @GetMapping("/modelos-veiculos")
+    @GetMapping("/admin/modelos-veiculos")
     public String modeloVeiculos(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         List<ModeloVeiculoDTO> modelos = modeloVeiculoService.findAllQuantidade();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("modelos", modelos);
-        model.addAttribute("conteudo", "/modelos-veiculos/listagem");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/modelos-veiculos/listagem");
+        return "/admin/layout";
     }
 
-    @GetMapping("/modelos-veiculos/cadastro")
+    @GetMapping("/admin/modelos-veiculos/cadastro")
     public String novoUsuario(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("modelo", new ModeloVeiculo());
-        model.addAttribute("conteudo", "/modelos-veiculos/cadastro");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/modelos-veiculos/cadastro");
+        return "/admin/layout";
     }
 
-    @PostMapping("/modelos-veiculos")
+    @PostMapping("/admin/modelos-veiculos")
     public String salvarModelo(@ModelAttribute ModeloVeiculo modelo, @RequestParam("imagemFile") MultipartFile imagem, RedirectAttributes redirectAttributes) {
         try {
             modeloVeiculoService.salvar(modelo, imagem);
             redirectAttributes.addFlashAttribute("success", "Modelo Veículo salvo com sucesso!");
-            return "redirect:/modelos-veiculos";
+            return "redirect:/admin/modelos-veiculos";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o modelo: " + e.getMessage());
             if(modelo.getId() != null) {
-                return "redirect:/modelos-veiculos/" +modelo.getId()+"/editar";
+                return "redirect:/admin/modelos-veiculos/" +modelo.getId()+"/editar";
             }
 
-            return "redirect:/modelos-veiculos/cadastro";
+            return "redirect:/admin/modelos-veiculos/cadastro";
         }
     }
 
-    @GetMapping("/modelos-veiculos/{id}/editar")
+    @GetMapping("/admin/modelos-veiculos/{id}/editar")
     public String editarVeiculo(@PathVariable Integer id, Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
 
         ModeloVeiculo modelo = modeloVeiculoService.findById(id);
         model.addAttribute("modelo", modelo);
-        model.addAttribute("conteudo", "/modelos-veiculos/cadastro");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/modelos-veiculos/cadastro");
+        return "/admin/layout";
     }
 
-    @PostMapping("/modelos-veiculos/{id}/excluir")
+    @PostMapping("/admin/modelos-veiculos/{id}/excluir")
     public String deletarModelo(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
             modeloVeiculoService.deletarModelo(id);
             redirectAttributes.addFlashAttribute("success", "Modelo deletado com sucesso!");
-            return "redirect:/modelos-veiculos";
+            return "redirect:/admin/modelos-veiculos";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao deletar o modelo de veículo: " + e.getMessage());
-            return "redirect:/modelos-veiculos";
+            return "redirect:/admin/modelos-veiculos";
         }
     }
 }

@@ -17,16 +17,16 @@ public class HomeController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/admin/home")
     public String home(Model model, Principal principal) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("conteudo", "home");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/home");
+        return "/admin/layout";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/admin/login")
     public String login() {
-        return "login";
+        return "/admin/login";
     }
 }
