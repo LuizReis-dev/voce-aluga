@@ -18,7 +18,7 @@ public class HomeController {
     }
 
     @GetMapping("/admin/home")
-    public String home(Model model, Principal principal) {
+    public String homeFuncionario(Model model, Principal principal) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("conteudo", "/admin/home");
@@ -26,7 +26,17 @@ public class HomeController {
     }
 
     @GetMapping("/admin/login")
-    public String login() {
+    public String loginFuncionario() {
         return "/admin/login";
+    }
+
+    @GetMapping("/login")
+    public String loginCliente() {
+        return "/login";
+    }
+
+    @GetMapping("/")
+    public String homeCliente() {
+        return "/home";
     }
 }
