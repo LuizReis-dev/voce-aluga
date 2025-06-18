@@ -1,0 +1,66 @@
+package com.cefet.vocealuga.services;
+
+import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
+import com.cefet.vocealuga.models.ModeloVeiculo;
+import com.cefet.vocealuga.models.Usuario;
+import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class ModeloVeiculoService {
+
+    private final ModeloVeiculoRepository modeloVeiculoRepository;
+    private final UsuarioService usuarioService;
+
+    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService) {
+        this.modeloVeiculoRepository = modeloVeiculoRepository;
+        this.usuarioService = usuarioService;
+    }
+
+    public List<ModeloVeiculoDTO> findAllQuantidade() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return modeloVeiculoRepository.listarModelosComQuantidade(usuarioLogado.getOperador().getFilial().getId());
+    }
+
+    public List<ModeloVeiculo> findAll() {
+        return modeloVeiculoRepository.findAll();
+    }
+
+    public ModeloVeiculo findById(int id) {
+        return modeloVeiculoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
+    }
+
+    @Transactional
+    public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
+        try {
+            if (!imagem.isEmpty()) {
+                String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
+                Path pasta = Paths.get("uploads");
+                Files.createDirectories(pasta);
+                Path caminho = pasta.resolve(nomeArquivo);
+                Files.copy(imagem.getInputStream(), caminho, StandardCopyOption.REPLACE_EXISTING);
+                modeloVeiculo.setImagem(nomeArquivo);
+            }
+            return modeloVeiculoRepository.save(modeloVeiculo);
+        }
+         catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Transactional
+    public void deletarModelo(Integer id) {
+        modeloVeiculoRepository.deleteById(id);
+    }
+}

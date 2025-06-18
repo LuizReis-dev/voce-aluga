@@ -1,0 +1,58 @@
+<div th:fragment="content">
+
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Modelos de Veículos</h1>
+        <a href="/modelos-veiculos/cadastro"
+           class="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded shadow">
+            + Novo Modelo
+        </a>
+    </div>
+
+    <!-- Tabela -->
+    <div class="overflow-x-auto bg-white rounded shadow">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tabela-grid">
+            <thead class="bg-gray-50 text-left text-gray-600 font-semibold">
+            <tr>
+                <th class="px-4 py-3">Marca</th>
+                <th class="px-4 py-3">Modelo</th>
+                <th class="px-4 py-3">Ano</th>
+                <th class="px-4 py-3">Imagem</th>
+                <th class="px-4 py-3">Quantidade</th>
+                <th class="px-4 py-3 text-center">Ações</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700" >
+            <tr th:each="modelo : ${modelos}">
+                <td class="px-4 py-2" th:text="${modelo.marca}"></td>
+                <td class="px-4 py-2" th:text="${modelo.modelo}"></td>
+                <td class="px-4 py-2" th:text="${modelo.ano}"></td>
+                <td>
+                    <img th:src="@{'/uploads/' + ${modelo.imagem}}" alt="Imagem" width="100">
+                </td>
+                <td class="px-4 py-2" th:text="${modelo.quantidade}"></td>
+                <td class="px-4 py-2 space-x-2">
+                    <a th:href="@{/veiculos/{id}/modelo(id=${modelo.id})}"
+                       class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
+                        Listar Veículos
+                    </a>
+
+                    <a th:href="@{/modelos-veiculos/{id}/editar(id=${modelo.id})}"
+                       class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
+                        Editar
+                    </a>
+
+                    <form th:action="@{/modelos-veiculos/{id}/excluir(id=${modelo.id})}" method="post" class="inline">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit"
+                                onclick="return confirm('Deseja excluir este usuário?')"
+                                class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1 rounded shadow">
+                            Excluir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

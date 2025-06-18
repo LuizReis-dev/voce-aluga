@@ -1,0 +1,38 @@
+<div th:fragment="content">
+    <h1 class="text-2xl font-bold mb-6"
+        th:text="${modelo.id} != null ? 'Editar Modelo' : 'Novo Modelo'">Novo Modelo</h1>
+
+    <form  method="post" enctype="multipart/form-data" th:action="@{/modelos-veiculos}" th:object="${modelo}"
+           class="space-y-6 bg-white p-6 rounded shadow max-w-xl">
+        <input type="hidden" name="id" th:value="*{id}" />
+        <!-- Marca -->
+        <div>
+            <label for="marca" class="block text-sm font-medium text-gray-700">Marca</label>
+            <input type="text" id="marca" th:field="*{marca}" required
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+
+        <!-- Modelo -->
+        <div>
+            <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo</label>
+            <input type="text" id="modelo" th:field="*{modelo}" required
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+        <!-- Ano -->
+        <div>
+            <label for="ano" class="block text-sm font-medium text-gray-700">Ano</label>
+            <input type="number" id="ano" th:field="*{ano}" required
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+
+        <input type="file" name="imagemFile" accept="image/*">
+        <!-- Botões -->
+        <div class="flex justify-end space-x-2">
+            <a href="/modelos-veiculos" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</a>
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>

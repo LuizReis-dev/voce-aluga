@@ -27,6 +27,9 @@ public class Filial {
     @OneToMany(mappedBy = "filial")
     private List<Operador> operadores = new ArrayList<>();
 
+    @OneToMany(mappedBy = "filial")
+    private List<Veiculo> veiculos = new ArrayList<>();
+
     public Filial(Integer id, String nome, String telefone, String email, Endereco endereco, Empresa empresa) {
         this.id = id;
         this.nome = nome;
@@ -69,5 +72,13 @@ public class Filial {
 
     public void setOperadores(List<Operador> operadores) {
         this.operadores = operadores;
+    }
+
+    public List<Veiculo> getVeiculos() {
+        return veiculos;
+    }
+
+    public void setVeiculos(List<Veiculo> veiculos) {
+        this.veiculos = veiculos;
     }
 }

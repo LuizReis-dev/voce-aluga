@@ -14,13 +14,14 @@
             labels.forEach(label => label.classList.toggle("hidden"));
         }
     </script>
+    <link rel="stylesheet" href="/css/table.css"/>
 </head>
 <body class="flex h-screen bg-gray-100">
 
 <!-- Sidebar -->
 <div id="sidebar" class="bg-white w-64 transition-all duration-300 shadow-md flex flex-col">
     <div class="flex items-center justify-between p-4 border-b">
-        <span class="text-xl font-semibold sidebar-label"></span>
+        <span class="text-xl font-semibold sidebar-label" th:text="${usuarioLogado.operador.filial.nome}"></span>
         <button onclick="toggleSidebar()" class="focus:outline-none">
             <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -36,7 +37,7 @@
             <span class="sidebar-label">Dashboard</span>
         </a>
         <div>
-            <button onclick="toggleDropdown()" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+            <button onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M12 4v16m8-8H4" />
@@ -52,7 +53,28 @@
             <div id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
                 <a href="/usuarios" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Usuários</a>
             </div>
+
+            <button onclick="toggleDropdown('dropdown-menu-veiculos', 'dropdown-icon-veiculos')"
+                    class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 10h18M3 14h18M5 6h14M5 18h14" />
+                    </svg>
+                    <span class="sidebar-label">Veículos</span>
+                </div>
+                <svg id="dropdown-icon-veiculos" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
+                     stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" />
+                </svg>
+            </button>
+
+            <div id="dropdown-menu-veiculos" class="ml-7 mt-2 space-y-1 hidden">
+                <a href="/modelos-veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Modelos de Veículos</a>
+                <a href="/veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Veículos</a>
+                <a href="/veiculos/compra" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Compra</a>
+            </div>
         </div>
+
     </nav>
 </div>
 
@@ -71,16 +93,33 @@
     <div th:if="${error}" class="mb-4 px-4 py-3 rounded bg-red-100 text-red-800 shadow">
         <p th:text="${error}"></p>
     </div>
+    <!-- Erros de validacao -->
+    <div th:if="${erros}" class="bg-red-100 text-red-800 p-4 rounded shadow">
+        <ul>
+            <li th:each="erro : ${erros}" th:text="${erro}"></li>
+        </ul>
+    </div>
+
+
     <!-- Conteúdo Principal -->
     <main class="p-6 overflow-auto">
         <div th:replace="${conteudo} :: content"></div>
     </main>
 </div>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://unpkg.com/imask"></script>
+
+<script src="/js/table.js"></script>
+<script src="/js/masks.js"></script>
+
 <script>
-    function toggleDropdown() {
-        const menu = document.getElementById('dropdown-menu');
-        const icon = document.getElementById('dropdown-icon');
+    function toggleDropdown(menuId, iconId) {
+        const menu = document.getElementById(menuId);
+        const icon = document.getElementById(iconId);
+        if (!menu || !icon) return;
         menu.classList.toggle('hidden');
         icon.classList.toggle('rotate-180');
     }
