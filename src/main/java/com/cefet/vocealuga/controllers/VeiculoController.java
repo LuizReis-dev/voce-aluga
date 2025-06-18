@@ -4,7 +4,6 @@ import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.models.Veiculo;
-import com.cefet.vocealuga.repositories.VeiculoRepository;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.services.VeiculoService;
@@ -34,41 +33,41 @@ public class VeiculoController {
         this.veiculoService = veiculoService;
     }
 
-    @GetMapping("/veiculos")
+    @GetMapping("/admin/veiculos")
     public String listarVeiculos(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         List<Veiculo> veiculos = this.veiculoService.findAll();
         model.addAttribute("veiculos", veiculos);
         model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("conteudo", "/veiculos/listagem");
+        model.addAttribute("conteudo", "/admin/veiculos/listagem");
 
-        return "layout";
+        return "/admin/layout";
     }
 
-    @GetMapping("/veiculos/compra")
+    @GetMapping("/admin/veiculos/compra")
     public String compra(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         List<ModeloVeiculo> modelos = this.modeloVeiculoService.findAll();
         model.addAttribute("modelos", modelos);
         model.addAttribute("compraVeiculoDTO", new CompraVeiculoDTO());
         model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("conteudo", "/veiculos/compra");
+        model.addAttribute("conteudo", "/admin/veiculos/compra");
 
-        return "layout";
+        return "/admin/layout";
     }
 
-    @GetMapping("/veiculos/{id}/modelo")
+    @GetMapping("/admin/veiculos/{id}/modelo")
     public String listarPorModelo(Model model, @PathVariable Integer id) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         List<Veiculo> veiculos = this.veiculoService.findAllByModelo(id);
         model.addAttribute("veiculos", veiculos);
         model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("conteudo", "/veiculos/listagem");
+        model.addAttribute("conteudo", "/admin/veiculos/listagem");
 
-        return "layout";
+        return "/admin/layout";
     }
 
-    @PostMapping("/veiculos/compra")
+    @PostMapping("/admin/veiculos/compra")
     public String registrarCompra(@ModelAttribute @Valid CompraVeiculoDTO compraVeiculoDTO, BindingResult result, RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
@@ -81,16 +80,16 @@ public class VeiculoController {
 
             redirectAttributes.addFlashAttribute("erros", mensagensErro);
 
-            return "redirect:/veiculos/compra";
+            return "redirect:/admin/veiculos/compra";
         }
 
         try {
             veiculoService.compra(compraVeiculoDTO);
             redirectAttributes.addFlashAttribute("success", "Veículo salvo com sucesso!");
-            return "redirect:/veiculos/";
+            return "redirect:/admin/veiculos";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: " + e.getMessage());
-            return "redirect:/veiculos/compra";
+            return "redirect:/admin/veiculos/compra";
         }
     }
 }

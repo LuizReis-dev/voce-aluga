@@ -2,9 +2,11 @@ package com.cefet.vocealuga.models;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,9 @@ public class Usuario implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
     private Operador operador;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
+    private Cliente cliente;
 
     public Usuario() {
     }
@@ -107,9 +112,29 @@ public class Usuario implements UserDetails {
         this.operador = operador;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if (this.operador != null) {
+            if (CargoOperador.OPERADOR.equals(this.operador.getCargo())) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_OPERADOR"));
+            } else if (CargoOperador.ADMINISTRADOR.equals(this.operador.getCargo())) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMINISTRADOR"));
+            }
+        } else if (this.cliente != null) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+
+        return authorities;
     }
 
     @Override

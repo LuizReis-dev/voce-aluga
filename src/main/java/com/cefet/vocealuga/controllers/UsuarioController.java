@@ -16,62 +16,62 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
-    @GetMapping("/usuarios")
+    @GetMapping("/admin/usuarios")
     public String listarUsuarios(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         List<Usuario> usuarios = usuarioService.findAll();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("usuarios", usuarios);
-        model.addAttribute("conteudo", "/usuarios/listagem");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/usuarios/listagem");
+        return "/admin/layout";
     }
 
-    @GetMapping("/usuarios/cadastro")
+    @GetMapping("/admin/usuarios/cadastro")
     public String novoUsuario(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("usuario", new Usuario());
-        model.addAttribute("conteudo", "/usuarios/cadastro");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/usuarios/cadastro");
+        return "/admin/layout";
     }
 
-    @GetMapping("/usuarios/{id}/editar")
+    @GetMapping("/admin/usuarios/{id}/editar")
     public String editarUsuario(@PathVariable Integer id, Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
         Usuario usuario = usuarioService.findById(id);
         System.out.println(usuario.getDataNascimento());
         model.addAttribute("usuario", usuario);
-        model.addAttribute("conteudo", "/usuarios/cadastro");
-        return "layout";
+        model.addAttribute("conteudo", "/admin/usuarios/cadastro");
+        return "/admin/layout";
     }
 
-    @PostMapping("/usuarios")
+    @PostMapping("/admin/usuarios")
     public String salvarUsuario(Usuario usuario, RedirectAttributes redirectAttributes, @RequestParam(required = false) String senha) {
         try {
             usuario.setSenha(senha);
             usuarioService.salvar(usuario);
             redirectAttributes.addFlashAttribute("success", "Usuário salvo com sucesso!");
-            return "redirect:/usuarios";
+            return "redirect:/admin/usuarios";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o usuário: " + e.getMessage());
             if(usuario.getId() != null) {
-                return "redirect:/usuarios/" +usuario.getId()+"/editar";
+                return "redirect:/admin/usuarios/" +usuario.getId()+"/editar";
             }
 
-            return "redirect:/usuarios/cadastro";
+            return "redirect:/admin/usuarios/cadastro";
         }
     }
 
-    @PostMapping("/usuarios/{id}/excluir")
+    @PostMapping("/admin/usuarios/{id}/excluir")
     public String deletarUsuario(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
             usuarioService.deletarUsuario(id);
             redirectAttributes.addFlashAttribute("success", "Usuário deletado com sucesso!");
-            return "redirect:/usuarios";
+            return "redirect:/admin/usuarios";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao deletar o usuário: " + e.getMessage());
-            return "redirect:/usuarios";
+            return "redirect:/admin/usuarios";
         }
     }
 
