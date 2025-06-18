@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.models.CargoOperador;
 import com.cefet.vocealuga.models.Operador;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.UsuarioRepository;
@@ -72,7 +73,7 @@ public class UsuarioService implements UserDetailsService {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         Operador operador = new Operador();
-        operador.setCargo("Operador");
+        operador.setCargo(CargoOperador.OPERADOR);
         operador.setFilial(usuarioLogado().getOperador().getFilial());
         operador.setUsuario(usuario);
 

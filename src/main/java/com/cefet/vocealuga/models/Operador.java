@@ -8,7 +8,8 @@ public class Operador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String cargo;
+    @Enumerated(EnumType.STRING)
+    private CargoOperador cargo;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", unique = true, nullable = false)
@@ -18,7 +19,7 @@ public class Operador {
     @JoinColumn(name = "filial_id")
     private Filial filial;
 
-    public Operador(Integer id, String cargo, Usuario usuario, Filial filial) {
+    public Operador(Integer id, CargoOperador cargo, Usuario usuario, Filial filial) {
         this.id = id;
         this.cargo = cargo;
         this.usuario = usuario;
@@ -36,11 +37,11 @@ public class Operador {
         this.id = id;
     }
 
-    public String getCargo() {
+    public CargoOperador getCargo() {
         return cargo;
     }
 
-    public void setCargo(String cargo) {
+    public void setCargo(CargoOperador cargo) {
         this.cargo = cargo;
     }
 

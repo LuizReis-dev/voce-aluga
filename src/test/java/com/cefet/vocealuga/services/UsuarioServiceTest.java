@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+import com.cefet.vocealuga.models.CargoOperador;
 import com.cefet.vocealuga.models.Filial;
 import com.cefet.vocealuga.models.Operador;
 import com.cefet.vocealuga.models.Usuario;
@@ -113,7 +114,7 @@ public class UsuarioServiceTest {
             verify(passwordEncoder).encode("senha123");
             verify(usuarioRepository).save(any(Usuario.class));
             assertNotNull(resultado.getOperador());
-            assertEquals("Operador", resultado.getOperador().getCargo());
+            assertEquals(CargoOperador.OPERADOR, resultado.getOperador().getCargo());
             assertEquals(usuarioLogado.getOperador().getFilial(), resultado.getOperador().getFilial());
         }
     }
