@@ -163,6 +163,98 @@ public class VeiculoServiceTest {
         verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
     }
 
+    @Test
+    void solicitarManutencaoDeveAtualizarVeiculoQuandoDisponivel() {
+        // Arrange
+        Integer veiculoId = 1;
+        Usuario usuario = criarUsuario();
+        Veiculo veiculo = criarVeiculoDisponivel(usuario.getOperador().getFilial());
+
+        when(usuarioService.usuarioLogado()).thenReturn(usuario);
+        when(veiculoRepository.findById(veiculoId)).thenReturn(Optional.of(veiculo));
+
+        // Act
+        veiculoService.solicitarManutencao(veiculoId);
+
+        // Assert
+        verify(veiculoRepository).save(any(Veiculo.class));
+        verify(gerenciamentoTransacaoVeiculoRepository).save(any(GerenciamentoTransacaoVeiculo.class));
+    }
+
+    @Test
+    void solicitarManutencaoDeveLancarExcecaoSeVeiculoNaoDisponivel() {
+        Integer veiculoId = 1;
+        Usuario usuario = criarUsuario();
+        Veiculo veiculo = criarVeiculoDisponivel(usuario.getOperador().getFilial());
+        veiculo.setEstadoVeiculo(EstadoVeiculo.VENDIDO); // não disponível
+
+        when(usuarioService.usuarioLogado()).thenReturn(usuario);
+        when(veiculoRepository.findById(veiculoId)).thenReturn(Optional.of(veiculo));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.solicitarManutencao(veiculoId);
+        });
+
+        verify(veiculoRepository, never()).save(any());
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
+    @Test
+    void finalizarManutencaoDeveAtualizarVeiculoQuandoEmManutencao() {
+        // Arrange
+        Integer veiculoId = 1;
+        Veiculo veiculo = new Veiculo();
+        veiculo.setId(veiculoId);
+        veiculo.setEstadoVeiculo(EstadoVeiculo.EM_MANUTENCAO);
+
+        GerenciamentoTransacaoVeiculo transacao = new GerenciamentoTransacaoVeiculo();
+        transacao.setVeiculo(veiculo);
+
+        when(veiculoRepository.findById(veiculoId)).thenReturn(Optional.of(veiculo));
+        when(gerenciamentoTransacaoVeiculoRepository.findByVeiculoManutencao(veiculo)).thenReturn(Optional.of(transacao));
+
+        // Act
+        veiculoService.finalizarManutencao(veiculoId);
+
+        // Assert
+        verify(gerenciamentoTransacaoVeiculoRepository).save(transacao);
+        assertEquals(EstadoVeiculo.DISPONIVEL, veiculo.getEstadoVeiculo());
+        assertNotNull(transacao.getDataFimTransacao());
+    }
+
+    @Test
+    void finalizarManutencaoDeveLancarExcecaoSeVeiculoNaoEmManutencao() {
+        Integer veiculoId = 1;
+        Veiculo veiculo = new Veiculo();
+        veiculo.setId(veiculoId);
+        veiculo.setEstadoVeiculo(EstadoVeiculo.VENDIDO);
+
+        when(veiculoRepository.findById(veiculoId)).thenReturn(Optional.of(veiculo));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.finalizarManutencao(veiculoId);
+        });
+
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
+    @Test
+    void finalizarManutencaoDeveLancarExcecaoSeTransacaoNaoEncontrada() {
+        Integer veiculoId = 1;
+        Veiculo veiculo = new Veiculo();
+        veiculo.setId(veiculoId);
+        veiculo.setEstadoVeiculo(EstadoVeiculo.EM_MANUTENCAO);
+
+        when(veiculoRepository.findById(veiculoId)).thenReturn(Optional.of(veiculo));
+        when(gerenciamentoTransacaoVeiculoRepository.findByVeiculoManutencao(veiculo)).thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.finalizarManutencao(veiculoId);
+        });
+
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
     private CompraVeiculoDTO criarDTO() {
         CompraVeiculoDTO dto = new CompraVeiculoDTO();
         dto.setModeloId(1);
