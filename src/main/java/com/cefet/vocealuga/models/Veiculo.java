@@ -3,6 +3,7 @@ package com.cefet.vocealuga.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "veiculo")
@@ -97,5 +98,10 @@ public class Veiculo {
 
     public void setUltimaManutencao(LocalDate ultimaManutencao) {
         this.ultimaManutencao = ultimaManutencao;
+    }
+
+    public String getUltimaManutencaoFormatada() {
+        if (ultimaManutencao == null) return "NUNCA FEITA";
+        return ultimaManutencao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

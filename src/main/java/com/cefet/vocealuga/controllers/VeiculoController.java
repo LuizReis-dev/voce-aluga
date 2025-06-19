@@ -143,4 +143,19 @@ public class VeiculoController {
 
         return "/admin/layout";
     }
+
+    @GetMapping("/admin/veiculos/{id}/detalhes")
+    public String detalhes(Model model, @PathVariable Integer id) {
+        Veiculo veiculo = veiculoService.findById(id);
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<GerenciamentoTransacaoVeiculo> transacoes = veiculoService.historicoTransacoesPorVeiculo(veiculo);
+
+        model.addAttribute("veiculo", veiculo);
+        model.addAttribute("transacoes", transacoes);
+
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("conteudo", "/admin/veiculos/detalhes");
+
+        return "/admin/layout";
+    }
 }

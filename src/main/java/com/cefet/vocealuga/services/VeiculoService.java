@@ -105,4 +105,14 @@ public class VeiculoService {
         return gerenciamentoTransacaoVeiculoRepository.findAll(usuarioLogado.getOperador().getFilial());
     }
 
+    public List<GerenciamentoTransacaoVeiculo> historicoTransacoesPorVeiculo(Veiculo veiculo) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.findAllByVeiculo(veiculo);
+    }
+
+    public Veiculo findById(Integer id) {
+        return veiculoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Veículo não encontrado"));
+    }
+
 }
