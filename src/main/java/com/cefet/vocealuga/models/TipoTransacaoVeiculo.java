@@ -3,7 +3,9 @@ package com.cefet.vocealuga.models;
 public enum TipoTransacaoVeiculo {
     COMPRA("Compra"),
     VENDA("Venda"),
-    TRANSACAO_FILIAL("Transferência entre filiais"),
+    TRANSFERENCIA_SOLICITADA("Transferência Solicitada"),
+    TRANSFERENCIA_ACEITA("Transferência aceita pela filial de origem"),
+    TRANSFERENCIA_RECUSADA("Transferência recusada pela filial de origem"),
     MANUTENCAO("Manutenção");
 
     private final String descricao;
