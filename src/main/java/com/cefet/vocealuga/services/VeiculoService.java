@@ -1,18 +1,21 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
 import com.cefet.vocealuga.repositories.VeiculoRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class VeiculoService {
-
+    private final static Logger LOGGER = Logger.getLogger(VeiculoService.class.getName());
     private final VeiculoRepository veiculoRepository;
     private final GerenciamentoTransacaoVeiculoRepository gerenciamentoTransacaoVeiculoRepository;
     private final ModeloVeiculoService modeloVeiculoService;
@@ -68,5 +71,9 @@ public class VeiculoService {
         gerenciamentoTransacaoVeiculo.setValor(compraVeiculoDTO.getValor());
 
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
+
+    public void venda(@Valid VendaVeiculoDTO vendaVeiculoDTO) {
+        LOGGER.info("venda de veiculo");
     }
 }
