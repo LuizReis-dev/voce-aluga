@@ -4,6 +4,7 @@ import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
+import com.cefet.vocealuga.repositories.VeiculoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,10 +22,12 @@ public class ModeloVeiculoService {
 
     private final ModeloVeiculoRepository modeloVeiculoRepository;
     private final UsuarioService usuarioService;
+    private final VeiculoRepository veiculoRepository;
 
-    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService) {
+    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService, VeiculoRepository veiculoRepository) {
         this.modeloVeiculoRepository = modeloVeiculoRepository;
         this.usuarioService = usuarioService;
+        this.veiculoRepository = veiculoRepository;
     }
 
     public List<ModeloVeiculoDTO> findAllQuantidade() {
@@ -42,7 +45,7 @@ public class ModeloVeiculoService {
     }
 
     @Transactional
-    public ModeloVeiculo salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
+    public void salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
         try {
             if (!imagem.isEmpty()) {
                 String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
@@ -52,7 +55,7 @@ public class ModeloVeiculoService {
                 Files.copy(imagem.getInputStream(), caminho, StandardCopyOption.REPLACE_EXISTING);
                 modeloVeiculo.setImagem(nomeArquivo);
             }
-            return modeloVeiculoRepository.save(modeloVeiculo);
+            modeloVeiculoRepository.save(modeloVeiculo);
         }
          catch (IOException e) {
             throw new RuntimeException(e);
@@ -61,6 +64,9 @@ public class ModeloVeiculoService {
 
     @Transactional
     public void deletarModelo(Integer id) {
+        if(veiculoRepository.existsByModeloId(id)) {
+            throw new IllegalArgumentException("Não foi possível deletar esse modelo pois já possui veículos associados");
+        }
         modeloVeiculoRepository.deleteById(id);
     }
 }
