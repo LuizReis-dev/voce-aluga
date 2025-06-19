@@ -37,11 +37,12 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario usuarioLogado() {
-        if(usuarioLogado == null) {
-            var usuario = (Usuario) SecurityContextHolder
-                            .getContext()
-                            .getAuthentication()
-                            .getPrincipal();
+        var usuario = (Usuario) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if(usuarioLogado == null || !usuarioLogado.getId().equals(usuario.getId())) {
+
             usuarioLogado = findById(usuario.getId());
         }
         return usuarioLogado;
