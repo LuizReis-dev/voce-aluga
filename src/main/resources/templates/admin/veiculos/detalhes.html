@@ -1,0 +1,51 @@
+<div th:fragment="content">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-700">Detalhes do Veículo</h1>
+    </div>
+    <!-- Card com informações do veículo -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+        <div class="grid grid-cols-4 gap-4 text-sm text-gray-800">
+            <div>
+                <span class="font-semibold">Marca:</span>
+                <p th:text="${veiculo.modelo.marca}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Modelo:</span>
+                <p th:text="${veiculo.modelo.modelo}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Ano:</span>
+                <p th:text="${veiculo.modelo.ano}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Placa:</span>
+                <p th:text="${veiculo.placa}"></p>
+            </div>
+
+            <div>
+                <span class="font-semibold">Chassi:</span>
+                <p th:text="${veiculo.chassi}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Quilometragem:</span>
+                <p th:text="${veiculo.quilometragem + ' km'}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Cor:</span>
+                <p th:text="${veiculo.cor}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Estado:</span>
+                <p th:text="${veiculo.estadoVeiculo.descricao}"></p>
+            </div>
+
+            <div class="col-span-4">
+                <span class="font-semibold">Última Manutenção:</span>
+                <p th:text="${veiculo.ultimaManutencaoFormatada}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="admin/veiculos/historico-transacoes :: content"></div>
+
+</div>

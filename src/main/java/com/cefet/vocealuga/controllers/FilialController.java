@@ -1,0 +1,24 @@
+package com.cefet.vocealuga.controllers;
+
+import com.cefet.vocealuga.dtos.filial.FilialDTO;
+import com.cefet.vocealuga.services.FilialService;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+@Controller
+public class FilialController {
+    private final FilialService filialService;
+    public FilialController(FilialService filialService) {
+        this.filialService = filialService;
+    }
+
+    @GetMapping("/admin/api/filial-possui-veiculo/{modeloId}")
+    @ResponseBody
+    public List<FilialDTO> filialPossuiVeiculo(@PathVariable int modeloId) {
+        return filialService.buscarFiliaisComVeiculoDisponivelDoModeloExcetoFilial(modeloId);
+    }
+}

@@ -3,6 +3,7 @@ package com.cefet.vocealuga.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Table(name = "gerenciamento_transacao_veiculo")
 @Entity
@@ -34,6 +35,7 @@ public class GerenciamentoTransacaoVeiculo {
     private LocalDate dataFimTransacao;
 
     private Double valor;
+    private Integer quilometragem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "operador_id", nullable = false)
@@ -124,5 +126,24 @@ public class GerenciamentoTransacaoVeiculo {
 
     public void setOperador(Operador operador) {
         this.operador = operador;
+    }
+
+    public Integer quilometragem() {
+        return quilometragem;
+    }
+
+    public GerenciamentoTransacaoVeiculo setQuilometragem(Integer quilometragem) {
+        this.quilometragem = quilometragem;
+        return this;
+    }
+
+    public String getDataTransacaoFormatada() {
+        if (dataTransacao == null) return "";
+        return dataTransacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    public String getDataFimTransacaoFormatada() {
+        if (dataFimTransacao == null) return "";
+        return dataFimTransacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

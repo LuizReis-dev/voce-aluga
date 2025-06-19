@@ -16,9 +16,9 @@ public interface ModeloVeiculoRepository extends JpaRepository<ModeloVeiculo, In
             COUNT(v.id)
         )
         FROM ModeloVeiculo mv
-        LEFT JOIN Veiculo v ON v.modelo.id = mv.id AND v.filial.id = :filialId
+        LEFT JOIN Veiculo v ON v.modelo.id = mv.id AND v.filial.id = :filialId AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO\s
         GROUP BY mv.id, mv.modelo, mv.marca, mv.ano
         ORDER BY mv.marca
-    """)
+   \s""")
     List<ModeloVeiculoDTO> listarModelosComQuantidade(@Param("filialId") Integer filialId);
 }

@@ -1,10 +1,10 @@
 <div th:fragment="content">
     <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl font-semibold text-gray-700">Compra de Veículo</h1>
+        <h1 class="text-xl font-semibold text-gray-700">Venda de veículo</h1>
     </div>
 
-    <form th:action="@{/admin/veiculos/compra}"
-          th:object="${compraVeiculoDTO}" method="post" class="space-y-6 bg-white p-8 rounded-2xl shadow max-w-xl border border-gray-100">
+    <form th:action="@{/admin/veiculos/venda}"
+          th:object="${vendaVeiculoDTO}" method="post" class="space-y-6 bg-white p-8 rounded-2xl shadow max-w-xl border border-gray-100">
         <!-- Modelo -->
         <div>
             <label class="block text-sm font-medium text-gray-700" for="modelo">Modelo:</label>
@@ -25,13 +25,6 @@
                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
         </div>
 
-        <!-- CHASSI -->
-        <div>
-            <label for="chassi" class="block text-sm font-medium text-gray-700">Chassi</label>
-            <input type="text" id="chassi" th:field="*{chassi}" required
-                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
-        </div>
-
         <!-- VALOR -->
         <div>
             <label for="valor" class="block text-sm font-medium text-gray-700">Valor</label>
@@ -39,32 +32,11 @@
                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
         </div>
 
-        <!-- COR -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700" for="cor">Cor:</label>
-            <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" th:field="*{cor}"
-                    name="cor" id="cor" required>
-                <option value="" disabled selected>Selecione uma cor</option>
-                <option value="PRETO">Preto</option>
-                <option value="BRANCO">Branco</option>
-                <option value="PRATA">Prata</option>
-                <option value="VERMELHO">Vermelho</option>
-
-            </select>
-        </div>
-
-        <!-- QUILOMETRAGEM -->
-        <div>
-            <label for="quilometragem" class="block text-sm font-medium text-gray-700">Quilometragem</label>
-            <input type="number" id="quilometragem" th:field="*{quilometragem}" required
-                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                   value="0"/>
-        </div>
         <!-- Botões -->
         <div class="flex justify-end space-x-2">
             <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
-                Salvar
+                Confirmar Venda
             </button>
         </div>
     </form>

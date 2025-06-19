@@ -1,0 +1,35 @@
+<div th:fragment="content">
+
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-700">Histórico de Transações</h1>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-white rounded-2xl shadow p-6 mt-6">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tabela-grid">
+            <thead>
+            <tr>
+                <th class="px-4 py-3">Modelo</th>
+                <th class="px-4 py-3">Placa</th>
+                <th class="px-4 py-3">Tipo Transação</th>
+                <th class="px-4 py-3">Valor</th>
+                <th class="px-4 py-3">Quilometragem</th>
+                <th class="px-4 py-3">Data</th>
+                <th class="px-4 py-3">Data Fim</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+            <tr th:each="transacao : ${transacoes}">
+                <td class="px-4 py-2" th:text="${transacao.veiculo.modelo.marca + ' ' + transacao.veiculo.modelo.modelo + ' - ' + transacao.veiculo.modelo.ano}"></td>
+                <td class="px-4 py-2" th:text="${transacao.veiculo.placa}"></td>
+                <td class="px-4 py-2" th:text="${transacao.tipoTransacao.descricao}"></td>
+                <td class="px-4 py-2" th:text="${#numbers.formatCurrency(transacao.valor)}"></td>
+                <td class="px-4 py-2" th:text="${transacao.quilometragem}"></td>
+                <td class="px-4 py-2" th:text="${transacao.dataTransacaoFormatada}"></td>
+                <td class="px-4 py-2" th:text="${transacao.dataFimTransacaoFormatada}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
