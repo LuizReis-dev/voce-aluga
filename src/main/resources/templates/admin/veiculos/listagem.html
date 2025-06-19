@@ -26,12 +26,32 @@
                     <td class="px-4 py-2" th:text="${veiculo.chassi}"></td>
                     <td class="px-4 py-2" th:text="${veiculo.quilometragem}"></td>
                     <td class="px-4 py-2" th:text="${veiculo.cor}"></td>
-                    <td class="px-4 py-2" th:text="${veiculo.estadoVeiculo}"></td>
+                    <td class="px-4 py-2" th:text="${veiculo.estadoVeiculo.descricao}"></td>
                     <td class="px-4 py-2 space-x-2">
                         <a th:href="@{/admin/veiculos/{id}/detalhes(id=${veiculo.id})}"
                            class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
                             Ver detalhes
                         </a>
+
+                        <!-- Botão para solicitar manutenção (se o veículo estiver disponivel) -->
+                        <form th:if="${veiculo.estadoVeiculo.name() == 'DISPONIVEL'}"
+                              th:action="@{/admin/veiculos/{id}/solicitar-manutencao(id=${veiculo.id})}" method="post" class="inline">
+                            <button type="submit"
+                                    onclick="return confirm('Deseja solicitar manutenção deste veículo?')"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1 rounded shadow">
+                                Solicitar Manutenção
+                            </button>
+                        </form>
+
+                        <!-- Botão para finalizar manutenção (se o veículo estiver em manutenção) -->
+                        <form th:if="${veiculo.estadoVeiculo.name() == 'EM_MANUTENCAO'}"
+                              th:action="@{/admin/veiculos/{id}/finalizar-manutencao(id=${veiculo.id})}" method="post" class="inline">
+                            <button type="submit"
+                                    onclick="return confirm('Deseja finalizar a manutenção deste veículo?')"
+                                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded shadow">
+                                Finalizar Manutenção
+                            </button>
+                        </form>
                     </td>
                 </tr>
             </tbody>

@@ -9,6 +9,7 @@ import com.cefet.vocealuga.models.Veiculo;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.services.VeiculoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
@@ -157,5 +158,19 @@ public class VeiculoController {
         model.addAttribute("conteudo", "/admin/veiculos/detalhes");
 
         return "/admin/layout";
+    }
+
+    @PostMapping("/admin/veiculos/{id}/solicitar-manutencao")
+    public String solicitarManutencao(@PathVariable Integer id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+
+        try {
+            veiculoService.solicitarManutencao(id);
+            redirectAttributes.addFlashAttribute("success", "Veículo colocado em manutenção!");
+            return "redirect:" + (referer != null ? referer : "/admin/veiculos");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao colocar veículo em manutenção: " + e.getMessage());
+            return "redirect:" + (referer != null ? referer : "/admin/veiculos");
+        }
     }
 }

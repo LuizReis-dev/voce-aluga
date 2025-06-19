@@ -14,6 +14,7 @@
                 <th class="px-4 py-3">Placa</th>
                 <th class="px-4 py-3">Tipo Transação</th>
                 <th class="px-4 py-3">Valor</th>
+                <th class="px-4 py-3">Quilometragem</th>
                 <th class="px-4 py-3">Data</th>
                 <th class="px-4 py-3">Data Fim</th>
             </tr>
@@ -22,8 +23,9 @@
             <tr th:each="transacao : ${transacoes}">
                 <td class="px-4 py-2" th:text="${transacao.veiculo.modelo.marca + ' ' + transacao.veiculo.modelo.modelo + ' - ' + transacao.veiculo.modelo.ano}"></td>
                 <td class="px-4 py-2" th:text="${transacao.veiculo.placa}"></td>
-                <td class="px-4 py-2" th:text="${transacao.tipoTransacao}"></td>
+                <td class="px-4 py-2" th:text="${transacao.tipoTransacao.descricao}"></td>
                 <td class="px-4 py-2" th:text="${#numbers.formatCurrency(transacao.valor)}"></td>
+                <td class="px-4 py-2" th:text="${transacao.quilometragem}"></td>
                 <td class="px-4 py-2" th:text="${transacao.dataTransacaoFormatada}"></td>
                 <td class="px-4 py-2" th:text="${transacao.dataFimTransacaoFormatada}"></td>
             </tr>

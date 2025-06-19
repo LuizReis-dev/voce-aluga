@@ -35,6 +35,7 @@ public class GerenciamentoTransacaoVeiculo {
     private LocalDate dataFimTransacao;
 
     private Double valor;
+    private Integer quilometragem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "operador_id", nullable = false)
@@ -125,6 +126,15 @@ public class GerenciamentoTransacaoVeiculo {
 
     public void setOperador(Operador operador) {
         this.operador = operador;
+    }
+
+    public Integer quilometragem() {
+        return quilometragem;
+    }
+
+    public GerenciamentoTransacaoVeiculo setQuilometragem(Integer quilometragem) {
+        this.quilometragem = quilometragem;
+        return this;
     }
 
     public String getDataTransacaoFormatada() {

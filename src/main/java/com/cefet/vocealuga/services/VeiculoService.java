@@ -115,4 +115,28 @@ public class VeiculoService {
                 .orElseThrow(() -> new EntityNotFoundException("Veículo não encontrado"));
     }
 
+    @Transactional
+    public void solicitarManutencao(Integer id) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        Veiculo veiculo = findById(id);
+
+        if(!EstadoVeiculo.DISPONIVEL.equals(veiculo.getEstadoVeiculo())) {
+            throw new IllegalArgumentException("Veículo deve estar dísponível!");
+        }
+
+        LocalDate dataManutencao = LocalDate.now();
+        veiculo.setUltimaManutencao(dataManutencao);
+        veiculo.setEstadoVeiculo(EstadoVeiculo.EM_MANUTENCAO);
+        veiculoRepository.save(veiculo);
+
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
+        gerenciamentoTransacaoVeiculo.setTipoTransacao(TipoTransacaoVeiculo.MANUTENCAO);
+        gerenciamentoTransacaoVeiculo.setVeiculo(veiculo);
+        gerenciamentoTransacaoVeiculo.setDataTransacao(dataManutencao);
+        gerenciamentoTransacaoVeiculo.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculo.setQuilometragem(veiculo.getQuilometragem());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
+
 }

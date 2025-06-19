@@ -12,10 +12,10 @@ import java.util.Optional;
 
 public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 
-    @Query("SELECT v FROM Veiculo v WHERE v.filial = :filial AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO")
+    @Query("SELECT v FROM Veiculo v JOIN FETCH v.modelo WHERE v.filial = :filial AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO")
     List<Veiculo> findAllByFilial(@Param("filial") Filial filial);
 
-    @Query("SELECT v FROM Veiculo v WHERE v.filial = :filial AND v.modelo.id = :modeloId AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO")
+    @Query("SELECT v FROM Veiculo v JOIN FETCH v.modelo WHERE v.filial = :filial AND v.modelo.id = :modeloId AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO")
     List<Veiculo> findAllByFilialAndModeloId(@Param("filial") Filial filial, @Param("modeloId") Integer modeloId);
     boolean existsByPlaca(String placa);
     boolean existsByChassi(String chassi);

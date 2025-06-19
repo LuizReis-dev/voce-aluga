@@ -14,12 +14,14 @@ public interface GerenciamentoTransacaoVeiculoRepository extends JpaRepository<G
     @Query("SELECT gt FROM GerenciamentoTransacaoVeiculo gt " +
             "JOIN FETCH gt.veiculo JOIN FETCH gt.veiculo.filial " +
             "JOIN FETCH gt.veiculo.modelo " +
-            "WHERE gt.veiculo.filial = :filial")
+            "WHERE gt.veiculo.filial = :filial " +
+            "ORDER BY gt.dataTransacao DESC ")
     List<GerenciamentoTransacaoVeiculo> findAll(@Param("filial") Filial filial);
 
     @Query("SELECT gt FROM GerenciamentoTransacaoVeiculo gt " +
             "JOIN FETCH gt.veiculo JOIN FETCH gt.veiculo.filial " +
             "JOIN FETCH gt.veiculo.modelo " +
-            "WHERE gt.veiculo = :veiculo")
+            "WHERE gt.veiculo = :veiculo " +
+            "ORDER BY gt.dataTransacao DESC")
     List<GerenciamentoTransacaoVeiculo> findAllByVeiculo(@Param("veiculo") Veiculo veiculo);
 }

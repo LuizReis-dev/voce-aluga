@@ -1,0 +1,1 @@
+ALTER TABLE gerenciamento_transacao_veiculo ADD COLUMN quilometragem INT AFTER valor
