@@ -99,4 +99,10 @@ public class VeiculoService {
 
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
+
+    public List<GerenciamentoTransacaoVeiculo> historicoTransacoes() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.findAll(usuarioLogado.getOperador().getFilial());
+    }
+
 }

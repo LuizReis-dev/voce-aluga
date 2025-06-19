@@ -3,6 +3,7 @@ package com.cefet.vocealuga.models;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Table(name = "gerenciamento_transacao_veiculo")
 @Entity
@@ -124,5 +125,15 @@ public class GerenciamentoTransacaoVeiculo {
 
     public void setOperador(Operador operador) {
         this.operador = operador;
+    }
+
+    public String getDataTransacaoFormatada() {
+        if (dataTransacao == null) return "";
+        return dataTransacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    public String getDataFimTransacaoFormatada() {
+        if (dataFimTransacao == null) return "";
+        return dataFimTransacao.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }

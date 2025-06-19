@@ -2,6 +2,7 @@ package com.cefet.vocealuga.controllers;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
+import com.cefet.vocealuga.models.GerenciamentoTransacaoVeiculo;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.models.Veiculo;
@@ -129,5 +130,17 @@ public class VeiculoController {
             redirectAttributes.addFlashAttribute("error", "Erro ao vender o veículo: " + e.getMessage());
             return "redirect:/admin/veiculos/venda";
         }
+    }
+
+    @GetMapping("/admin/veiculos/historico-transacoes")
+    public String historicoTransacoes(Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<GerenciamentoTransacaoVeiculo> transacoes = veiculoService.historicoTransacoes();
+
+        model.addAttribute("transacoes", transacoes);
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("conteudo", "/admin/veiculos/historico-transacoes");
+
+        return "/admin/layout";
     }
 }
