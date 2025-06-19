@@ -205,7 +205,16 @@ public class VeiculoController {
             redirectAttributes.addFlashAttribute("error", "Erro ao solicitar transferência: " + e.getMessage());
         }
         return "redirect:/admin/veiculos/solicitar-transferencia";
+    }
 
+    @GetMapping("/admin/veiculos/solicitacoes-transferencia")
+    public String solicitacoesTransferencia(Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<GerenciamentoTransacaoVeiculo> solicitacoes = veiculoService.listarSolicitacoesTransferencia();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("solicitacoes", solicitacoes);
+        model.addAttribute("conteudo", "/admin/veiculos/solicitacoes-transferencia");
+        return "/admin/layout";
     }
 }
 

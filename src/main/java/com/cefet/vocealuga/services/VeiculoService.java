@@ -173,4 +173,9 @@ public class VeiculoService {
 
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
+
+    public List<GerenciamentoTransacaoVeiculo> listarSolicitacoesTransferencia() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.buscaSolicitacoesTransferencia(usuarioLogado.getOperador().getFilial());
+    }
 }
