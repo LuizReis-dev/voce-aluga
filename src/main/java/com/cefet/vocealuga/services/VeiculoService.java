@@ -139,4 +139,20 @@ public class VeiculoService {
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
 
+    @Transactional
+    public void finalizarManutencao(Integer id) {
+        Veiculo veiculo = findById(id);
+
+        if(!EstadoVeiculo.EM_MANUTENCAO.equals(veiculo.getEstadoVeiculo())) {
+            throw new IllegalArgumentException("Veículo deve estar em manutenção!");
+        }
+
+        veiculo.setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);
+
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = gerenciamentoTransacaoVeiculoRepository.findByVeiculoManutencao(veiculo)
+                .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao tirar veículo de manutenção"));
+
+        gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
 }

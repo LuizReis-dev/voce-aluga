@@ -163,14 +163,24 @@ public class VeiculoController {
     @PostMapping("/admin/veiculos/{id}/solicitar-manutencao")
     public String solicitarManutencao(@PathVariable Integer id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-
         try {
             veiculoService.solicitarManutencao(id);
             redirectAttributes.addFlashAttribute("success", "Veículo colocado em manutenção!");
-            return "redirect:" + (referer != null ? referer : "/admin/veiculos");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao colocar veículo em manutenção: " + e.getMessage());
-            return "redirect:" + (referer != null ? referer : "/admin/veiculos");
         }
+        return "redirect:" + (referer != null ? referer : "/admin/veiculos");
+    }
+
+    @PostMapping("/admin/veiculos/{id}/finalizar-manutencao")
+    public String finalizarManutencao(@PathVariable Integer id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        try {
+            veiculoService.finalizarManutencao(id);
+            redirectAttributes.addFlashAttribute("success", "Manutenção finalizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao finalizar manutenção: " + e.getMessage());
+        }
+        return "redirect:" + (referer != null ? referer : "/admin/veiculos");
     }
 }

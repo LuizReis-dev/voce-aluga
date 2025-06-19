@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GerenciamentoTransacaoVeiculoRepository extends JpaRepository<GerenciamentoTransacaoVeiculo, Integer> {
 
@@ -24,4 +25,12 @@ public interface GerenciamentoTransacaoVeiculoRepository extends JpaRepository<G
             "WHERE gt.veiculo = :veiculo " +
             "ORDER BY gt.dataTransacao DESC")
     List<GerenciamentoTransacaoVeiculo> findAllByVeiculo(@Param("veiculo") Veiculo veiculo);
+
+
+    @Query("SELECT gt FROM GerenciamentoTransacaoVeiculo gt " +
+            "WHERE gt.veiculo = :veiculo " +
+            " AND gt.tipoTransacao = com.cefet.vocealuga.models.TipoTransacaoVeiculo.MANUTENCAO " +
+            " AND gt.dataFimTransacao IS NULL " +
+            "ORDER BY gt.dataTransacao DESC ")
+    Optional<GerenciamentoTransacaoVeiculo> findByVeiculoManutencao(Veiculo veiculo);
 }
