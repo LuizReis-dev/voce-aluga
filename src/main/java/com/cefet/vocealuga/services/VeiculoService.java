@@ -5,6 +5,7 @@ import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
 import com.cefet.vocealuga.repositories.VeiculoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,29 @@ public class VeiculoService {
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
 
+    @Transactional
     public void venda(@Valid VendaVeiculoDTO vendaVeiculoDTO) {
         LOGGER.info("venda de veiculo");
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        Veiculo veiculo = veiculoRepository.findByPlacaAndFilialAndModeloId(vendaVeiculoDTO.getPlaca(),
+                        usuarioLogado.getOperador().getFilial(),
+                        vendaVeiculoDTO.getModeloId())
+                        .orElseThrow(() -> new EntityNotFoundException("Veiculo não encontrado!"));
+
+        if(!EstadoVeiculo.DISPONIVEL.equals(veiculo.getEstadoVeiculo())) {
+            throw new IllegalArgumentException("O veículo deve estar disponível para ser vendido!");
+        }
+
+        veiculo.setEstadoVeiculo(EstadoVeiculo.VENDIDO);
+        veiculoRepository.save(veiculo);
+
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
+        gerenciamentoTransacaoVeiculo.setTipoTransacao(TipoTransacaoVeiculo.VENDA);
+        gerenciamentoTransacaoVeiculo.setVeiculo(veiculo);
+        gerenciamentoTransacaoVeiculo.setDataTransacao(LocalDate.now());
+        gerenciamentoTransacaoVeiculo.setValor(vendaVeiculoDTO.getValor());
+        gerenciamentoTransacaoVeiculo.setOperador(usuarioLogado.getOperador());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
 }

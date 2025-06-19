@@ -127,7 +127,7 @@ public class VeiculoController {
             return "redirect:/admin/veiculos";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erro ao vender o veículo: " + e.getMessage());
-            return "redirect:/admin/veiculos/veiculos";
+            return "redirect:/admin/veiculos/venda";
         }
     }
 }
