@@ -1,6 +1,7 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
@@ -153,6 +154,23 @@ public class VeiculoService {
                 .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao tirar veículo de manutenção"));
 
         gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
+
+    @Transactional
+    public void solicitarTransferencia(@Valid SolicitacaoTransferenciaDTO solicitacaoTransferenciaDTO) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        Veiculo veiculo = veiculoRepository.findFirstByFilialIdAndModeloId(solicitacaoTransferenciaDTO.filialId(), solicitacaoTransferenciaDTO.modeloId())
+                .orElseThrow(() -> new IllegalArgumentException("Nenhum veículo encontrado"));
+
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
+        gerenciamentoTransacaoVeiculo.setDataTransacao(LocalDate.now());
+        gerenciamentoTransacaoVeiculo.setVeiculo(veiculo);
+        gerenciamentoTransacaoVeiculo.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculo.setFilialOrigem(veiculo.getFilial());
+        gerenciamentoTransacaoVeiculo.setFilialDestino(usuarioLogado.getOperador().getFilial());
+        gerenciamentoTransacaoVeiculo.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_SOLICITADA);
+
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
     }
 }

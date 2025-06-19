@@ -1,6 +1,7 @@
 package com.cefet.vocealuga.controllers;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.GerenciamentoTransacaoVeiculo;
 import com.cefet.vocealuga.models.ModeloVeiculo;
@@ -183,4 +184,28 @@ public class VeiculoController {
         }
         return "redirect:" + (referer != null ? referer : "/admin/veiculos");
     }
+
+    @GetMapping("/admin/veiculos/solicitar-transferencia")
+    public String solicitarTransferencia(Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<ModeloVeiculo> modelos = modeloVeiculoService.findAll();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("modelos", modelos);
+
+        model.addAttribute("conteudo", "/admin/veiculos/solicitar-transferencia");
+        return "/admin/layout";
+    }
+
+    @PostMapping("/admin/veiculos/solicitar-transferencia")
+    public String registrarSolicitacaoTransferencia(@Valid SolicitacaoTransferenciaDTO solicitacaoTransferenciaDTO, RedirectAttributes redirectAttributes) {
+        try {
+            veiculoService.solicitarTransferencia(solicitacaoTransferenciaDTO);
+            redirectAttributes.addFlashAttribute("success", "Solicitação realizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao solicitar transferência: " + e.getMessage());
+        }
+        return "redirect:/admin/veiculos/solicitar-transferencia";
+
+    }
 }
+
