@@ -15,6 +15,8 @@
                 <th class="px-4 py-3">Tipo Transação</th>
                 <th class="px-4 py-3">Valor</th>
                 <th class="px-4 py-3">Quilometragem</th>
+                <th class="px-4 py-3">Filial Solicitante</th>
+                <th class="px-4 py-3">Filial Destino</th>
                 <th class="px-4 py-3">Data</th>
                 <th class="px-4 py-3">Data Fim</th>
             </tr>
@@ -26,6 +28,8 @@
                 <td class="px-4 py-2" th:text="${transacao.tipoTransacao.descricao}"></td>
                 <td class="px-4 py-2" th:text="${#numbers.formatCurrency(transacao.valor)}"></td>
                 <td class="px-4 py-2" th:text="${transacao.quilometragem}"></td>
+                <td class="px-4 py-2" th:text="${transacao.filialOrigem.nome}"></td>
+                <td class="px-4 py-2" th:text="${transacao.filialDestino.nome}"></td>
                 <td class="px-4 py-2" th:text="${transacao.dataTransacaoFormatada}"></td>
                 <td class="px-4 py-2" th:text="${transacao.dataFimTransacaoFormatada}"></td>
             </tr>
