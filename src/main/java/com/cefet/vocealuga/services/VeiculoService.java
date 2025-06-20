@@ -224,4 +224,9 @@ public class VeiculoService {
         transacaoNegada.setOperador(usuarioLogado.getOperador());
         gerenciamentoTransacaoVeiculoRepository.save(transacaoNegada);
     }
+
+    public boolean existeSolicitacaoTransferencia() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.existeSolicitacaoTransferencia(usuarioLogado.getOperador().getFilial());
+    }
 }

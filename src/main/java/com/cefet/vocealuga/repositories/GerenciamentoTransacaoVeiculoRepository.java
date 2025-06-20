@@ -40,4 +40,11 @@ public interface GerenciamentoTransacaoVeiculoRepository extends JpaRepository<G
             " AND gt.dataFimTransacao IS NULL " +
             "ORDER BY gt.dataTransacao DESC, gt.id DESC")
     List<GerenciamentoTransacaoVeiculo> buscaSolicitacoesTransferencia(@Param("filial") Filial filial);
+
+    @Query("SELECT COUNT(gt) > 0 FROM GerenciamentoTransacaoVeiculo gt " +
+            "WHERE gt.filialOrigem = :filial " +
+            "AND gt.tipoTransacao = com.cefet.vocealuga.models.TipoTransacaoVeiculo.TRANSFERENCIA_SOLICITADA " +
+            "AND gt.dataFimTransacao IS NULL")
+    boolean existeSolicitacaoTransferencia(@Param("filial") Filial filial);
+
 }

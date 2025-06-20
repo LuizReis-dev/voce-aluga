@@ -88,7 +88,7 @@
     <header class="bg-white shadow p-4 flex justify-end items-center">
         <span class="text-gray-700 font-medium">Olá, <span th:text="${usuarioLogado.nome}">Usuário !</span></span>
     </header>
-
+    <!-- Mensagem de sucesso -->
     <div th:if="${success}" class="mb-4 px-4 py-3 rounded bg-green-100 text-green-800 shadow">
         <p th:text="${success}"></p>
     </div>
@@ -103,6 +103,12 @@
             <li th:each="erro : ${erros}" th:text="${erro}"></li>
         </ul>
     </div>
+
+    <!-- Notificação de transferencia de veículo -->
+    <a th:if="${notificacaoTransferencia}" th:href="@{/admin/veiculos/solicitacoes-transferencia}"
+       class="block mb-4 px-4 py-3 rounded bg-blue-100 text-blue-800 shadow hover:bg-blue-200 transition-colors">
+        <p>Existe uma solicitação de transação de veículo pendente!</p>
+    </a>
 
 
     <!-- Conteúdo Principal -->
