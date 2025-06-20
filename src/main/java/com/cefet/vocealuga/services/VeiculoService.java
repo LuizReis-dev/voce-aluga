@@ -178,4 +178,29 @@ public class VeiculoService {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         return gerenciamentoTransacaoVeiculoRepository.buscaSolicitacoesTransferencia(usuarioLogado.getOperador().getFilial());
     }
+
+    @Transactional
+    public void aprovarSolicitacaoTransferencia(Integer solicitacaoTransferenciaId){
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = gerenciamentoTransacaoVeiculoRepository.findById(solicitacaoTransferenciaId)
+                .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao aprovar solicitação de transferência"));
+
+        Veiculo veiculo = gerenciamentoTransacaoVeiculo.getVeiculo();
+        veiculo.setFilial(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        veiculoRepository.save(veiculo);
+
+        gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+
+        GerenciamentoTransacaoVeiculo transacaoAprovacao = new GerenciamentoTransacaoVeiculo();
+        transacaoAprovacao.setDataTransacao(LocalDate.now());
+        transacaoAprovacao.setDataFimTransacao(LocalDate.now());
+        transacaoAprovacao.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_ACEITA);
+        transacaoAprovacao.setVeiculo(veiculo);
+        transacaoAprovacao.setFilialDestino(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        transacaoAprovacao.setFilialOrigem(gerenciamentoTransacaoVeiculo.getFilialOrigem());
+        transacaoAprovacao.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculoRepository.save(transacaoAprovacao);
+    }
 }

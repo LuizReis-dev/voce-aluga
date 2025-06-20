@@ -216,5 +216,17 @@ public class VeiculoController {
         model.addAttribute("conteudo", "/admin/veiculos/solicitacoes-transferencia");
         return "/admin/layout";
     }
+
+    @PostMapping("/admin/veiculos/{id}/aprovar-solicitacao-transferencia")
+    public String aprovarSolicitacaoTransferencia(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            veiculoService.aprovarSolicitacaoTransferencia(id);
+            redirectAttributes.addFlashAttribute("success", "Transferência realizada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao confirmar transferência: " + e.getMessage());
+        }
+        return "redirect:/admin/veiculos/solicitacoes-transferencia";
+
+    }
 }
 
