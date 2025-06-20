@@ -1,6 +1,7 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
@@ -250,6 +251,107 @@ public class VeiculoServiceTest {
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             veiculoService.finalizarManutencao(veiculoId);
+        });
+
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
+    @Test
+    void solicitarTransferenciaDeveSalvarTransacaoQuandoVeiculoEncontrado() {
+        SolicitacaoTransferenciaDTO dto = new SolicitacaoTransferenciaDTO(1, 2);
+        Usuario usuario = criarUsuario();
+        Veiculo veiculo = criarVeiculoDisponivel(new Filial());
+
+        when(usuarioService.usuarioLogado()).thenReturn(usuario);
+        when(veiculoRepository.findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(
+                dto.filialId(), dto.modeloId(), EstadoVeiculo.DISPONIVEL))
+                .thenReturn(Optional.of(veiculo));
+
+        veiculoService.solicitarTransferencia(dto);
+
+        verify(gerenciamentoTransacaoVeiculoRepository).save(any(GerenciamentoTransacaoVeiculo.class));
+    }
+
+    @Test
+    void solicitarTransferenciaDeveLancarExcecaoQuandoVeiculoNaoEncontrado() {
+        SolicitacaoTransferenciaDTO dto = new SolicitacaoTransferenciaDTO(1, 2);
+        when(veiculoRepository.findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(
+                anyInt(), anyInt(), any())).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.solicitarTransferencia(dto);
+        });
+
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
+
+    @Test
+    void aprovarSolicitacaoTransferenciaDeveAtualizarFilialERegistrarTransacoes() {
+        Integer id = 10;
+        Usuario usuario = criarUsuario();
+        Veiculo veiculo = new Veiculo();
+        Filial origem = new Filial();
+        Filial destino = new Filial();
+        veiculo.setFilial(origem);
+
+        GerenciamentoTransacaoVeiculo solicitacao = new GerenciamentoTransacaoVeiculo();
+        solicitacao.setId(id);
+        solicitacao.setVeiculo(veiculo);
+        solicitacao.setFilialOrigem(origem);
+        solicitacao.setFilialDestino(destino);
+
+        when(usuarioService.usuarioLogado()).thenReturn(usuario);
+        when(gerenciamentoTransacaoVeiculoRepository.findById(id)).thenReturn(Optional.of(solicitacao));
+
+        veiculoService.aprovarSolicitacaoTransferencia(id);
+
+        verify(veiculoRepository).save(veiculo);
+        verify(gerenciamentoTransacaoVeiculoRepository, times(2)).save(any(GerenciamentoTransacaoVeiculo.class));
+        assertEquals(destino, veiculo.getFilial());
+    }
+
+    @Test
+    void aprovarSolicitacaoTransferenciaDeveLancarExcecaoQuandoNaoEncontrado() {
+        Integer id = 10;
+        when(gerenciamentoTransacaoVeiculoRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.aprovarSolicitacaoTransferencia(id);
+        });
+
+        verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
+    }
+
+    @Test
+    void negarSolicitacaoTransferenciaDeveSalvarTransacaoRecusada() {
+        Integer id = 20;
+        Usuario usuario = criarUsuario();
+        Veiculo veiculo = new Veiculo();
+        Filial origem = new Filial();
+        Filial destino = new Filial();
+
+        GerenciamentoTransacaoVeiculo solicitacao = new GerenciamentoTransacaoVeiculo();
+        solicitacao.setId(id);
+        solicitacao.setVeiculo(veiculo);
+        solicitacao.setFilialOrigem(origem);
+        solicitacao.setFilialDestino(destino);
+
+        when(usuarioService.usuarioLogado()).thenReturn(usuario);
+        when(gerenciamentoTransacaoVeiculoRepository.findById(id)).thenReturn(Optional.of(solicitacao));
+
+        veiculoService.negarSolicitacaoTransferencia(id);
+
+        verify(gerenciamentoTransacaoVeiculoRepository, times(2)).save(any(GerenciamentoTransacaoVeiculo.class));
+    }
+
+    @Test
+    void negarSolicitacaoTransferenciaDeveLancarExcecaoQuandoNaoEncontrado() {
+        Integer id = 20;
+        when(gerenciamentoTransacaoVeiculoRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            veiculoService.negarSolicitacaoTransferencia(id);
         });
 
         verify(gerenciamentoTransacaoVeiculoRepository, never()).save(any());
