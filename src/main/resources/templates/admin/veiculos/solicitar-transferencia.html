@@ -1,0 +1,78 @@
+<div th:fragment="content">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-700">Solicitar Transferência</h1>
+    </div>
+    <form th:action="@{/admin/veiculos/solicitar-transferencia}" method="post"
+          class="space-y-6 bg-white p-8 rounded-2xl shadow max-w-xl border border-gray-100">
+
+        <!-- Modelo -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700" for="modelo">Modelo:</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                    name="modeloId" id="modelo" required onchange="buscarFiliaisPorModelo(this.value)">
+                <option value="" disabled selected>Selecione um modelo</option>
+                <option th:each="modelo : ${modelos}"
+                        th:value="${modelo.id}"
+                        th:text="${modelo.marca + ' ' + modelo.modelo + ' - ' + modelo.ano}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Filial -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700" for="filial">Filial:</label>
+            <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                    name="filialId" id="filial" required>
+                <option value="">Selecione um modelo primeiro</option>
+            </select>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex justify-end space-x-2">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
+                Solicitar
+            </button>
+        </div>
+    </form>
+
+    <script>
+        function buscarFiliaisPorModelo(modeloId) {
+            const filialSelect = document.getElementById("filial");
+            filialSelect.innerHTML = "<option>Carregando...</option>";
+
+            fetch(`/admin/api/filial-possui-veiculo/${modeloId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro na resposta da API");
+                    return response.json();
+                })
+                .then(data => {
+                    filialSelect.innerHTML = "";
+
+                    if (data.length === 0) {
+                        const option = document.createElement("option");
+                        option.text = "Nenhuma filial disponível";
+                        option.disabled = true;
+                        option.selected = true;
+                        filialSelect.appendChild(option);
+                    } else {
+                        const defaultOption = document.createElement("option");
+                        defaultOption.text = "Selecione uma filial";
+                        defaultOption.value = "";
+                        filialSelect.appendChild(defaultOption);
+
+                        data.forEach(filial => {
+                            const option = document.createElement("option");
+                            option.value = filial.id;
+                            option.text = filial.nome;
+                            filialSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar filiais:", error);
+                    filialSelect.innerHTML = "<option>Erro ao carregar</option>";
+                });
+        }
+    </script>
+</div>

@@ -1,6 +1,7 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
@@ -154,5 +155,78 @@ public class VeiculoService {
 
         gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
         gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
+
+    @Transactional
+    public void solicitarTransferencia(@Valid SolicitacaoTransferenciaDTO solicitacaoTransferenciaDTO) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        Veiculo veiculo = veiculoRepository.findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(solicitacaoTransferenciaDTO.filialId(),
+                        solicitacaoTransferenciaDTO.modeloId(), EstadoVeiculo.DISPONIVEL)
+                .orElseThrow(() -> new IllegalArgumentException("Nenhum veículo encontrado"));
+
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
+        gerenciamentoTransacaoVeiculo.setDataTransacao(LocalDate.now());
+        gerenciamentoTransacaoVeiculo.setVeiculo(veiculo);
+        gerenciamentoTransacaoVeiculo.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculo.setFilialOrigem(veiculo.getFilial());
+        gerenciamentoTransacaoVeiculo.setFilialDestino(usuarioLogado.getOperador().getFilial());
+        gerenciamentoTransacaoVeiculo.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_SOLICITADA);
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+    }
+
+    public List<GerenciamentoTransacaoVeiculo> listarSolicitacoesTransferencia() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.buscaSolicitacoesTransferencia(usuarioLogado.getOperador().getFilial());
+    }
+
+    @Transactional
+    public void aprovarSolicitacaoTransferencia(Integer solicitacaoTransferenciaId){
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = gerenciamentoTransacaoVeiculoRepository.findById(solicitacaoTransferenciaId)
+                .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao aprovar solicitação de transferência"));
+
+        Veiculo veiculo = gerenciamentoTransacaoVeiculo.getVeiculo();
+        veiculo.setFilial(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        veiculoRepository.save(veiculo);
+
+        gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+
+        GerenciamentoTransacaoVeiculo transacaoAprovacao = new GerenciamentoTransacaoVeiculo();
+        transacaoAprovacao.setDataTransacao(LocalDate.now());
+        transacaoAprovacao.setDataFimTransacao(LocalDate.now());
+        transacaoAprovacao.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_ACEITA);
+        transacaoAprovacao.setVeiculo(veiculo);
+        transacaoAprovacao.setFilialDestino(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        transacaoAprovacao.setFilialOrigem(gerenciamentoTransacaoVeiculo.getFilialOrigem());
+        transacaoAprovacao.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculoRepository.save(transacaoAprovacao);
+    }
+
+    public void negarSolicitacaoTransferencia(Integer solicitacaoTransferenciaId) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = gerenciamentoTransacaoVeiculoRepository.findById(solicitacaoTransferenciaId)
+                .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao aprovar negar de transferência"));
+
+        gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+
+        GerenciamentoTransacaoVeiculo transacaoNegada = new GerenciamentoTransacaoVeiculo();
+        transacaoNegada.setDataTransacao(LocalDate.now());
+        transacaoNegada.setDataFimTransacao(LocalDate.now());
+        transacaoNegada.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_RECUSADA);
+        transacaoNegada.setVeiculo(gerenciamentoTransacaoVeiculo.getVeiculo());
+        transacaoNegada.setFilialDestino(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        transacaoNegada.setFilialOrigem(gerenciamentoTransacaoVeiculo.getFilialOrigem());
+        transacaoNegada.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculoRepository.save(transacaoNegada);
+    }
+
+    public boolean existeSolicitacaoTransferencia() {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return gerenciamentoTransacaoVeiculoRepository.existeSolicitacaoTransferencia(usuarioLogado.getOperador().getFilial());
     }
 }

@@ -1,0 +1,49 @@
+<div th:fragment="content">
+
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-700">Solicitações de Transferência</h1>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-white rounded-2xl shadow p-6 mt-6">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tabela-grid">
+            <thead>
+            <tr>
+                <th class="px-4 py-3">Modelo</th>
+                <th class="px-4 py-3">Placa</th>
+                <th class="px-4 py-3">Tipo Transação</th>
+                <th class="px-4 py-3">Filial Solicitante</th>
+                <th class="px-4 py-3">Data Solicitação</th>
+                <th class="px-4 py-3 text-center">Ações</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+            <tr th:each="solicitacao : ${solicitacoes}">
+                <td class="px-4 py-2" th:text="${solicitacao.veiculo.modelo.marca + ' ' + solicitacao.veiculo.modelo.modelo + ' - ' + solicitacao.veiculo.modelo.ano}"></td>
+                <td class="px-4 py-2" th:text="${solicitacao.veiculo.placa}"></td>
+                <td class="px-4 py-2" th:text="${solicitacao.tipoTransacao.descricao}"></td>
+                <td class="px-4 py-2" th:text="${solicitacao.filialDestino.nome}"></td>
+                <td class="px-4 py-2" th:text="${solicitacao.dataTransacaoFormatada}"></td>
+                <td class="px-4 py-2 space-x-2">
+                    <form th:action="@{/admin/veiculos/{id}/aprovar-solicitacao-transferencia(id=${solicitacao.id})}" method="post" class="inline">
+                        <button type="submit"
+                                onclick="return confirm('Deseja aprovar esta solicitação')"
+                                class="bg-green-600 hover:bg-green-700 text-white font-semibold px-3 py-1 rounded shadow">
+                            Aprovar Solicitação
+                        </button>
+                    </form>
+
+                    <form th:action="@{/admin/veiculos/{id}/negar-solicitacao-transferencia(id=${solicitacao.id})}" method="post" class="inline">
+                        <button type="submit"
+                                onclick="return confirm('Deseja negar esta solicitação?')"
+                                class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1 rounded shadow">
+                            Negar Solicitação
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

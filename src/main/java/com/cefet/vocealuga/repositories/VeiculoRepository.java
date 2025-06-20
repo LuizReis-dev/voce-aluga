@@ -21,5 +21,10 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
     boolean existsByChassi(String chassi);
 
     Optional<Veiculo> findByPlacaAndFilialAndModeloId(String placa, Filial filial, Integer modeloId);
+    Optional<Veiculo> findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(
+            Integer filialId,
+            Integer modeloId,
+            EstadoVeiculo estadoVeiculo
+    );
     boolean existsByModeloId(Integer modeloId);
 }
