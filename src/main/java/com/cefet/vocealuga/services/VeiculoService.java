@@ -160,7 +160,8 @@ public class VeiculoService {
     @Transactional
     public void solicitarTransferencia(@Valid SolicitacaoTransferenciaDTO solicitacaoTransferenciaDTO) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
-        Veiculo veiculo = veiculoRepository.findFirstByFilialIdAndModeloId(solicitacaoTransferenciaDTO.filialId(), solicitacaoTransferenciaDTO.modeloId())
+        Veiculo veiculo = veiculoRepository.findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(solicitacaoTransferenciaDTO.filialId(),
+                        solicitacaoTransferenciaDTO.modeloId(), EstadoVeiculo.DISPONIVEL)
                 .orElseThrow(() -> new IllegalArgumentException("Nenhum veículo encontrado"));
 
         GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = new GerenciamentoTransacaoVeiculo();
@@ -202,5 +203,25 @@ public class VeiculoService {
         transacaoAprovacao.setFilialOrigem(gerenciamentoTransacaoVeiculo.getFilialOrigem());
         transacaoAprovacao.setOperador(usuarioLogado.getOperador());
         gerenciamentoTransacaoVeiculoRepository.save(transacaoAprovacao);
+    }
+
+    public void negarSolicitacaoTransferencia(Integer solicitacaoTransferenciaId) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        GerenciamentoTransacaoVeiculo gerenciamentoTransacaoVeiculo = gerenciamentoTransacaoVeiculoRepository.findById(solicitacaoTransferenciaId)
+                .orElseThrow(() -> new IllegalArgumentException("Ocorreu um erro ao aprovar negar de transferência"));
+
+        gerenciamentoTransacaoVeiculo.setDataFimTransacao(LocalDate.now());
+
+        gerenciamentoTransacaoVeiculoRepository.save(gerenciamentoTransacaoVeiculo);
+
+        GerenciamentoTransacaoVeiculo transacaoNegada = new GerenciamentoTransacaoVeiculo();
+        transacaoNegada.setDataTransacao(LocalDate.now());
+        transacaoNegada.setDataFimTransacao(LocalDate.now());
+        transacaoNegada.setTipoTransacao(TipoTransacaoVeiculo.TRANSFERENCIA_RECUSADA);
+        transacaoNegada.setVeiculo(gerenciamentoTransacaoVeiculo.getVeiculo());
+        transacaoNegada.setFilialDestino(gerenciamentoTransacaoVeiculo.getFilialDestino());
+        transacaoNegada.setFilialOrigem(gerenciamentoTransacaoVeiculo.getFilialOrigem());
+        transacaoNegada.setOperador(usuarioLogado.getOperador());
+        gerenciamentoTransacaoVeiculoRepository.save(transacaoNegada);
     }
 }

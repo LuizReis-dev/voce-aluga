@@ -228,5 +228,17 @@ public class VeiculoController {
         return "redirect:/admin/veiculos/solicitacoes-transferencia";
 
     }
+
+    @PostMapping("/admin/veiculos/{id}/negar-solicitacao-transferencia")
+    public String negarSolicitacaoTransferencia(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            veiculoService.negarSolicitacaoTransferencia(id);
+            redirectAttributes.addFlashAttribute("success", "Transferência negada com sucesso!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao negar transferência: " + e.getMessage());
+        }
+        return "redirect:/admin/veiculos/solicitacoes-transferencia";
+
+    }
 }
 
