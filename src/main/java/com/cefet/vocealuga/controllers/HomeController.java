@@ -12,35 +12,36 @@ import java.security.Principal;
 @Controller
 public class HomeController {
 
-    private final UsuarioService usuarioService;
-    private final VeiculoService veiculoService;
-    public HomeController(UsuarioService usuarioService, VeiculoService veiculoService) {
-        this.usuarioService = usuarioService;
-        this.veiculoService = veiculoService;
-    }
+	private final UsuarioService usuarioService;
+	private final VeiculoService veiculoService;
 
-    @GetMapping("/admin/home")
-    public String homeFuncionario(Model model, Principal principal) {
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        boolean existeSolicitacaoTransferencia = veiculoService.existeSolicitacaoTransferencia();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("notificacaoTransferencia", existeSolicitacaoTransferencia);
-        model.addAttribute("conteudo", "/admin/home");
-        return "/admin/layout";
-    }
+	public HomeController(UsuarioService usuarioService, VeiculoService veiculoService) {
+		this.usuarioService = usuarioService;
+		this.veiculoService = veiculoService;
+	}
 
-    @GetMapping("/admin/login")
-    public String loginFuncionario() {
-        return "/admin/login";
-    }
+	@GetMapping("/admin/home")
+	public String homeFuncionario(Model model, Principal principal) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		boolean existeSolicitacaoTransferencia = veiculoService.existeSolicitacaoTransferencia();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("notificacaoTransferencia", existeSolicitacaoTransferencia);
+		model.addAttribute("conteudo", "/admin/home");
+		return "/admin/layout";
+	}
 
-    @GetMapping("/login")
-    public String loginCliente() {
-        return "/login";
-    }
+	@GetMapping("/admin/login")
+	public String loginFuncionario() {
+		return "/admin/login";
+	}
 
-    @GetMapping("/")
-    public String homeCliente() {
-        return "/home";
-    }
+	@GetMapping("/login")
+	public String loginCliente() {
+		return "/cliente/login";
+	}
+
+	@GetMapping("/")
+	public String homeCliente() {
+		return "/cliente/home";
+	}
 }
