@@ -13,9 +13,11 @@ public interface ModeloVeiculoRepository extends JpaRepository<ModeloVeiculo, In
     @Query("""
         SELECT new com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO(
             mv.id, mv.modelo, mv.marca, mv.ano, mv.imagem,
+            g.nome,
             COUNT(v.id)
         )
         FROM ModeloVeiculo mv
+        JOIN mv.grupo g
         LEFT JOIN Veiculo v ON v.modelo.id = mv.id AND v.filial.id = :filialId AND v.estadoVeiculo <> com.cefet.vocealuga.models.EstadoVeiculo.VENDIDO\s
         GROUP BY mv.id, mv.modelo, mv.marca, mv.ano
         ORDER BY mv.marca

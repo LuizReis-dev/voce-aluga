@@ -18,6 +18,7 @@
                 <th class="px-4 py-3">Modelo</th>
                 <th class="px-4 py-3">Ano</th>
                 <th class="px-4 py-3">Imagem</th>
+                <th class="px-4 py-3">Grupo</th>
                 <th class="px-4 py-3">Quantidade</th>
                 <th class="px-4 py-3 text-center">Ações</th>
             </tr>
@@ -30,6 +31,7 @@
                 <td>
                     <img th:src="@{'../uploads/' + ${modelo.imagem}}" alt="Imagem" width="100">
                 </td>
+                <td class="px-4 py-2" th:text="${modelo.grupo}"></td>
                 <td class="px-4 py-2" th:text="${modelo.quantidade}"></td>
                 <td class="px-4 py-2 space-x-2">
                     <a th:href="@{/admin/veiculos/{id}/modelo(id=${modelo.id})}"
