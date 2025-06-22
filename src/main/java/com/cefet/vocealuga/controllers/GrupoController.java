@@ -2,12 +2,15 @@ package com.cefet.vocealuga.controllers;
 
 import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.Grupo;
+import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.GrupoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
 public class GrupoController {
     private final GrupoService grupoService;
     private final UsuarioService usuarioService;
+
     public GrupoController(GrupoService grupoService, UsuarioService usuarioService) {
         this.grupoService = grupoService;
         this.usuarioService = usuarioService;
@@ -29,4 +33,29 @@ public class GrupoController {
         model.addAttribute("conteudo", "/admin/grupos/listagem");
         return "/admin/layout";
     }
+
+    @GetMapping("/admin/grupos/{id}/editar")
+    public String editarGrupo(@PathVariable Integer id, Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        Grupo grupo = grupoService.findById(id);
+
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("grupo", grupo);
+        model.addAttribute("conteudo", "/admin/grupos/cadastro");
+        return "/admin/layout";
+    }
+
+    @PostMapping("/admin/grupos")
+    public String salvarGrupo(@ModelAttribute Grupo grupo, RedirectAttributes redirectAttributes) {
+        try {
+            grupoService.salvar(grupo);
+            redirectAttributes.addFlashAttribute("success", "Preço alterado com sucesso!");
+            return "redirect:/admin/grupos";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao salvar o modelo: " + e.getMessage());
+            return "redirect:/admin/grupos/" +grupo.getId()+"/editar";
+
+        }
+    }
+
 }

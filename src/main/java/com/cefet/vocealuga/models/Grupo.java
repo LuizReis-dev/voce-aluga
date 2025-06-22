@@ -19,6 +19,7 @@ public class Grupo {
     private BigDecimal precoPorDia;
     @OneToMany(mappedBy = "grupo")
     private List<ModeloVeiculo> modelosVeiculo;
+
     public Grupo() {
     }
 
@@ -28,7 +29,7 @@ public class Grupo {
         this.precoPorDia = precoPorDia;
     }
 
-    public Integer id() {
+    public Integer getId() {
         return id;
     }
 
@@ -37,7 +38,7 @@ public class Grupo {
         return this;
     }
 
-    public String nome() {
+    public String getNome() {
         return nome;
     }
 
@@ -46,7 +47,7 @@ public class Grupo {
         return this;
     }
 
-    public BigDecimal precoPorDia() {
+    public BigDecimal getPrecoPorDia() {
         return precoPorDia;
     }
 
@@ -55,7 +56,7 @@ public class Grupo {
         return this;
     }
 
-    public List<ModeloVeiculo> modelosVeiculo() {
+    public List<ModeloVeiculo> getModelosVeiculo() {
         return modelosVeiculo;
     }
 
