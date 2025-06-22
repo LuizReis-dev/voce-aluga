@@ -80,7 +80,7 @@ public class ModeloVeiculo {
         this.veiculos = veiculos;
     }
 
-    public Grupo grupo() {
+    public Grupo getGrupo() {
         return grupo;
     }
 

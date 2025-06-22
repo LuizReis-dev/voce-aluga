@@ -42,18 +42,16 @@ public class Grupo {
         return nome;
     }
 
-    public Grupo setNome(String nome) {
+    public void setNome(String nome) {
         this.nome = nome;
-        return this;
     }
 
     public BigDecimal getPrecoPorDia() {
         return precoPorDia;
     }
 
-    public Grupo setPrecoPorDia(BigDecimal precoPorDia) {
+    public void setPrecoPorDia(BigDecimal precoPorDia) {
         this.precoPorDia = precoPorDia;
-        return this;
     }
 
     public List<ModeloVeiculo> getModelosVeiculo() {
