@@ -16,6 +16,9 @@ public class ModeloVeiculo {
     private Integer ano;
     private String imagem;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grupo_id")
+    private Grupo grupo;
     @OneToMany(mappedBy = "modelo")
     private List<Veiculo> veiculos = new ArrayList<>();
 
@@ -75,5 +78,14 @@ public class ModeloVeiculo {
 
     public void setVeiculos(List<Veiculo> veiculos) {
         this.veiculos = veiculos;
+    }
+
+    public Grupo getGrupo() {
+        return grupo;
+    }
+
+    public ModeloVeiculo setGrupo(Grupo grupo) {
+        this.grupo = grupo;
+        return this;
     }
 }

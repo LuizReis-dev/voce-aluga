@@ -6,14 +6,16 @@ public class ModeloVeiculoDTO {
     private String marca;
     private Integer ano;
     private String imagem;
+    private String grupo;
     private Long quantidade;
 
-    public ModeloVeiculoDTO(Integer id, String modelo, String marca, Integer ano, String imagem, Long quantidade) {
+    public ModeloVeiculoDTO(Integer id, String modelo, String marca, Integer ano, String imagem, String grupo, Long quantidade) {
         this.id = id;
         this.modelo = modelo;
         this.marca = marca;
         this.ano = ano;
         this.imagem = imagem;
+        this.grupo = grupo;
         this.quantidade = quantidade;
     }
 
@@ -63,5 +65,14 @@ public class ModeloVeiculoDTO {
 
     public void setQuantidade(Long quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public ModeloVeiculoDTO setGrupo(String grupo) {
+        this.grupo = grupo;
+        return this;
     }
 }

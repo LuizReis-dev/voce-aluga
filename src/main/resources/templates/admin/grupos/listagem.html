@@ -1,0 +1,32 @@
+<div th:fragment="content">
+
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Grupos (Preço)</h1>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-white rounded-2xl shadow p-6 mt-6">
+        <table class="min-w-full divide-y divide-gray-200 text-sm" id="tabela-grid">
+            <thead class="bg-gray-50 text-left text-gray-600 font-semibold">
+                <tr>
+                    <th class="px-4 py-3">Nome</th>
+                    <th class="px-4 py-3">Preço por Dia</th>
+                    <th class="px-4 py-3 text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+                <tr th:each="grupo : ${grupos}">
+                    <td class="px-4 py-2" th:text="${grupo.nome}"></td>
+                    <td class="px-4 py-2" th:text="${#numbers.formatCurrency(grupo.precoPorDia)}"></td>
+                    <td class="px-4 py-2 space-x-2">
+                        <a th:href="@{/admin/grupos/{id}/editar(id=${grupo.id})}"
+                           class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

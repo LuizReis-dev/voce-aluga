@@ -1,8 +1,10 @@
 package com.cefet.vocealuga.controllers;
 
 import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
+import com.cefet.vocealuga.models.Grupo;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
+import com.cefet.vocealuga.services.GrupoService;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
 import com.cefet.vocealuga.services.UsuarioService;
 import org.springframework.stereotype.Controller;
@@ -17,10 +19,12 @@ import java.util.List;
 public class ModeloVeiculoController {
     private final UsuarioService usuarioService;
     private final ModeloVeiculoService modeloVeiculoService;
+    private final GrupoService grupoService;
 
-    public ModeloVeiculoController(UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService) {
+    public ModeloVeiculoController(UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService, GrupoService grupoService) {
         this.usuarioService = usuarioService;
         this.modeloVeiculoService = modeloVeiculoService;
+        this.grupoService = grupoService;
     }
 
     @GetMapping("/admin/modelos-veiculos")
@@ -34,10 +38,12 @@ public class ModeloVeiculoController {
     }
 
     @GetMapping("/admin/modelos-veiculos/cadastro")
-    public String novoUsuario(Model model) {
+    public String novoModelo(Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<Grupo> grupos = grupoService.findAll();
         model.addAttribute("usuarioLogado", usuarioLogado);
         model.addAttribute("modelo", new ModeloVeiculo());
+        model.addAttribute("grupos", grupos);
         model.addAttribute("conteudo", "/admin/modelos-veiculos/cadastro");
         return "/admin/layout";
     }
@@ -49,7 +55,6 @@ public class ModeloVeiculoController {
             redirectAttributes.addFlashAttribute("success", "Modelo Veículo salvo com sucesso!");
             return "redirect:/admin/modelos-veiculos";
         } catch (Exception e) {
-            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Erro ao salvar o modelo: " + e.getMessage());
             if(modelo.getId() != null) {
                 return "redirect:/admin/modelos-veiculos/" +modelo.getId()+"/editar";
@@ -63,9 +68,12 @@ public class ModeloVeiculoController {
     public String editarVeiculo(@PathVariable Integer id, Model model) {
         Usuario usuarioLogado = usuarioService.usuarioLogado();
         model.addAttribute("usuarioLogado", usuarioLogado);
+        List<Grupo> grupos = grupoService.findAll();
 
         ModeloVeiculo modelo = modeloVeiculoService.findById(id);
         model.addAttribute("modelo", modelo);
+        model.addAttribute("grupos", grupos);
+
         model.addAttribute("conteudo", "/admin/modelos-veiculos/cadastro");
         return "/admin/layout";
     }

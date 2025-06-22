@@ -1,0 +1,32 @@
+<div th:fragment="content">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-700">Alterar Preço</h1>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" th:action="@{/admin/grupos}" th:object="${grupo}"
+          class="space-y-6 bg-white p-8 rounded-2xl shadow max-w-xl border border-gray-100">
+        <input type="hidden" name="id" th:value="*{id}" />
+
+        <!-- Nome -->
+        <div>
+            <label for="modelo" class="block text-sm font-medium text-gray-700">Grupo</label>
+            <input type="text" id="modelo" th:field="*{nome}" readonly
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+        <!-- Preco -->
+        <div>
+            <label for="preco" class="block text-sm font-medium text-gray-700">Preço por dia</label>
+            <input type="number" id="preco" th:field="*{precoPorDia}" step="0.01" min="0" required
+                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+
+        <!-- Botões -->
+        <div class="flex justify-end space-x-2">
+            <a href="/admin/grupos" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</a>
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded">
+                Salvar
+            </button>
+        </div>
+    </form>
+</div>

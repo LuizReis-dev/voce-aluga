@@ -47,6 +47,10 @@ public class ModeloVeiculoService {
     @Transactional
     public void salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
         try {
+            if(modeloVeiculo.getId() != null) {
+                ModeloVeiculo modeloBD = findById(modeloVeiculo.getId());
+                modeloVeiculo.setImagem(modeloBD.getImagem());
+            }
             if (!imagem.isEmpty()) {
                 String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
                 Path pasta = Paths.get("uploads");
