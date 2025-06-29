@@ -70,8 +70,8 @@
                         <div>
                             <label for="cep" class="block text-sm font-medium text-gray-700">CEP</label>
                             <input type="text" id="cep"
-                                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
-                                   placeholder="00000-000" maxlength="9" DISABLED />
+                                   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                                   placeholder="00000-000" maxlength="9" DISABLED onblur="buscarCep(this.value)"/>
                         </div>
 
                         <!-- Rua + Número -->

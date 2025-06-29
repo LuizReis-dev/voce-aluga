@@ -43,6 +43,8 @@ function buscarCliente(cpf) {
 
             disableCampos('input-cliente', false);
             disableCampos('input-endereco', false);
+            document.getElementById("cep").disabled = false;
+
             document.getElementById("botaoSalvar").disabled = false;
         })
         .catch(error => {
@@ -50,12 +52,61 @@ function buscarCliente(cpf) {
             zerarTela();
         });
 }
+function buscarCep(valorCep) {
+    const cep = valorCep.value.replace(/\D/g, '');
 
+    if(cep.length !== 8) return limparEndereco();
+
+    fetch(`https://viacep.com.br/ws/${cep}/json`)
+        .then(async response => {
+            const mensagemErro = document.getElementById("mensagemErro");
+            const mensagemTexto = document.getElementById("mensagemTexto");
+
+            if (!response.ok) {
+                mensagemTexto.textContent = "Erro ao buscar o CEP.";
+                mensagemErro.classList.remove("hidden");
+                limparEndereco();
+                return null;
+            }
+
+            const data = await response.json();
+
+            if (data.erro) {
+                mensagemTexto.textContent = "CEP não encontrado.";
+                mensagemErro.classList.remove("hidden");
+                limparEndereco();
+                return null;
+            }
+
+            mensagemErro.classList.add("hidden");
+            return data;
+        })
+        .then(endereco => {
+            if (!endereco) return;
+
+            document.getElementById("rua").value = endereco.logradouro || "";
+            document.getElementById("cidade").value = endereco.localidade || "";
+            document.getElementById("uf").value = endereco.uf || "";
+            document.getElementById("complemento").value = endereco.complemento || "";
+
+            disableCampos('input-endereco', false);
+        })
+        .catch(error => {
+            console.error("Erro ao buscar endereço via CEP:", error);
+            limparEndereco();
+        });
+}
 function limparCampos() {
+    limparClientes();
+    limparEndereco();
+}
+function limparClientes() {
     document.querySelectorAll(".input-cliente").forEach(input => {
         input.value = "";
         input.disabled = true;
     });
+}
+function limparEndereco() {
     document.querySelectorAll(".input-endereco").forEach(input => {
         input.value = "";
         input.disabled = true;
@@ -69,7 +120,5 @@ function disableCampos(classname, estado) {
 function zerarTela() {
     document.getElementById("mensagemErro").classList.add("hidden");
     limparCampos();
-    disableCampos('input-cliente', true);
-    disableCampos('input-cliente', false);
-
 }
+
