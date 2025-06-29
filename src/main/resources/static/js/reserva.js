@@ -16,6 +16,7 @@ function buscarCliente(cpf) {
                 limparCampos();
                 if(!erro.bloqueante) {
                     disableCampos('input-cliente', false);
+                    document.getElementById("cep").disabled = false;
                 }
 
                 return null;
@@ -33,17 +34,29 @@ function buscarCliente(cpf) {
             document.getElementById("dataNascimento").value = cliente.dataNascimento;
             document.getElementById("cnh").value = cliente.cnh;
             document.getElementById("apolice").value = cliente.apolice;
+            document.getElementById("cep").value = cliente.cep;
+            document.getElementById("rua").value = cliente.rua;
+            document.getElementById("numero").value = cliente.numero;
+            document.getElementById("complemento").value = cliente.complemento;
+            document.getElementById("cidade").value = cliente.cidade;
+            document.getElementById("uf").value = cliente.uf;
 
             disableCampos('input-cliente', false);
+            disableCampos('input-endereco', false);
             document.getElementById("botaoSalvar").disabled = false;
         })
         .catch(error => {
             console.error("Erro ao buscar cliente:", error);
+            zerarTela();
         });
 }
 
 function limparCampos() {
     document.querySelectorAll(".input-cliente").forEach(input => {
+        input.value = "";
+        input.disabled = true;
+    });
+    document.querySelectorAll(".input-endereco").forEach(input => {
         input.value = "";
         input.disabled = true;
     });
@@ -57,4 +70,6 @@ function zerarTela() {
     document.getElementById("mensagemErro").classList.add("hidden");
     limparCampos();
     disableCampos('input-cliente', true);
+    disableCampos('input-cliente', false);
+
 }
