@@ -31,6 +31,8 @@ function buscarCliente(cpf) {
             document.getElementById("email").value = cliente.email;
             document.getElementById("telefone").value = cliente.telefone;
             document.getElementById("dataNascimento").value = cliente.dataNascimento;
+            document.getElementById("cnh").value = cliente.cnh;
+            document.getElementById("apolice").value = cliente.apolice;
 
             disableCampos('input-cliente', false);
             document.getElementById("botaoSalvar").disabled = false;
