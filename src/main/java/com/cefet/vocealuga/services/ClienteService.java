@@ -1,7 +1,8 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.repositories.ClienteRepository;
-import com.cefet.vocealuga.webservices.exceptions.ClienteNaoEncontradoException;
+import com.cefet.vocealuga.utils.CPFValidator;
+import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.responses.ClienteResponse;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,11 @@ public class ClienteService {
     }
 
     public ClienteResponse buscaPorCpf(String cpf) {
+        if(!CPFValidator.validarCPF(cpf)) {
+            throw new WebserviceException("CPF inválido!", true);
+        }
         return this.clienteRepository.findByCpf(cpf)
-                .orElseThrow(() -> new ClienteNaoEncontradoException("Cliente não cadastrado!"));
+                .orElseThrow(() -> new WebserviceException("Cliente não encontrado, prosseguir com o cadastro!", false));
     }
 
 }

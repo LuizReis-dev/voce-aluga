@@ -1,20 +1,22 @@
 function buscarCliente(cpf) {
+    zerarTela();
     if (!cpf || cpf.length < 11) return;
 
     fetch(`/admin/api/v1/clientes/${cpf}`)
         .then(async response => {
             const mensagemErro = document.getElementById("mensagemErro");
             const mensagemTexto = document.getElementById("mensagemTexto");
-            const botaoSalvar = document.getElementById("botaoSalvar");
 
             if (!response.ok) {
                 const erro = await response.json();
 
-                mensagemTexto.textContent = erro.mensagem || "Cliente não encontrado.";
+                mensagemTexto.textContent = erro.mensagem;
                 mensagemErro.classList.remove("hidden");
 
                 limparCampos();
-                document.querySelectorAll(".input-cliente").forEach(input => input.disabled = false);
+                if(!erro.bloqueante) {
+                    disableCampos('input-cliente', false);
+                }
 
                 return null;
             }
@@ -30,7 +32,7 @@ function buscarCliente(cpf) {
             document.getElementById("telefone").value = cliente.telefone;
             document.getElementById("dataNascimento").value = cliente.dataNascimento;
 
-            document.querySelectorAll(".input-cliente").forEach(input => input.disabled = false);
+            disableCampos('input-cliente', false);
             document.getElementById("botaoSalvar").disabled = false;
         })
         .catch(error => {
@@ -43,4 +45,14 @@ function limparCampos() {
         input.value = "";
         input.disabled = true;
     });
+}
+
+function disableCampos(classname, estado) {
+    document.querySelectorAll(`.${classname}`).forEach(input => input.disabled = estado);
+}
+
+function zerarTela() {
+    document.getElementById("mensagemErro").classList.add("hidden");
+    limparCampos();
+    disableCampos('input-cliente', true);
 }
