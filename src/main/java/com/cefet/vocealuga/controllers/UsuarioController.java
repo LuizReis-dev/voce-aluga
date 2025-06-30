@@ -87,7 +87,6 @@ public class UsuarioController {
 	public String cadastroCliente(Usuario usuario, RedirectAttributes redirectAttributes) {
 
 		try {
-			System.out.println("usuario green:" + usuario.getSenha());
 			usuarioService.salvarCliente(usuario);
 
 			redirectAttributes.addFlashAttribute("success", "cadastro realizado com sucesso!");
