@@ -12,7 +12,7 @@ function buscarCliente(cpf) {
 
                 mensagemTexto.textContent = erro.mensagem;
                 mensagemErro.classList.remove("hidden");
-
+                document.getElementById("cep").value = "";
                 limparCampos();
                 if(!erro.bloqueante) {
                     disableCampos('input-cliente', false);
@@ -45,15 +45,15 @@ function buscarCliente(cpf) {
             disableCampos('input-endereco', false);
             document.getElementById("cep").disabled = false;
 
-            document.getElementById("botaoSalvar").disabled = false;
         })
         .catch(error => {
             console.error("Erro ao buscar cliente:", error);
             zerarTela();
         });
 }
+
 function buscarCep(valorCep) {
-    const cep = valorCep.value.replace(/\D/g, '');
+    const cep = valorCep.replace(/\D/g, '');
 
     if(cep.length !== 8) return limparEndereco();
 
@@ -96,16 +96,74 @@ function buscarCep(valorCep) {
             limparEndereco();
         });
 }
+
+function cadastrarCliente(event) {
+    event.preventDefault();
+
+    const botaoSalvar = document.getElementById("botaoSalvar");
+    botaoSalvar.disabled = true;
+
+    const mensagemErro = document.getElementById("mensagemErro");
+    const mensagemTexto = document.getElementById("mensagemTexto");
+
+    const cliente = {
+        cpf: document.getElementById("cpf").value.replace(/\D/g, ''),
+        nome: document.getElementById("nome").value,
+        email: document.getElementById("email").value,
+        telefone: document.getElementById("telefone").value,
+        dataNascimento: document.getElementById("dataNascimento").value,
+        cnh: document.getElementById("cnh").value,
+        apolice: document.getElementById("apolice").value,
+        cep: document.getElementById("cep").value,
+        rua: document.getElementById("rua").value,
+        numero: document.getElementById("numero").value,
+        complemento: document.getElementById("complemento").value,
+        cidade: document.getElementById("cidade").value,
+        uf: document.getElementById("uf").value.toUpperCase()
+    };
+
+    fetch("/admin/api/v1/clientes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(cliente)
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(erro => {
+                    mensagemTexto.textContent = "Erro ao cadastrar cliente.";
+                    mensagemErro.classList.remove("hidden");
+                    console.error("Erro da API:", erro);
+                    botaoSalvar.disabled = false;
+                });
+            }
+
+            mensagemErro.classList.add("hidden");
+            alert("Cliente cadastrado com sucesso!");
+            botaoSalvar.disabled = false;
+        })
+        .catch(error => {
+            console.error("Erro de rede:", error);
+            mensagemTexto.textContent = "Erro de rede ao cadastrar cliente.";
+            mensagemErro.classList.remove("hidden");
+            botaoSalvar.disabled = false;
+        });
+}
+
+
 function limparCampos() {
     limparClientes();
     limparEndereco();
 }
+
 function limparClientes() {
     document.querySelectorAll(".input-cliente").forEach(input => {
         input.value = "";
         input.disabled = true;
     });
 }
+
 function limparEndereco() {
     document.querySelectorAll(".input-endereco").forEach(input => {
         input.value = "";
