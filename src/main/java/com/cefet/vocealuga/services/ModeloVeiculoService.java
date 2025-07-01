@@ -6,6 +6,8 @@ import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.ModeloVeiculoRepository;
 import com.cefet.vocealuga.repositories.VeiculoRepository;
 import jakarta.transaction.Transactional;
+
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,57 +22,61 @@ import java.util.UUID;
 @Service
 public class ModeloVeiculoService {
 
-    private final ModeloVeiculoRepository modeloVeiculoRepository;
-    private final UsuarioService usuarioService;
-    private final VeiculoRepository veiculoRepository;
+	private final ModeloVeiculoRepository modeloVeiculoRepository;
+	private final UsuarioService usuarioService;
+	private final VeiculoRepository veiculoRepository;
 
-    public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService, VeiculoRepository veiculoRepository) {
-        this.modeloVeiculoRepository = modeloVeiculoRepository;
-        this.usuarioService = usuarioService;
-        this.veiculoRepository = veiculoRepository;
-    }
+	public ModeloVeiculoService(ModeloVeiculoRepository modeloVeiculoRepository, UsuarioService usuarioService,
+			VeiculoRepository veiculoRepository) {
+		this.modeloVeiculoRepository = modeloVeiculoRepository;
+		this.usuarioService = usuarioService;
+		this.veiculoRepository = veiculoRepository;
+	}
 
-    public List<ModeloVeiculoDTO> findAllQuantidade() {
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        return modeloVeiculoRepository.listarModelosComQuantidade(usuarioLogado.getOperador().getFilial().getId());
-    }
+	public List<ModeloVeiculoDTO> findAllQuantidade() {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		return modeloVeiculoRepository.listarModelosComQuantidade(usuarioLogado.getOperador().getFilial().getId());
+	}
 
-    public List<ModeloVeiculo> findAll() {
-        return modeloVeiculoRepository.findAll();
-    }
+	public Page<ModeloVeiculoDTO> findAllPublico(org.springframework.data.domain.Pageable pageable) {
+		return modeloVeiculoRepository.listarModelosComQuantidadePublico(pageable);
+	}
 
-    public ModeloVeiculo findById(int id) {
-        return modeloVeiculoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
-    }
+	public List<ModeloVeiculo> findAll() {
+		return modeloVeiculoRepository.findAll();
+	}
 
-    @Transactional
-    public void salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
-        try {
-            if(modeloVeiculo.getId() != null) {
-                ModeloVeiculo modeloBD = findById(modeloVeiculo.getId());
-                modeloVeiculo.setImagem(modeloBD.getImagem());
-            }
-            if (!imagem.isEmpty()) {
-                String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
-                Path pasta = Paths.get("uploads");
-                Files.createDirectories(pasta);
-                Path caminho = pasta.resolve(nomeArquivo);
-                Files.copy(imagem.getInputStream(), caminho, StandardCopyOption.REPLACE_EXISTING);
-                modeloVeiculo.setImagem(nomeArquivo);
-            }
-            modeloVeiculoRepository.save(modeloVeiculo);
-        }
-         catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	public ModeloVeiculo findById(int id) {
+		return modeloVeiculoRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
+	}
 
-    @Transactional
-    public void deletarModelo(Integer id) {
-        if(veiculoRepository.existsByModeloId(id)) {
-            throw new IllegalArgumentException("Não foi possível deletar esse modelo pois já possui veículos associados");
-        }
-        modeloVeiculoRepository.deleteById(id);
-    }
+	@Transactional
+	public void salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
+		try {
+			if (modeloVeiculo.getId() != null) {
+				ModeloVeiculo modeloBD = findById(modeloVeiculo.getId());
+				modeloVeiculo.setImagem(modeloBD.getImagem());
+			}
+			if (!imagem.isEmpty()) {
+				String nomeArquivo = UUID.randomUUID() + "_" + imagem.getOriginalFilename();
+				Path pasta = Paths.get("uploads");
+				Files.createDirectories(pasta);
+				Path caminho = pasta.resolve(nomeArquivo);
+				Files.copy(imagem.getInputStream(), caminho, StandardCopyOption.REPLACE_EXISTING);
+				modeloVeiculo.setImagem(nomeArquivo);
+			}
+			modeloVeiculoRepository.save(modeloVeiculo);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Transactional
+	public void deletarModelo(Integer id) {
+		if (veiculoRepository.existsByModeloId(id)) {
+			throw new IllegalArgumentException("Não foi possível deletar esse modelo pois já possui veículos associados");
+		}
+		modeloVeiculoRepository.deleteById(id);
+	}
 }
