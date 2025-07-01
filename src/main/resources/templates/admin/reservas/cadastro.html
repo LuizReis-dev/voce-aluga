@@ -1,5 +1,6 @@
 <div th:fragment="content">
-    <div id="mensagemErro" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mb-4" role="alert">
+    <div id="mensagemErro" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mb-4"
+         role="alert">
         <p id="mensagemTexto"></p>
     </div>
 
@@ -8,8 +9,10 @@
     </div>
 
     <form method="post"
+          id="form-cliente"
           onsubmit="cadastrarCliente(event)"
-          class="bg-white w-full px-10 py-5 rounded-2xl shadow border border-gray-200 mx-auto max-w-screen-2xl space-y-10">
+          class="bg-white w-full px-10 py-5 rounded-2xl shadow border border-gray-200 mx-auto max-w-screen-2xl space-y-10"
+          style="display: none">
         <!-- GRID DAS SEÇÕES -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
@@ -26,37 +29,39 @@
                     <div>
                         <label for="nome" class="block text-sm font-medium text-gray-700">Nome*</label>
                         <input type="text" id="nome" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email*</label>
                         <input type="email" id="email" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                     <!-- Data de Nascimento -->
                     <div>
-                        <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento*</label>
+                        <label for="dataNascimento" class="block text-sm font-medium text-gray-700">Data de
+                            Nascimento*</label>
                         <input type="date" id="dataNascimento" name="dataNascimento" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                     <!-- Telefone -->
                     <div>
-                        <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone* (Somente números)</label>
+                        <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone* (Somente
+                            números)</label>
                         <input type="text" id="telefone" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                     <!-- CNH -->
                     <div>
                         <label for="cnh" class="block text-sm font-medium text-gray-700">CNH*</label>
                         <input type="text" id="cnh" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                     <!-- Apólice -->
                     <div>
                         <label for="apolice" class="block text-sm font-medium text-gray-700">Apólice*</label>
                         <input type="text" id="apolice" required disabled
-                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
+                               class="input-cliente mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                 </div>
             </div>
@@ -80,12 +85,14 @@
                             <div>
                                 <label for="rua" class="block text-sm font-medium text-gray-700">Rua*</label>
                                 <input type="text" id="rua" required
-                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco" DISABLED/>
+                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
+                                       DISABLED/>
                             </div>
                             <div>
                                 <label for="numero" class="block text-sm font-medium text-gray-700">Número</label>
                                 <input type="text" id="numero"
-                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco" DISABLED/>
+                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
+                                       DISABLED/>
                             </div>
                         </div>
 
@@ -94,7 +101,7 @@
                             <label for="complemento" class="block text-sm font-medium text-gray-700">Complemento</label>
                             <input type="text" id="complemento"
                                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
-                                   placeholder="Apartamento, bloco, etc." DISABLED />
+                                   placeholder="Apartamento, bloco, etc." DISABLED/>
                         </div>
 
                         <!-- Cidade + UF -->
@@ -102,7 +109,8 @@
                             <div>
                                 <label for="cidade" class="block text-sm font-medium text-gray-700">Cidade* </label>
                                 <input type="text" id="cidade" required
-                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco" DISABLED />
+                                       class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
+                                       DISABLED/>
                             </div>
                             <div>
                                 <label for="uf" class="block text-sm font-medium text-gray-700">UF*</label>
@@ -125,6 +133,74 @@
             </button>
         </div>
     </form>
+    <form method="post"
+          id="form-reserva"
+          class="bg-white w-full px-10 py-5 rounded-2xl shadow border border-gray-200 mx-auto max-w-screen-2xl space-y-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Informações da Reserva</h2>
+                <div class="space-y-4">
+                    <!-- GRUPO -->
+                    <div>
+                        <label for="grupo" class="block text-sm font-medium text-gray-700">Grupo* </label>
+                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                                name="grupo" id="grupo" required>
+                            <option value="" disabled selected>Selecione um Grupo</option>
+                        </select>
+                    </div>
 
+                    <!-- MODELO -->
+                    <div>
+                        <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo* </label>
+                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                                name="modelo" id="modelo" required>
+                            <option value="" disabled selected>Selecione um Modelo</option>
+                        </select>
+                    </div>
+                    <!-- DATA DE INICIO DA RESERVA -->
+                    <div>
+                        <label for="dataEntrega" class="block text-sm font-medium text-gray-700">Data de
+                            Entrega*</label>
+                        <input type="date" id="dataEntrega" name="dataEntrega" required
+                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
+                    </div>
+
+                    <!-- DATA DE FIM DA RESERVA -->
+
+                    <div>
+                        <label for="dataDevolucao" class="block text-sm font-medium text-gray-700">Data de
+                            Devolução*</label>
+                        <input type="date" id="dataDevolucao" name="dataDevolucao" required
+                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold text-gray-700 mb-4">Informações do Pagamento</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="valorTotal" class="block text-sm font-medium text-gray-700">Valor total: </label>
+                        <input type="text" id="valorTotal" required
+                               class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 input-endereco"
+                               DISABLED readonly/>
+                    </div>
+                    <div>
+                        <label for="formaPagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento: </label>
+                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                                name="formaPagamento" id="formaPagamento" required>
+                            <option value="" selected>Selecione uma forma de pagamento</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- BOTÕES -->
+        <div class="flex justify-end space-x-4 pt-6">
+            <button type="submit" id="botaoConfirmarReserva"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded">
+                Confirmar Reserva
+            </button>
+        </div>
+    </form>
     <script src="/js/reserva.js"></script>
 </div>
