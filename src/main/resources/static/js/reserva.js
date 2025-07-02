@@ -151,6 +151,55 @@ function cadastrarCliente(event) {
         });
 }
 
+function buscarModelos(grupo) {
+    document.getElementById("modelo").value = "";
+
+    if(grupo === "") return;
+
+    fetch(`/admin/api/v1/modelos/${grupo}`)
+        .then(response => {
+            const mensagemErro = document.getElementById("mensagemErro");
+            const mensagemTexto = document.getElementById("mensagemTexto");
+            const selectModelo = document.getElementById("modelo");
+
+            if (!response.ok) {
+                mensagemTexto.textContent = "Erro ao buscar modelos.";
+                mensagemErro.classList.remove("hidden");
+                return null;
+            }
+
+            return response.json().then(modelos => {
+                const modelosDisponiveis = modelos.filter(m => m.quantidade > 0);
+
+                if (modelosDisponiveis.length === 0) {
+                    mensagemTexto.textContent = "Nenhum veículo disponível, orientar aluguel pelo site.";
+                    mensagemErro.classList.remove("hidden");
+                    selectModelo.disabled = true;
+                    return;
+                }
+
+                selectModelo.innerHTML = '<option value="" selected>Selecione um Modelo</option>';
+                selectModelo.disabled = false;
+                mensagemErro.classList.add("hidden");
+
+                modelosDisponiveis.forEach(modelo => {
+                    const option = document.createElement("option");
+                    option.value = modelo.id;
+                    option.textContent = `${modelo.marca} ${modelo.modelo} (${modelo.ano})`;
+                    selectModelo.appendChild(option);
+                });
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao buscar modelos:", error);
+            const mensagemErro = document.getElementById("mensagemErro");
+            const mensagemTexto = document.getElementById("mensagemTexto");
+            mensagemTexto.textContent = "Erro ao buscar modelos.";
+            mensagemErro.classList.remove("hidden");
+        });
+
+
+}
 
 function limparCampos() {
     limparClientes();

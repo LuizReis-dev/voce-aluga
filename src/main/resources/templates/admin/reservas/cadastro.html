@@ -135,7 +135,9 @@
     </form>
     <form method="post"
           id="form-reserva"
+          th:object="${criaReservaDTO}"
           class="bg-white w-full px-10 py-5 rounded-2xl shadow border border-gray-200 mx-auto max-w-screen-2xl space-y-10">
+        <input type="hidden" id="id-cliente-reserva" th:field="*{clienteId}"/>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Informações da Reserva</h2>
@@ -144,8 +146,12 @@
                     <div>
                         <label for="grupo" class="block text-sm font-medium text-gray-700">Grupo* </label>
                         <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="grupo" id="grupo" required>
-                            <option value="" disabled selected>Selecione um Grupo</option>
+                                name="grupo" id="grupo" required th:field="*{grupoId}" onchange="buscarModelos(this.value)">
+                            <option value="" selected>Selecione um grupo</option>
+                            <option th:each="grupo : ${grupos}"
+                                    th:value="${grupo.id}"
+                                    th:text="${grupo.nome}">
+                            </option>
                         </select>
                     </div>
 
@@ -153,8 +159,8 @@
                     <div>
                         <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo* </label>
                         <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="modelo" id="modelo" required>
-                            <option value="" disabled selected>Selecione um Modelo</option>
+                                name="modelo" id="modelo" required th:field="*{modeloId}" disabled>
+                            <option value="" selected>Selecione um Modelo</option>
                         </select>
                     </div>
                     <!-- DATA DE INICIO DA RESERVA -->
@@ -162,7 +168,7 @@
                         <label for="dataEntrega" class="block text-sm font-medium text-gray-700">Data de
                             Entrega*</label>
                         <input type="date" id="dataEntrega" name="dataEntrega" required
-                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
+                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2" th:field="*{dataEntrega}"/>
                     </div>
 
                     <!-- DATA DE FIM DA RESERVA -->
@@ -170,7 +176,7 @@
                     <div>
                         <label for="dataDevolucao" class="block text-sm font-medium text-gray-700">Data de
                             Devolução*</label>
-                        <input type="date" id="dataDevolucao" name="dataDevolucao" required
+                        <input type="date" id="dataDevolucao" name="dataDevolucao" required th:field="*{dataDevolucao}"
                                class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
                     </div>
                 </div>
@@ -185,10 +191,13 @@
                                DISABLED readonly/>
                     </div>
                     <div>
-                        <label for="formaPagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento: </label>
+                        <label for="formaPagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento:</label>
                         <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="formaPagamento" id="formaPagamento" required>
+                                name="formaPagamento" th:field="*{formaPagamento}" id="formaPagamento" required>
                             <option value="" selected>Selecione uma forma de pagamento</option>
+                            <option th:each="fp : ${formasPagamento}"
+                                    th:value="${fp}"
+                                    th:text="${fp}"></option>
                         </select>
                     </div>
                 </div>

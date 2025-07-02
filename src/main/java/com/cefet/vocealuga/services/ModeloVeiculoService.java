@@ -44,6 +44,11 @@ public class ModeloVeiculoService {
                 .orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
     }
 
+    public List<ModeloVeiculoDTO> findAllByGrupo(Integer grupoId) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return modeloVeiculoRepository.listarModelosDisponiveisPorGrupoEFilial(usuarioLogado.getOperador().getFilial().getId(), grupoId);
+    }
+
     @Transactional
     public void salvar(ModeloVeiculo modeloVeiculo, MultipartFile imagem) {
         try {
