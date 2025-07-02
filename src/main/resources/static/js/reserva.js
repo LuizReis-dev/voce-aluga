@@ -161,7 +161,7 @@ function buscarModelos(grupo) {
             const mensagemErro = document.getElementById("mensagemErro");
             const mensagemTexto = document.getElementById("mensagemTexto");
             const selectModelo = document.getElementById("modelo");
-
+            disableCampos("input-reserva", true);
             if (!response.ok) {
                 mensagemTexto.textContent = "Erro ao buscar modelos.";
                 mensagemErro.classList.remove("hidden");
@@ -188,6 +188,8 @@ function buscarModelos(grupo) {
                     option.textContent = `${modelo.marca} ${modelo.modelo} (${modelo.ano})`;
                     selectModelo.appendChild(option);
                 });
+                disableCampos("input-reserva", false);
+
             });
         })
         .catch(error => {
@@ -196,9 +198,72 @@ function buscarModelos(grupo) {
             const mensagemTexto = document.getElementById("mensagemTexto");
             mensagemTexto.textContent = "Erro ao buscar modelos.";
             mensagemErro.classList.remove("hidden");
+            disableCampos("input-reserva", false);
+
         });
 
 
+}
+
+function zerarHora(data) {
+    data.setHours(0, 0, 0, 0);
+    return data;
+}
+
+function handleDataEntregaChange(dataEntregaInput) {
+    const mensagemErro = document.getElementById("mensagemErro");
+    const mensagemTexto = document.getElementById("mensagemTexto");
+
+    if (dataEntregaInput.value === "") return;
+
+    const [ano, mes, dia] = dataEntregaInput.value.split("-");
+    const dataEntrega = zerarHora(new Date(ano, mes - 1, dia));
+    const hoje = zerarHora(new Date());
+
+    mensagemErro.classList.add("hidden");
+
+    if (dataEntrega < hoje) {
+        mensagemTexto.textContent = "A data de entrega não pode ser anterior a hoje.";
+        mensagemErro.classList.remove("hidden");
+        dataEntregaInput.value = "";
+    }
+}
+
+function handleDataDevolucaoChange(dataDevolucaoInput) {
+    const mensagemErro = document.getElementById("mensagemErro");
+    const mensagemTexto = document.getElementById("mensagemTexto");
+
+    const dataEntregaInput = document.getElementById("dataEntrega");
+
+    if (dataDevolucaoInput.value === "") return;
+
+    if (dataEntregaInput.value === "") {
+        mensagemTexto.textContent = "Preencha a data de entrega antes da data de devolução.";
+        mensagemErro.classList.remove("hidden");
+        dataDevolucaoInput.value = "";
+        return;
+    }
+
+    const [anoE, mesE, diaE] = dataEntregaInput.value.split("-");
+    const [anoD, mesD, diaD] = dataDevolucaoInput.value.split("-");
+    const dataEntrega = zerarHora(new Date(anoE, mesE - 1, diaE));
+    const dataDevolucao = zerarHora(new Date(anoD, mesD - 1, diaD));
+    const hoje = zerarHora(new Date());
+
+    mensagemErro.classList.add("hidden");
+
+    if (dataDevolucao < hoje) {
+        mensagemTexto.textContent = "A data de devolução não pode ser anterior a hoje.";
+        mensagemErro.classList.remove("hidden");
+        dataDevolucaoInput.value = "";
+        return;
+    }
+
+    if (dataDevolucao < dataEntrega) {
+        mensagemTexto.textContent = "A data de devolução não pode ser anterior à data de entrega.";
+        mensagemErro.classList.remove("hidden");
+        dataDevolucaoInput.value = "";
+    }
 }
 
 function limparCampos() {

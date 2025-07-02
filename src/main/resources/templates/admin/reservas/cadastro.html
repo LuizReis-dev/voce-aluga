@@ -158,7 +158,8 @@
                     <!-- MODELO -->
                     <div>
                         <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo* </label>
-                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                        <select class="mt-1 input-reserva
+                                       block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
                                 name="modelo" id="modelo" required th:field="*{modeloId}" disabled>
                             <option value="" selected>Selecione um Modelo</option>
                         </select>
@@ -167,17 +168,23 @@
                     <div>
                         <label for="dataEntrega" class="block text-sm font-medium text-gray-700">Data de
                             Entrega*</label>
-                        <input type="date" id="dataEntrega" name="dataEntrega" required
-                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2" th:field="*{dataEntrega}"/>
+                        <input type="date" id="dataEntrega" name="dataEntrega" required disabled
+                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                               th:field="*{dataEntrega}"
+                               onchange="handleDataEntregaChange(this)"/>
                     </div>
 
                     <!-- DATA DE FIM DA RESERVA -->
 
                     <div>
-                        <label for="dataDevolucao" class="block text-sm font-medium text-gray-700">Data de
+                        <label for="dataDevolucao"
+                               class="block text-sm font-medium text-gray-700">Data de
                             Devolução*</label>
-                        <input type="date" id="dataDevolucao" name="dataDevolucao" required th:field="*{dataDevolucao}"
-                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"/>
+                        <input type="date" id="dataDevolucao" name="dataDevolucao"
+                               required
+                               th:field="*{dataDevolucao}"
+                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2" disabled
+                               onchange="handleDataDevolucaoChange(this)"/>
                     </div>
                 </div>
             </div>
@@ -192,8 +199,8 @@
                     </div>
                     <div>
                         <label for="formaPagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento:</label>
-                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="formaPagamento" th:field="*{formaPagamento}" id="formaPagamento" required>
+                        <select class="mt-1 block input-reserva w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                                name="formaPagamento" th:field="*{formaPagamento}" id="formaPagamento" required disabled>
                             <option value="" selected>Selecione uma forma de pagamento</option>
                             <option th:each="fp : ${formasPagamento}"
                                     th:value="${fp}"
