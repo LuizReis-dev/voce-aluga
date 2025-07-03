@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +43,11 @@ public class ModeloVeiculoService {
     public ModeloVeiculo findById(int id) {
         return modeloVeiculoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Modelo Veiculo não encontrado"));
+    }
+
+    public List<ModeloVeiculoDTO> findAllByGrupo(Integer grupoId, LocalDate dataEntrega, LocalDate dataDevolucao) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        return modeloVeiculoRepository.listarModelosDisponiveisPorGrupoEFilial(usuarioLogado.getOperador().getFilial().getId(), grupoId, dataEntrega, dataDevolucao);
     }
 
     @Transactional

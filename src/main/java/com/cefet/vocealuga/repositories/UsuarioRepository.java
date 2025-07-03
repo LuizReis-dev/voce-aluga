@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String username);
+    Optional<Usuario> findByCpf(String cpf);
     boolean existsByEmailOrCpf(String email, String cpf);
 
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM Usuario u WHERE (u.email = :email OR u.cpf = :cpf) AND u.id <> :id")

@@ -25,3 +25,10 @@ if (chassiElement) {
         }
     });
 }
+
+const cepElement = document.getElementById('cep');
+if (cepElement) {
+    IMask(cepElement, {
+        mask: '00000-000'
+    });
+}

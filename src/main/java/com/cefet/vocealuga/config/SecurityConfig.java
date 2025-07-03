@@ -24,6 +24,9 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/admin/login").permitAll()
 						.anyRequest().hasAnyRole("OPERADOR", "ADMINISTRADOR"))
+				.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/admin/api/**")
+				)
 				.formLogin(form -> form
 						.loginPage("/admin/login")
 						.loginProcessingUrl("/admin/login")
