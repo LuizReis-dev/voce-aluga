@@ -1,5 +1,5 @@
 package com.cefet.vocealuga.models;
 
 public enum FormaPagamento {
-    DINHEIRO, CARTAO, PIX
+    PIX, Credito, Debito, Dinheiro, BTC
 }

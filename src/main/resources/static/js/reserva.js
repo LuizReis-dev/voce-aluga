@@ -154,13 +154,12 @@ function cadastrarCliente(event) {
         .catch(function(error) {
             console.error("Erro de rede ou do servidor:", error);
             if (mensagemErro.classList.contains("hidden")) {
-                mensagemTexto.textContent = "Erro de rede ao cadastrar cliente.";
+                mensagemTexto.textContent = "Erro de sistema ao cadastrar reserva.";
                 mensagemErro.classList.remove("hidden");
             }
             botaoSalvar.disabled = false;
         });
 }
-
 
 function buscarModelos(grupo) {
     zeraTelaReserva();
@@ -314,6 +313,86 @@ function exibirValorReserva(valor) {
     document.getElementById("valorTotal").value = `R$ ${valor}`;
 }
 
+function cadastrarReserva(event) {
+    event.preventDefault();
+
+    if (clienteId === 0) {
+        alert("Ocorreu um erro, recomende reserva pelo site");
+        return;
+    }
+    const grupo = document.getElementById("grupo").value;
+    if(grupo === "") {
+        alert("Preencha o grupo!");
+        return
+    }
+
+    const modelo = document.getElementById("modelo").value;
+    if(modelo === "") {
+        alert("Preencha o modelo!");
+        return;
+    }
+
+    const dataEntrega = document.getElementById("dataEntrega").value;
+    if(dataEntrega === "") {
+        alert("Preencha a dataEntrega!");
+        return;
+    }
+
+    const dataDevolucao = document.getElementById("dataDevolucao").value;
+    if(dataDevolucao === "") {
+        alert("Preencha a dataDevolucao!");
+        return;
+    }
+
+    const formaPagamento = document.getElementById("formaPagamento").value;
+    if(formaPagamento === "") {
+        alert("Preencha a forma de pagamento!");
+        return;
+    }
+
+    const requestBody = {
+        clienteId: clienteId,
+        grupoId: grupo,
+        modeloId: modelo,
+        dataEntrega: dataEntrega,
+        dataDevolucao: dataDevolucao,
+        formaPagamento: formaPagamento
+    }
+
+    console.log(requestBody)
+    const mensagemErro = document.getElementById("mensagemErro");
+    const mensagemTexto = document.getElementById("mensagemTexto");
+
+    const mensagemSucesso = document.getElementById("mensagemSucesso");
+    const mensagemTextoSucesso = document.getElementById("mensagemTextoSucesso");
+    fetch("/admin/api/v1/reservas", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
+    })
+        .then(function(response) {
+            if (!response.ok) {
+                return response.text().then(function(erro) {
+                    mensagemTexto.textContent = "Erro ao cadastrar reserva.";
+                    mensagemErro.classList.remove("hidden");
+
+                    throw new Error("Erro no cadastro");
+                });
+            }
+
+            mensagemTextoSucesso.textContent = "Reserva cadastrada com sucesso!";
+            mensagemSucesso.classList.remove("hidden");
+        })
+        .catch(function(error) {
+            console.error("Erro de rede ou do servidor:", error);
+            if (mensagemErro.classList.contains("hidden")) {
+                mensagemTexto.textContent = "Erro de rede ao cadastrar cliente.";
+                mensagemErro.classList.remove("hidden");
+            }
+        });
+}
 function limparCampos() {
     limparClientes();
     limparEndereco();

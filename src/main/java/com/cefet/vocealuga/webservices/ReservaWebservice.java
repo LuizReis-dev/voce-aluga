@@ -2,6 +2,7 @@ package com.cefet.vocealuga.webservices;
 
 import com.cefet.vocealuga.services.ReservaService;
 import com.cefet.vocealuga.webservices.requests.CalculoValorReservaRequest;
+import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import com.cefet.vocealuga.webservices.responses.CalculoValorReservaResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,5 +22,11 @@ public class ReservaWebservice {
     @PostMapping("/calcular-valor")
     public ResponseEntity<CalculoValorReservaResponse> calculoValorReserva(@RequestBody CalculoValorReservaRequest request) {
         return ResponseEntity.ok(reservaService.calcularValorReserva(request));
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> criaRerva(@RequestBody CreateReservaRequest request) {
+        this.reservaService.criarReserva(request);
+        return ResponseEntity.status(201).build();
     }
 }

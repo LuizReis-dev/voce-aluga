@@ -4,6 +4,11 @@
         <p id="mensagemTexto"></p>
     </div>
 
+    <div id="mensagemSucesso" class="hidden bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-4"
+         role="alert">
+        <p id="mensagemTextoSucesso"></p>
+    </div>
+
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-gray-800">Nova Reserva</h1>
     </div>
@@ -133,10 +138,9 @@
         </div>
     </form>
     <form method="post"
+          onsubmit="cadastrarReserva(event)"
           id="form-reserva"
-          th:object="${criaReservaDTO}"
           class="bg-white w-full px-10 py-5 rounded-2xl shadow border border-gray-200 mx-auto max-w-screen-2xl space-y-10" style="display: none">
-        <input type="hidden" id="id-cliente-reserva" th:field="*{clienteId}" />
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Informações da Reserva</h2>
@@ -145,7 +149,7 @@
                     <div>
                         <label for="grupo" class="block text-sm font-medium text-gray-700">Grupo* </label>
                         <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="grupo" id="grupo" required th:field="*{grupoId}" onchange="buscarModelos(this.value)">
+                                name="grupo" id="grupo" required onchange="buscarModelos(this.value)">
                             <option value="" selected>Selecione um grupo</option>
                             <option th:each="grupo : ${grupos}"
                                     th:value="${grupo.id}"
@@ -159,7 +163,7 @@
                         <label for="modelo" class="block text-sm font-medium text-gray-700">Modelo* </label>
                         <select class="mt-1 input-reserva
                                        block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="modelo" id="modelo" required th:field="*{modeloId}" disabled>
+                                name="modelo" id="modelo" required disabled>
                             <option value="" selected>Selecione um Modelo</option>
                         </select>
                     </div>
@@ -169,7 +173,6 @@
                             Entrega*</label>
                         <input type="date" id="dataEntrega" name="dataEntrega" required disabled
                                class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                               th:field="*{dataEntrega}"
                                onchange="handleDataEntregaChange(this)"/>
                     </div>
 
@@ -181,7 +184,6 @@
                             Devolução*</label>
                         <input type="date" id="dataDevolucao" name="dataDevolucao"
                                required
-                               th:field="*{dataDevolucao}"
                                class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2" disabled
                                onchange="handleDataDevolucaoChange(this)"/>
                     </div>
@@ -199,7 +201,7 @@
                     <div>
                         <label for="formaPagamento" class="block text-sm font-medium text-gray-700">Forma de Pagamento:</label>
                         <select class="mt-1 block input-reserva w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="formaPagamento" th:field="*{formaPagamento}" id="formaPagamento" required disabled>
+                                name="formaPagamento" id="formaPagamento" required disabled>
                             <option value="" selected>Selecione uma forma de pagamento</option>
                             <option th:each="fp : ${formasPagamento}"
                                     th:value="${fp}"

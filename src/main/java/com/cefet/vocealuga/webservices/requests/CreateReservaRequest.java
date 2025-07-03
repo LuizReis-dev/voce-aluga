@@ -1,10 +1,10 @@
-package com.cefet.vocealuga.dtos.reserva;
+package com.cefet.vocealuga.webservices.requests;
 
 import com.cefet.vocealuga.models.FormaPagamento;
 
 import java.time.LocalDate;
 
-public class CriaReservaDTO {
+public class CreateReservaRequest {
     private Integer clienteId;
     private Integer grupoId;
     private Integer modeloId;
@@ -12,10 +12,10 @@ public class CriaReservaDTO {
     private LocalDate dataDevolucao;
     private FormaPagamento formaPagamento;
 
-    public CriaReservaDTO() {
+    public CreateReservaRequest() {
     }
 
-    public CriaReservaDTO(Integer clienteId, Integer grupoId, Integer modeloId, LocalDate dataEntrega, LocalDate dataDevolucao, FormaPagamento formaPagamento) {
+    public CreateReservaRequest(Integer clienteId, Integer grupoId, Integer modeloId, LocalDate dataEntrega, LocalDate dataDevolucao, FormaPagamento formaPagamento) {
         this.clienteId = clienteId;
         this.grupoId = grupoId;
         this.modeloId = modeloId;

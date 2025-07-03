@@ -1,22 +1,78 @@
 package com.cefet.vocealuga.services;
 
-import com.cefet.vocealuga.models.Grupo;
-import com.cefet.vocealuga.repositories.GrupoRepository;
+import com.cefet.vocealuga.models.*;
+import com.cefet.vocealuga.repositories.*;
 import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.requests.CalculoValorReservaRequest;
+import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import com.cefet.vocealuga.webservices.responses.CalculoValorReservaResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @Service
 public class ReservaService {
+    private final UsuarioService usuarioService;
     private final GrupoRepository grupoRepository;
+    private final ClienteRepository clienteRepository;
+    private final VeiculoRepository veiculoRepository;
+    private final ReservaRepository reservaRepository;
+    private final PagamentoRepository pagamentoRepository;
 
-    public ReservaService(GrupoRepository grupoRepository) {
+    public ReservaService(UsuarioService usuarioService, GrupoRepository grupoRepository, ClienteRepository clienteRepository, VeiculoRepository veiculoRepository, ReservaRepository reservaRepository, PagamentoRepository pagamentoRepository) {
+        this.usuarioService = usuarioService;
         this.grupoRepository = grupoRepository;
+        this.clienteRepository = clienteRepository;
+        this.veiculoRepository = veiculoRepository;
+        this.reservaRepository = reservaRepository;
+        this.pagamentoRepository = pagamentoRepository;
+    }
+
+    @Transactional
+    public void criarReserva(CreateReservaRequest request) {
+        Operador operador = usuarioService.usuarioLogado().getOperador();
+        Cliente cliente = clienteRepository.findById(request.getClienteId())
+                .orElseThrow(() -> new WebserviceException("Cliente não encontrado!", false));
+
+        Veiculo veiculo = this.veiculoRepository
+                .findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(operador.getFilial().getId(), request.getModeloId(), EstadoVeiculo.DISPONIVEL)
+                .orElseThrow(() -> new WebserviceException("Nenhum veículo encontrado, selecione outro modelo!", false));
+
+        Grupo grupo = veiculo.getModelo().getGrupo();
+
+        LocalDate dataDevolucao = request.getDataDevolucao();
+        LocalDate dataEntrega = request.getDataEntrega();
+
+        if (dataDevolucao.isBefore(dataEntrega)) {
+            throw new WebserviceException("Data de devolução não pode ser antes da data de entrega.", false);
+        }
+
+        long dias = ChronoUnit.DAYS.between(dataEntrega, dataDevolucao) + 1;
+
+        BigDecimal valorDiario = grupo.getPrecoPorDia();
+
+        BigDecimal valorReserva = valorDiario.multiply(BigDecimal.valueOf(dias));
+
+        Reserva reserva = new Reserva();
+        reserva.setCliente(cliente);
+        reserva.setOperador(operador);
+        reserva.setVeiculo(veiculo);
+        reserva.setDataDevolucao(dataDevolucao);
+        reserva.setDataEntegra(dataEntrega);
+        reserva.setValor(valorReserva);
+
+        reservaRepository.save(reserva);
+
+        Pagamento pagamento = new Pagamento();
+        pagamento.setDataPagamento(LocalDate.now());
+        pagamento.setValor(valorReserva);
+        pagamento.setNotaFiscal(UUID.randomUUID().toString());
+        pagamento.setFormaPagamento(request.getFormaPagamento());
+        pagamentoRepository.save(pagamento);
     }
 
     public CalculoValorReservaResponse calcularValorReserva(CalculoValorReservaRequest calculoValorReservaRequest) {
@@ -30,7 +86,7 @@ public class ReservaService {
         BigDecimal valorDiario = grupo.getPrecoPorDia();
 
         if (dataDevolucao.isBefore(dataEntrega)) {
-            throw new IllegalArgumentException("Data de devolução não pode ser antes da data de entrega.");
+            throw new WebserviceException("Data de devolução não pode ser antes da data de entrega.", false);
         }
 
         // Quantidade de dias (incluindo o dia da entrega)
