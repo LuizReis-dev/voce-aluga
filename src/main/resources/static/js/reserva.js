@@ -216,7 +216,6 @@ function buscarModelos(grupo) {
             disableCampos("input-reserva", true);
             erroBuscaModelos = true;
         });
-
     fetch("/admin/api/v1/reservas/calcular-valor", {
         method: "POST",
         headers: {
@@ -242,6 +241,7 @@ function buscarModelos(grupo) {
             mensagemTexto.textContent = "Erro ao calcular valor da reserva.";
             mensagemErro.classList.remove("hidden");
         });
+    document.getElementById("grupo").disabled = false;
 
 }
 

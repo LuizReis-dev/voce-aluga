@@ -56,7 +56,9 @@ public class ReservaService {
         }
 
         Veiculo veiculo = this.veiculoRepository
-                .findFirstDisponivelSemReserva(operador.getFilial().getId(), request.getModeloId(), dataEntrega, dataDevolucao)
+                .findFirstDisponiveisSemReserva(operador.getFilial().getId(), request.getModeloId(), dataEntrega, dataDevolucao)
+                .stream()
+                .findFirst()
                 .orElseThrow(() -> new WebserviceException("Nenhum veículo encontrado, selecione outro modelo!", false));
 
         Grupo grupo = veiculo.getModelo().getGrupo();

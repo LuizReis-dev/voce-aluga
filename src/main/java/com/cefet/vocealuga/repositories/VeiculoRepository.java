@@ -41,7 +41,7 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
           )
         ORDER BY v.id ASC
     """)
-    Optional<Veiculo> findFirstDisponivelSemReserva(
+    List<Veiculo>findFirstDisponiveisSemReserva(
             @Param("filialId") Integer filialId,
             @Param("modeloId") Integer modeloId,
             @Param("dataEntrega") LocalDate dataEntrega,

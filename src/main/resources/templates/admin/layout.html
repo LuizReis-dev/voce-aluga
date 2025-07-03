@@ -79,7 +79,22 @@
                 <a href="/admin/veiculos/historico-transacoes" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Histório de Transações</a>
             </div>
 
-            <a href="/admin/reservas/cadastro" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Reserva</a>
+            <button onclick="toggleDropdown('dropdown-menu-reserva', 'dropdown-icon-reservas')"
+                    class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 10h18M3 14h18M5 6h14M5 18h14" />
+                    </svg>
+                    <span class="sidebar-label">Reservas</span>
+                </div>
+                <svg id="dropdown-icon-reservas" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
+                     stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" />
+                </svg>
+            </button>
+            <div id="dropdown-menu-reserva" class="ml-7 mt-2 space-y-1 hidden">
+                <a href="/admin/reservas/cadastro" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Nova Reserva</a>
+            </div>
 
         </div>
 
