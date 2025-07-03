@@ -162,10 +162,10 @@ function cadastrarCliente(event) {
 }
 
 function buscarModelos(grupo) {
-    zeraTelaReserva();
-
+    const mensagemErro = document.getElementById("mensagemErro");
+    const mensagemTexto = document.getElementById("mensagemTexto");
     if(grupo === "") return;
-
+    let erroBuscaModelos = false;
     fetch(`/admin/api/v1/modelos/${grupo}`)
         .then(response => {
             const mensagemErro = document.getElementById("mensagemErro");
@@ -175,6 +175,7 @@ function buscarModelos(grupo) {
             if (!response.ok) {
                 mensagemTexto.textContent = "Erro ao buscar modelos.";
                 mensagemErro.classList.remove("hidden");
+                erroBuscaModelos = true;
                 return null;
             }
 
@@ -185,6 +186,7 @@ function buscarModelos(grupo) {
                     mensagemTexto.textContent = "Nenhum veículo disponível, orientar aluguel pelo site.";
                     mensagemErro.classList.remove("hidden");
                     selectModelo.disabled = true;
+                    erroBuscaModelos = true;
                     return;
                 }
 
@@ -209,9 +211,37 @@ function buscarModelos(grupo) {
             mensagemTexto.textContent = "Erro ao buscar modelos.";
             mensagemErro.classList.remove("hidden");
             disableCampos("input-reserva", true);
-
+            erroBuscaModelos = true;
         });
 
+    const dataEntregaInput = document.getElementById("dataEntrega");
+    const dataDevolucaoInput = document.getElementById("dataDevolucao");
+
+    fetch("/admin/api/v1/reservas/calcular-valor", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            grupoId: parseInt(grupo),
+            dateEntrega: dataEntregaInput.value,
+            dataDevolucao: dataDevolucaoInput.value
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erro ao calcular valor da reserva.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            exibirValorReserva(data.valorReserva);
+        })
+        .catch(error => {
+            console.error("Erro ao calcular valor da reserva:", error);
+            mensagemTexto.textContent = "Erro ao calcular valor da reserva.";
+            mensagemErro.classList.remove("hidden");
+        });
 
 }
 
@@ -221,6 +251,12 @@ function zerarHora(data) {
 }
 
 function handleDataEntregaChange(dataEntregaInput) {
+    zeraTelaReserva();
+    const dataDevolucaoInput = document.getElementById("dataDevolucao");
+
+    dataDevolucaoInput.value = "";
+    dataDevolucaoInput.disabled = true;
+
     const mensagemErro = document.getElementById("mensagemErro");
     const mensagemTexto = document.getElementById("mensagemTexto");
 
@@ -237,14 +273,17 @@ function handleDataEntregaChange(dataEntregaInput) {
         mensagemErro.classList.remove("hidden");
         dataEntregaInput.value = "";
     }
+
+    dataDevolucaoInput.disabled = false;
+
 }
 
 function handleDataDevolucaoChange(dataDevolucaoInput) {
+    zeraTelaReserva();
     const mensagemErro = document.getElementById("mensagemErro");
     const mensagemTexto = document.getElementById("mensagemTexto");
 
     const dataEntregaInput = document.getElementById("dataEntrega");
-    const grupoIdInput = document.getElementById("grupo"); // certifique-se do ID correto
 
     if (dataDevolucaoInput.value === "") return;
 
@@ -278,35 +317,7 @@ function handleDataDevolucaoChange(dataDevolucaoInput) {
         dataDevolucaoInput.value = "";
         return;
     }
-
-    const grupoId = grupoIdInput.value;
-    if (!grupoId) return;
-
-    fetch("/admin/api/v1/reservas/calcular-valor", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            grupoId: parseInt(grupoId),
-            dateEntrega: dataEntregaInput.value,
-            dataDevolucao: dataDevolucaoInput.value
-        })
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro ao calcular valor da reserva.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            exibirValorReserva(data.valorReserva);
-        })
-        .catch(error => {
-            console.error("Erro ao calcular valor da reserva:", error);
-            mensagemTexto.textContent = "Erro ao calcular valor da reserva.";
-            mensagemErro.classList.remove("hidden");
-        });
+    document.getElementById("grupo").disabled = false;
 }
 
 function exibirValorReserva(valor) {
@@ -393,6 +404,7 @@ function cadastrarReserva(event) {
             }
         });
 }
+
 function limparCampos() {
     limparClientes();
     limparEndereco();
@@ -423,9 +435,8 @@ function zerarTela() {
 
 function zeraTelaReserva() {
     document.getElementById("modelo").value = "";
+    document.getElementById("grupo").value = "";
     document.getElementById("valorTotal").value = "";
-    document.getElementById("dataEntrega").value = "";
-    document.getElementById("dataDevolucao").value = "";
     document.getElementById("formaPagamento").value = "";
     disableCampos("input-reserva", true);
 }

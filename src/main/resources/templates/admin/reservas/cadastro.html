@@ -145,11 +145,31 @@
             <div>
                 <h2 class="text-lg font-semibold text-gray-700 mb-4">Informações da Reserva</h2>
                 <div class="space-y-4">
+                    <!-- DATA DE INICIO DA RESERVA -->
+                    <div>
+                        <label for="dataEntrega" class="block text-sm font-medium text-gray-700">Data de
+                            Entrega*</label>
+                        <input type="date" id="dataEntrega" name="dataEntrega" required
+                               class="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                               onchange="handleDataEntregaChange(this)"/>
+                    </div>
+
+                    <!-- DATA DE FIM DA RESERVA -->
+                    <div>
+                        <label for="dataDevolucao"
+                               class="block text-sm font-medium text-gray-700">Data de
+                            Devolução*</label>
+                        <input type="date" id="dataDevolucao" name="dataDevolucao"
+                               required
+                               class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" disabled
+                               onchange="handleDataDevolucaoChange(this)"/>
+                    </div>
+
                     <!-- GRUPO -->
                     <div>
                         <label for="grupo" class="block text-sm font-medium text-gray-700">Grupo* </label>
-                        <select class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                                name="grupo" id="grupo" required onchange="buscarModelos(this.value)">
+                        <select class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                                name="grupo" id="grupo" required onchange="buscarModelos(this.value)" disabled>
                             <option value="" selected>Selecione um grupo</option>
                             <option th:each="grupo : ${grupos}"
                                     th:value="${grupo.id}"
@@ -166,26 +186,6 @@
                                 name="modelo" id="modelo" required disabled>
                             <option value="" selected>Selecione um Modelo</option>
                         </select>
-                    </div>
-                    <!-- DATA DE INICIO DA RESERVA -->
-                    <div>
-                        <label for="dataEntrega" class="block text-sm font-medium text-gray-700">Data de
-                            Entrega*</label>
-                        <input type="date" id="dataEntrega" name="dataEntrega" required disabled
-                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                               onchange="handleDataEntregaChange(this)"/>
-                    </div>
-
-                    <!-- DATA DE FIM DA RESERVA -->
-
-                    <div>
-                        <label for="dataDevolucao"
-                               class="block text-sm font-medium text-gray-700">Data de
-                            Devolução*</label>
-                        <input type="date" id="dataDevolucao" name="dataDevolucao"
-                               required
-                               class="input-reserva mt-1 block w-full border border-gray-300 rounded px-3 py-2" disabled
-                               onchange="handleDataDevolucaoChange(this)"/>
                     </div>
                 </div>
             </div>
