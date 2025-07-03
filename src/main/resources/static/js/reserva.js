@@ -385,11 +385,9 @@ function cadastrarReserva(event) {
     })
         .then(function(response) {
             if (!response.ok) {
-                return response.text().then(function(erro) {
-                    mensagemTexto.textContent = "Erro ao cadastrar reserva.";
+                return response.json().then(function(erro) {
+                    mensagemTexto.textContent = erro.mensagem || "Erro ao cadastrar reserva.";
                     mensagemErro.classList.remove("hidden");
-
-                    throw new Error("Erro no cadastro");
                 });
             }
 

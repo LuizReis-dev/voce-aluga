@@ -7,10 +7,12 @@ import com.cefet.vocealuga.webservices.requests.CalculoValorReservaRequest;
 import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import com.cefet.vocealuga.webservices.responses.CalculoValorReservaResponse;
 import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
@@ -35,17 +37,29 @@ public class ReservaService {
     @Transactional
     public void criarReserva(CreateReservaRequest request) {
         Operador operador = usuarioService.usuarioLogado().getOperador();
+        LocalDate hoje = LocalDate.now();
         Cliente cliente = clienteRepository.findById(request.getClienteId())
                 .orElseThrow(() -> new WebserviceException("Cliente não encontrado!", false));
 
+        if (cliente.getUsuario().getDataNascimento() != null) {
+            Period idade = Period.between(cliente.getUsuario().getDataNascimento(), hoje);
+
+            if (idade.getYears() < 25) {
+                throw new WebserviceException("Cliente deve ter pelo menos 25 anos para realizar a reserva!", false);
+            }
+        }
+        LocalDate dataDevolucao = request.getDataDevolucao();
+        LocalDate dataEntrega = request.getDataEntrega();
+
+        if(reservaRepository.clientePossuiReservaNoPeriodo(cliente.getId(), dataDevolucao, dataEntrega)){
+            throw new WebserviceException("Cliente já possui uma reserva para o periodo selecionado!", false);
+        }
+
         Veiculo veiculo = this.veiculoRepository
-                .findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(operador.getFilial().getId(), request.getModeloId(), EstadoVeiculo.DISPONIVEL)
+                .findFirstDisponivelSemReserva(operador.getFilial().getId(), request.getModeloId(), dataEntrega, dataDevolucao)
                 .orElseThrow(() -> new WebserviceException("Nenhum veículo encontrado, selecione outro modelo!", false));
 
         Grupo grupo = veiculo.getModelo().getGrupo();
-
-        LocalDate dataDevolucao = request.getDataDevolucao();
-        LocalDate dataEntrega = request.getDataEntrega();
 
         if (dataDevolucao.isBefore(dataEntrega)) {
             throw new WebserviceException("Data de devolução não pode ser antes da data de entrega.", false);
@@ -64,6 +78,11 @@ public class ReservaService {
         reserva.setDataDevolucao(dataDevolucao);
         reserva.setDataEntrega(dataEntrega);
         reserva.setValor(valorReserva);
+
+        if(dataEntrega.equals(hoje)) {
+            veiculo.setEstadoVeiculo(EstadoVeiculo.RESERVADO);
+            veiculoRepository.save(veiculo);
+        }
 
         reservaRepository.save(reserva);
 
