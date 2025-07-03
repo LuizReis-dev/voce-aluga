@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,9 +20,9 @@ public class ModeloWebservice {
         this.modeloVeiculoService = modeloVeiculoService;
     }
 
-    @GetMapping("/{grupoId}")
-    public ResponseEntity<List<ModeloVeiculoDTO>> buscarModelosPorGrupo(@PathVariable Integer grupoId) {
-        List<ModeloVeiculoDTO> response = this.modeloVeiculoService.findAllByGrupo(grupoId);
+    @GetMapping("/{grupoId}/{dataEntrega}/{dataDevolucao}")
+    public ResponseEntity<List<ModeloVeiculoDTO>> buscarModelosPorGrupo(@PathVariable Integer grupoId, @PathVariable LocalDate dataEntrega, @PathVariable LocalDate dataDevolucao) {
+        List<ModeloVeiculoDTO> response = this.modeloVeiculoService.findAllByGrupo(grupoId, dataEntrega, dataDevolucao);
         return ResponseEntity.ok(response);
     }
 }

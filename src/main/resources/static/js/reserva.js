@@ -166,7 +166,10 @@ function buscarModelos(grupo) {
     const mensagemTexto = document.getElementById("mensagemTexto");
     if(grupo === "") return;
     let erroBuscaModelos = false;
-    fetch(`/admin/api/v1/modelos/${grupo}`)
+    const dataEntregaInput = document.getElementById("dataEntrega");
+    const dataDevolucaoInput = document.getElementById("dataDevolucao");
+
+    fetch(`/admin/api/v1/modelos/${grupo}/${dataEntregaInput.value}/${dataDevolucaoInput.value}`)
         .then(response => {
             const mensagemErro = document.getElementById("mensagemErro");
             const mensagemTexto = document.getElementById("mensagemTexto");
@@ -213,9 +216,6 @@ function buscarModelos(grupo) {
             disableCampos("input-reserva", true);
             erroBuscaModelos = true;
         });
-
-    const dataEntregaInput = document.getElementById("dataEntrega");
-    const dataDevolucaoInput = document.getElementById("dataDevolucao");
 
     fetch("/admin/api/v1/reservas/calcular-valor", {
         method: "POST",

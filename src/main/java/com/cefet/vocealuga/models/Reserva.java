@@ -25,7 +25,7 @@ public class Reserva {
     private Operador operador;
 
     @Column(name = "data_entrega", nullable = false)
-    private LocalDate dataEntegra;
+    private LocalDate dataEntrega;
 
     @Column(name = "data_devolucao", nullable = false)
     private LocalDate dataDevolucao;
@@ -36,12 +36,12 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(Integer id, Veiculo veiculo, Cliente cliente, Operador operador, LocalDate dataEntegra, LocalDate dataDevolucao, BigDecimal valor) {
+    public Reserva(Integer id, Veiculo veiculo, Cliente cliente, Operador operador, LocalDate dataEntrega, LocalDate dataDevolucao, BigDecimal valor) {
         this.id = id;
         this.veiculo = veiculo;
         this.cliente = cliente;
         this.operador = operador;
-        this.dataEntegra = dataEntegra;
+        this.dataEntrega = dataEntrega;
         this.dataDevolucao = dataDevolucao;
         this.valor = valor;
     }
@@ -78,12 +78,12 @@ public class Reserva {
         this.operador = operador;
     }
 
-    public LocalDate getDataEntegra() {
-        return dataEntegra;
+    public LocalDate getDataEntrega() {
+        return dataEntrega;
     }
 
-    public void setDataEntegra(LocalDate dataEntegra) {
-        this.dataEntegra = dataEntegra;
+    public void setDataEntrega(LocalDate dataEntegra) {
+        this.dataEntrega = dataEntegra;
     }
 
     public LocalDate getDataDevolucao() {

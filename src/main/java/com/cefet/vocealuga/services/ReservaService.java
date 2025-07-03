@@ -62,7 +62,7 @@ public class ReservaService {
         reserva.setOperador(operador);
         reserva.setVeiculo(veiculo);
         reserva.setDataDevolucao(dataDevolucao);
-        reserva.setDataEntegra(dataEntrega);
+        reserva.setDataEntrega(dataEntrega);
         reserva.setValor(valorReserva);
 
         reservaRepository.save(reserva);
