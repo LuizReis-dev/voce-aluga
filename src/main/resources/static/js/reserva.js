@@ -1,3 +1,5 @@
+let clienteId = 0;
+
 function buscarCliente(cpf) {
     zerarTela();
     if (!cpf || cpf.length < 11) return;
@@ -34,7 +36,7 @@ function buscarCliente(cpf) {
             document.getElementById("dataNascimento").value = cliente.dataNascimento;
             document.getElementById("cnh").value = cliente.cnh;
             document.getElementById("apolice").value = cliente.apolice;
-            document.getElementById("cep").value = cliente.cep;
+            document.getElementById("cep").value = cliente.cep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
             document.getElementById("rua").value = cliente.rua;
             document.getElementById("numero").value = cliente.numero;
             document.getElementById("complemento").value = cliente.complemento;
@@ -129,27 +131,36 @@ function cadastrarCliente(event) {
         },
         body: JSON.stringify(cliente)
     })
-        .then(response => {
+        .then(function(response) {
             if (!response.ok) {
-                return response.text().then(erro => {
+                return response.text().then(function(erro) {
                     mensagemTexto.textContent = "Erro ao cadastrar cliente.";
                     mensagemErro.classList.remove("hidden");
-                    console.error("Erro da API:", erro);
                     botaoSalvar.disabled = false;
+
+                    throw new Error("Erro no cadastro");
                 });
             }
-
-            mensagemErro.classList.add("hidden");
-            alert("Cliente cadastrado com sucesso!");
-            botaoSalvar.disabled = false;
+            return response.json();
         })
-        .catch(error => {
-            console.error("Erro de rede:", error);
-            mensagemTexto.textContent = "Erro de rede ao cadastrar cliente.";
-            mensagemErro.classList.remove("hidden");
+        .then(function(responseBody) {
+            mensagemErro.classList.add("hidden");
+            botaoSalvar.disabled = false;
+            clienteId = responseBody.id;
+            document.getElementById("form-cliente").style.display = "none";
+            document.getElementById("form-reserva").style.display = "block";
+
+        })
+        .catch(function(error) {
+            console.error("Erro de rede ou do servidor:", error);
+            if (mensagemErro.classList.contains("hidden")) {
+                mensagemTexto.textContent = "Erro de rede ao cadastrar cliente.";
+                mensagemErro.classList.remove("hidden");
+            }
             botaoSalvar.disabled = false;
         });
 }
+
 
 function buscarModelos(grupo) {
     zeraTelaReserva();
@@ -303,7 +314,6 @@ function exibirValorReserva(valor) {
     document.getElementById("valorTotal").value = `R$ ${valor}`;
 }
 
-
 function limparCampos() {
     limparClientes();
     limparEndereco();
@@ -334,6 +344,7 @@ function zerarTela() {
 
 function zeraTelaReserva() {
     document.getElementById("modelo").value = "";
+    document.getElementById("valorTotal").value = "";
     document.getElementById("dataEntrega").value = "";
     document.getElementById("dataDevolucao").value = "";
     document.getElementById("formaPagamento").value = "";

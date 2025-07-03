@@ -3,6 +3,7 @@ package com.cefet.vocealuga.webservices;
 import com.cefet.vocealuga.services.ClienteService;
 import com.cefet.vocealuga.webservices.requests.CreateClienteRequest;
 import com.cefet.vocealuga.webservices.responses.ClienteResponse;
+import com.cefet.vocealuga.webservices.responses.CreateClienteResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ClienteWebservice {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CreateClienteRequest request) {
-        this.clienteService.create(request);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<CreateClienteResponse> create(@RequestBody @Valid CreateClienteRequest request) {
+        CreateClienteResponse response = this.clienteService.create(request);
+        return ResponseEntity.ok(response);
     }
 }

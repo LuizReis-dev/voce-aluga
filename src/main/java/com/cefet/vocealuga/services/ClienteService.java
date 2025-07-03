@@ -9,6 +9,7 @@ import com.cefet.vocealuga.utils.CPFValidator;
 import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.requests.CreateClienteRequest;
 import com.cefet.vocealuga.webservices.responses.ClienteResponse;
+import com.cefet.vocealuga.webservices.responses.CreateClienteResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class ClienteService {
     }
 
     @Transactional
-    public void create(CreateClienteRequest request) {
+    public CreateClienteResponse create(CreateClienteRequest request) {
         if(!CPFValidator.validarCPF(request.getCpf())) {
             throw new WebserviceException("CPF inválido!", true);
         }
@@ -80,5 +81,7 @@ public class ClienteService {
         usuario.setCliente(cliente);
 
         usuarioRepository.save(usuario);
+
+        return new CreateClienteResponse("Cliente criado/atualizado com sucesso!", cliente.getId());
     }
 }
