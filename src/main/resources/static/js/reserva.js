@@ -134,7 +134,7 @@ function cadastrarCliente(event) {
         .then(function(response) {
             if (!response.ok) {
                 return response.text().then(function(erro) {
-                    mensagemTexto.textContent = "Erro ao cadastrar cliente.";
+                    mensagemTexto.textContent = erro.mensagem || "Erro ao cadastrar cliente.";
                     mensagemErro.classList.remove("hidden");
                     botaoSalvar.disabled = false;
 
@@ -437,4 +437,9 @@ function zeraTelaReserva() {
     document.getElementById("valorTotal").value = "";
     document.getElementById("formaPagamento").value = "";
     disableCampos("input-reserva", true);
+}
+
+function voltarPagina() {
+    document.getElementById("form-cliente").style.display = "block";
+    document.getElementById("form-reserva").style.display = "none";
 }
