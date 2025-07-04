@@ -4,68 +4,85 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Login</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen bg-zinc-900">
-	<div class="flex h-screen items-center justify-center">
+	<div class="flex min-h-screen flex-col lg:flex-row">
 
-		<form th:action="@{/login}" method="post"
-			class="flex h-full lg:w-[75rem] flex-col items-center justify-center gap-8 bg-zinc-900">
-			<h1 class="mb-4 text-4xl font-bold text-zinc-100">Aluga Mais</h1>
+		<div class="flex-1 flex items-center justify-center p-4 lg:p-6">
+			<div class="w-full max-w-md lg:max-w-lg xl:max-w-xl flex flex-col items-center justify-center gap-4 lg:gap-6">
 
-			<div>
-				<h1 class="mb-4 text-3xl font-bold text-zinc-100">Login</h1>
+				<form th:action="@{/login}" method="post" th:object="${usuario}"
+					class="w-full max-w-md lg:max-w-lg xl:max-w-xl flex flex-col items-center justify-center gap-4 lg:gap-6">
 
-				<div class="flex w-[45.5rem] flex-col items-center gap-4">
-					<div class="flex w-full flex-col gap-2">
-						<label for="username" class="block text-zinc-100">Usuário</label>
-						<input type="text" id="username" name="username"
-							class="w-full rounded-xl bg-zinc-800 px-4 py-2 text-zinc-100 placeholder:text-white/40 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-							placeholder="Digite seu email" required />
+					<h1 class="mb-2 lg:mb-4 text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-100 text-center">Aluga Mais</h1>
+
+					<div class="w-full">
+						<h2 class="mb-4 lg:mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-zinc-100">Login</h2>
+
+						<div class="flex flex-col gap-3 lg:gap-4">
+
+							<div class="flex flex-col gap-2">
+								<label for="username" class="block text-zinc-100">Usuário</label>
+								<input type="text" id="username" name="username"
+									class="w-full rounded-xl bg-zinc-800 px-4 py-2 text-zinc-100 placeholder:text-white/40 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+									placeholder="Digite seu email" required />
+							</div>
+
+							<div class="flex flex-col gap-2">
+								<label for="password" class="block text-zinc-100">Senha</label>
+								<input type="password" id="password" name="password"
+									class="w-full rounded-xl bg-zinc-800 px-4 py-2 text-zinc-100 placeholder:text-white/40 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+									placeholder="Digite sua senha" required />
+							</div>
+
+							<button type="submit"
+								class="w-full mt-4 lg:mt-6 rounded-3xl border-2 border-blue-400 bg-blue-700 py-2 lg:py-3 text-sm lg:text-base text-white font-bold transition duration-200 hover:bg-blue-500 focus:ring-2 focus:ring-blue-300 focus:outline-none h-10 flex items-center justify-center">
+								Entrar
+							</button>
+
+							<div th:if="${param.error}" class="text-red-500 text-sm text-center">
+								Usuário ou senha inválidos.
+							</div>
+
+							<div th:if="${param.logout}" class="text-green-500 text-sm text-center">
+								Logout realizado com sucesso.
+							</div>
+
+						</div>
+
 					</div>
+				</form>
 
-					<div class="flex w-full flex-col gap-2">
-						<label for="password" class="block text-zinc-100">Senha</label>
-						<input type="password" id="password" name="password"
-							class="w-full rounded-xl bg-zinc-800 px-4 py-2 text-zinc-100 placeholder:text-white/40 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-							placeholder="Digite sua senha" required />
-					</div>
+				<div class="w-full mt-8 text-center space-y-3 lg:hidden">
 
-					<div class="w-[30rem]">
-						<button type="submit"
-							class="w-full cursor-pointer rounded-3xl border-2 border-blue-400 bg-blue-700 py-2 text-white transition duration-200 hover:bg-blue-500 mt-4">Entrar</button>
-					</div>
-
-					<div th:if="${param.error}" class="text-red-500 text-sm text-center">
-						Usuário ou senha inválidos.
-					</div>
-
-					<div th:if="${param.logout}" class="text-green-500 text-sm text-center">
-						Logout realizado com sucesso.
-					</div>
-
+					<p class="text-sm text-zinc-100">Se você não tem conta ainda, se cadastre clicando no
+						botão abaixo!</p>
+					<a th:href="@{/cadastro}"
+						class="inline-block w-full px-4 py-2 rounded-3xl border-2 border-zinc-700 bg-zinc-900 text-sm text-white font-bold hover:bg-zinc-800 transition duration-200 focus:ring-2 focus:ring-zinc-500 focus:outline-none">
+						Cadastre-se
+					</a>
 				</div>
 
 			</div>
-		</form>
+		</div>
 
-		<div class="flex h-full lg:w-[45rem] items-center justify-center bg-blue-700">
+		<div class="hidden lg:flex flex-1 lg:max-w-lg xl:max-w-xl items-center justify-center bg-blue-700 p-4 lg:p-8">
+			<div class="w-full max-w-md text-center space-y-4 lg:space-y-8">
 
-			<div class="flex flex-col items-center gap-16 w-[33.75rem]">
-
-				<h1 class="text-7xl font-bold text-zinc-100">Novo aqui?</h1>
-				<p class="text-center text-2xl font-bold text-zinc-100">Se você não tem conta ainda, se cadastre clicando no
+				<h1 class="text-4xl lg:text-6xl font-bold text-zinc-100">Novo aqui?</h1>
+				<p class="text-xl font-bold text-zinc-100">Se você não tem conta ainda, se cadastre clicando no
 					botão abaixo!</p>
 
 				<a th:href="@{/cadastro}"
-					class="w-full rounded-3xl border-2 border-zinc-700 bg-zinc-900 py-2 font-bold text-white transition duration-200 hover:bg-zinc-800 flex justify-center items-center">
-					Cadastre
+					class="inline-block w-full px-4 py-2 rounded-3xl border-2 border-zinc-700 bg-zinc-900 text-sm text-white font-bold hover:bg-zinc-800 transition duration-200 focus:ring-2 focus:ring-zinc-500 focus:outline-none h-10">
+					Cadastre-se
 				</a>
-
 			</div>
 		</div>
+
 	</div>
 </body>
 
