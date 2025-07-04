@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.dtos.veiculos.ModeloMarcaDTO;
 import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
@@ -45,6 +46,10 @@ public class ModeloVeiculoService {
 
 	public List<ModeloVeiculo> findAll() {
 		return modeloVeiculoRepository.findAll();
+	}
+
+	public ModeloMarcaDTO findModeloById(Integer modeloId) {
+		return modeloVeiculoRepository.findModeloMarcaById(modeloId);
 	}
 
 	public ModeloVeiculo findById(int id) {

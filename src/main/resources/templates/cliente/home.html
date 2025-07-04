@@ -52,20 +52,23 @@
 
 			<div th:each="modelo : ${modelos}" th:if="${modelo.quantidade > 0}"
 				class="col-span-1 mb-4 flex flex-col items-center justify-center gap-1 rounded-lg border border-zinc-300 bg-zinc-100 p-4">
+
+				<div class="flex gap-1">
+					<p th:text="${modelo.marca}"></p>
+					<p th:text="${modelo.modelo}" class="before:mr-1 before:content-['-']"></p>
+				</div>
+
+				<p th:text="${modelo.grupo}"></p>
 				<div>
 					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6fVh4DuRVp6f4LA4JsaG9ptF1lHnTbx4jMQ&s"
 						alt="Imagem" width="100" class="w-full rounded-lg border border-zinc-700" />
 				</div>
 
-				<div class="flex gap-1">
-					<p th:text="${modelo.marca}"></p>
-					<p th:text="${modelo.id}"></p>
-					<p th:text="${modelo.modelo}" class="before:mr-1 before:content-['-']"></p>
-				</div>
 				<p th:text="${modelo.ano}"></p>
-				<p th:text="${modelo.grupo}"></p>
-				<button
-					class="flex cursor-pointer items-center justify-center rounded-xl border px-4 py-0.5 text-sm hover:bg-zinc-300 border-zinc-700">Reservar</button>
+
+				<a th:href="@{/reserva/{modeloId}(modeloId=${modelo.id})}"
+					class="flex cursor-pointer items-center justify-center rounded-xl border px-4 py-0.5 text-sm hover:bg-zinc-300 border-zinc-700">Reservar
+				</a>
 			</div>
 
 		</div>

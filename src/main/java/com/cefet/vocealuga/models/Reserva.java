@@ -24,6 +24,10 @@ public class Reserva {
 	@JoinColumn(name = "operador_id")
 	private Operador operador;
 
+	@ManyToOne
+	@JoinColumn(name = "filial_id")
+	private Filial filial;
+
 	@Column(name = "data_entrega", nullable = false)
 	private LocalDate dataEntrega;
 
@@ -37,7 +41,7 @@ public class Reserva {
 	}
 
 	public Reserva(Integer id, Veiculo veiculo, Cliente cliente, Operador operador, LocalDate dataEntrega,
-			LocalDate dataDevolucao, BigDecimal valor) {
+			LocalDate dataDevolucao, BigDecimal valor, Filial filial) {
 		this.id = id;
 		this.veiculo = veiculo;
 		this.cliente = cliente;
@@ -45,6 +49,7 @@ public class Reserva {
 		this.dataEntrega = dataEntrega;
 		this.dataDevolucao = dataDevolucao;
 		this.valor = valor;
+		this.filial = filial;
 	}
 
 	public Integer getId() {
@@ -101,5 +106,13 @@ public class Reserva {
 
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
+	}
+
+	public Filial getFilial() {
+		return filial;
+	}
+
+	public void setFilial(Filial filial) {
+		this.filial = filial;
 	}
 }

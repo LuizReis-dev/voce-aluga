@@ -1,17 +1,25 @@
 package com.cefet.vocealuga.controllers;
 
+import com.cefet.vocealuga.dtos.filial.FilialDTO;
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
+import com.cefet.vocealuga.dtos.veiculos.ModeloMarcaDTO;
+import com.cefet.vocealuga.dtos.veiculos.ReservaClienteDTO;
 import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
+import com.cefet.vocealuga.models.FormaPagamento;
 import com.cefet.vocealuga.models.GerenciamentoTransacaoVeiculo;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.models.Veiculo;
+import com.cefet.vocealuga.services.FilialService;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
+import com.cefet.vocealuga.services.ReservaService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.services.VeiculoService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,12 +38,16 @@ public class VeiculoController {
 	private final UsuarioService usuarioService;
 	private final ModeloVeiculoService modeloVeiculoService;
 	private final VeiculoService veiculoService;
+	private final ReservaService reservaService;
+	private final FilialService filialService;
 
 	public VeiculoController(UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService,
-			VeiculoService veiculoService) {
+			VeiculoService veiculoService, ReservaService reservaService, FilialService filialService) {
 		this.usuarioService = usuarioService;
 		this.modeloVeiculoService = modeloVeiculoService;
 		this.veiculoService = veiculoService;
+		this.reservaService = reservaService;
+		this.filialService = filialService;
 	}
 
 	@GetMapping("/admin/veiculos")
@@ -247,14 +259,40 @@ public class VeiculoController {
 
 	}
 
-	@GetMapping("/reserva/{id}")
-	public String fazerReserva(Model model, @PathVariable Integer id) {
-		Usuario usuarioLogado = usuarioService.usuarioLogado();
-		List<String> cores = this.veiculoService.findAllByModeloToReserva(id);
-		model.addAttribute("cores", cores);
-		model.addAttribute("usuarioLogado", usuarioLogado);
+	@GetMapping("/reserva/{modeloId:\\d+}")
+	public String Reserva(Model model, @PathVariable Integer modeloId) {
+		com.cefet.vocealuga.dtos.veiculos.GrupoDTO grupo = veiculoService.findGrupoNomeByModeloVeiculo(modeloId);
+		List<FilialDTO> filiais = filialService.buscarFiliaisComVeiculoDisponivelDoModelo(modeloId);
+		ModeloMarcaDTO modeloMarca = modeloVeiculoService.findModeloById(modeloId);
+
+		Usuario usuario = usuarioService.usuarioLogado();
+
+		ReservaClienteDTO dto = new ReservaClienteDTO();
+		dto.setModeloId(modeloId);
+		dto.setGrupoId(grupo.getId());
+		dto.setClienteId(usuario.getId());
+
+		model.addAttribute("reserva", dto);
+		model.addAttribute("filiais", filiais);
+		model.addAttribute("formasPagamento", FormaPagamento.values());
+		model.addAttribute("modeloMarca", modeloMarca);
+		model.addAttribute("grupo", grupo);
 
 		return "/cliente/reserva";
 	}
 
+	@PostMapping("/reserva")
+	public String criaReserva(@ModelAttribute @Valid ReservaClienteDTO dto, RedirectAttributes redirectAttributes) {
+		System.out.println("dot: \n" + dto);
+		try {
+			reservaService.criarReservaCliente(dto);
+
+			redirectAttributes.addFlashAttribute("success", "Reserva criada com sucesso!");
+			return "redirect:/";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao criar reserva: " + e.getMessage());
+
+			return "redirect:/reserva/" + dto.getModeloId();
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.repositories;
 
+import com.cefet.vocealuga.dtos.veiculos.ModeloMarcaDTO;
 import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.ModeloVeiculo;
 
@@ -68,4 +69,14 @@ public interface ModeloVeiculoRepository extends JpaRepository<ModeloVeiculo, In
 			     ORDER BY mv.marca
 			\s""")
 	Page<ModeloVeiculoDTO> listarModelosComQuantidadePublico(org.springframework.data.domain.Pageable pageable);
+
+	@Query("""
+			    SELECT new com.cefet.vocealuga.dtos.veiculos.ModeloMarcaDTO(
+			        mv.modelo,
+			        mv.marca
+			    )
+			    FROM ModeloVeiculo mv
+			    WHERE mv.id = :id
+			""")
+	ModeloMarcaDTO findModeloMarcaById(@Param("id") Integer id);
 }
