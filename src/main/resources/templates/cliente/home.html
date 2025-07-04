@@ -1,16 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Home</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Voce Aluga</title>
+	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-	<nav class="flex-1 p-4 space-y-2">
-		<h1>aaaaaaaaaaaa</h1>
-	</nav>
+<body class="bg-zinc-100">
+	<header class="h-24 bg-zinc-200 flex justify-center items-center md:px-96 px-10 shadow-md">
+		<h1 class="text-center text-4xl font-bold text-zinc-700">Você Aluga</h1>
+	</header>
+
+	<div class="p-10 flex flex-col items-center justify-center">
+
+		<form th:action="@{/}" method="get" class="mb-10 flex flex-col md:flex-row items-center justify-center gap-4">
+
+			<select name="marca" class="rounded border border-zinc-300 p-2 w-full">
+				<option value="">Todas as marcas</option>
+				<option th:each="m : ${marcas}" th:value="${m}" th:text="${m}"
+					th:selected="${param.marca != null and param.marca[0] == m}">
+				</option>
+			</select>
+
+			<select name="modelo" class="rounded border border-zinc-300 p-2 w-full">
+				<option value="">Todos os modelos</option>
+				<option th:each="m : ${modelosDisponiveis}" th:value="${m}" th:text="${m}"
+					th:selected="${param.modelo != null and param.modelo[0] == m}">
+				</option>
+			</select>
+
+			<select name="ano" class="rounded border border-zinc-300 p-2 w-full">
+				<option value="">Todos os anos</option>
+				<option th:each="a : ${anos}" th:value="${a}" th:text="${a}"
+					th:selected="${param.ano != null and param.ano[0] == a}">
+				</option>
+			</select>
+
+			<select name="grupo" class="rounded border border-zinc-300 p-2 w-full">
+				<option value="">Todos os grupos</option>
+				<option th:each="g : ${grupos}" th:value="${g}" th:text="${g}"
+					th:selected="${param.grupo != null and param.grupo[0] == g}">
+				</option>
+			</select>
+
+			<button type="submit" class="rounded bg-zinc-700 px-4 py-2 text-white hover:bg-zinc-800 w-full">Filtrar</button>
+		</form>
+
+		<div class="sm:flex gap-12 sm:flex-col md:grid md:grid-cols-4 max-w-fit">
+
+			<div th:each="modelo : ${modelos}" th:if="${modelo.quantidade > 0}"
+				class="col-span-1 mb-4 flex flex-col items-center justify-center gap-1 rounded-lg border border-zinc-300 bg-zinc-100 p-4">
+
+				<div class="flex gap-1">
+					<p th:text="${modelo.marca}"></p>
+					<p th:text="${modelo.modelo}" class="before:mr-1 before:content-['-']"></p>
+				</div>
+
+				<p th:text="${modelo.grupo}"></p>
+				<div>
+					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6fVh4DuRVp6f4LA4JsaG9ptF1lHnTbx4jMQ&s"
+						alt="Imagem" width="100" class="w-full rounded-lg border border-zinc-700" />
+				</div>
+
+				<p th:text="${modelo.ano}"></p>
+
+				<a th:href="@{/reserva/{modeloId}(modeloId=${modelo.id})}"
+					class="flex cursor-pointer items-center justify-center rounded-xl border px-4 py-0.5 text-sm hover:bg-zinc-300 border-zinc-700">Reservar
+				</a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="flex justify-center static items-center my-8 gap-2 md:fixed bottom-0 left-0 w-full h-[2.1875rem]">
+		<a th:if="${paginaAtual > 0}"
+			th:href="@{/(page=${paginaAtual - 1}, marca=${param.marca}, modelo=${param.modelo}, ano=${param.ano}, grupo=${param.grupo})}"
+			class="px-4 py-2 bg-zinc-200 rounded hover:bg-zinc-300 cursor-pointer">
+			Anterior
+		</a>
+
+		<span th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}">
+			<a th:href="@{/(page=${i}, marca=${param.marca}, modelo=${param.modelo}, ano=${param.ano}, grupo=${param.grupo})}"
+				th:text="${i + 1}"
+				th:classappend="${i == paginaAtual} ? ' bg-zinc-700 text-white' : ' bg-zinc-200 hover:bg-zinc-300'"
+				class="px-4 py-2 rounded cursor-pointer">
+			</a>
+		</span>
+
+		<a th:if="${paginaAtual < totalPaginas - 1}"
+			th:href="@{/(page=${paginaAtual + 1}, marca=${param.marca}, modelo=${param.modelo}, ano=${param.ano}, grupo=${param.grupo})}"
+			class="px-4 py-2 bg-zinc-200 rounded hover:bg-zinc-300 cursor-pointer">
+			Próximo
+		</a>
+
+	</div>
 </body>
 
 </html>

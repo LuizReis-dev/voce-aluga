@@ -24,8 +24,7 @@ public class SecurityConfig {
 						.requestMatchers("/admin/login").permitAll()
 						.anyRequest().hasAnyRole("OPERADOR", "ADMINISTRADOR"))
 				.csrf(csrf -> csrf
-						.ignoringRequestMatchers("/admin/api/**")
-				)
+						.ignoringRequestMatchers("/admin/api/**"))
 				.formLogin(form -> form
 						.loginPage("/admin/login")
 						.loginProcessingUrl("/admin/login")
@@ -53,6 +52,8 @@ public class SecurityConfig {
 						.loginProcessingUrl("/login")
 						.defaultSuccessUrl("/", true)
 						.permitAll())
+				.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/api/**"))
 				.logout(logout -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/login")

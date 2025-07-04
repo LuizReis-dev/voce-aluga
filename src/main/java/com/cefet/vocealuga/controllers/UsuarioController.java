@@ -85,7 +85,6 @@ public class UsuarioController {
 
 	@PostMapping("/cadastro")
 	public String cadastroCliente(Usuario usuario, RedirectAttributes redirectAttributes) {
-
 		try {
 			usuarioService.salvarCliente(usuario);
 
