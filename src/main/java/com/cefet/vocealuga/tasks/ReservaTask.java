@@ -1,12 +1,10 @@
 package com.cefet.vocealuga.tasks;
 
 import com.cefet.vocealuga.models.EstadoVeiculo;
-import com.cefet.vocealuga.models.Grupo;
 import com.cefet.vocealuga.models.StatusReserva;
 import com.cefet.vocealuga.models.Veiculo;
 import com.cefet.vocealuga.repositories.ReservaRepository;
 import com.cefet.vocealuga.repositories.VeiculoRepository;
-import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -97,7 +95,7 @@ public class ReservaTask implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        atualizaVeiculosReservados(LocalDate.now().plusDays(1));
+        atualizaVeiculosReservados(LocalDate.now());
     }
 
 }
