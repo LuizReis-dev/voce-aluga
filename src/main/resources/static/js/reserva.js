@@ -134,7 +134,7 @@ function cadastrarCliente(event) {
         .then(function(response) {
             if (!response.ok) {
                 return response.text().then(function(erro) {
-                    mensagemTexto.textContent = "Erro ao cadastrar cliente.";
+                    mensagemTexto.textContent = erro.mensagem || "Erro ao cadastrar cliente.";
                     mensagemErro.classList.remove("hidden");
                     botaoSalvar.disabled = false;
 
@@ -216,7 +216,6 @@ function buscarModelos(grupo) {
             disableCampos("input-reserva", true);
             erroBuscaModelos = true;
         });
-
     fetch("/admin/api/v1/reservas/calcular-valor", {
         method: "POST",
         headers: {
@@ -242,6 +241,7 @@ function buscarModelos(grupo) {
             mensagemTexto.textContent = "Erro ao calcular valor da reserva.";
             mensagemErro.classList.remove("hidden");
         });
+    document.getElementById("grupo").disabled = false;
 
 }
 
@@ -437,4 +437,9 @@ function zeraTelaReserva() {
     document.getElementById("valorTotal").value = "";
     document.getElementById("formaPagamento").value = "";
     disableCampos("input-reserva", true);
+}
+
+function voltarPagina() {
+    document.getElementById("form-cliente").style.display = "block";
+    document.getElementById("form-reserva").style.display = "none";
 }

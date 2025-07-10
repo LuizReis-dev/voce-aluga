@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -102,12 +103,12 @@ public class ReservaServiceTest {
         when(usuarioService.usuarioLogado()).thenReturn(usuarioLogado);
         when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
         when(reservaRepository.clientePossuiReservaNoPeriodo(cliente.getId(), dataDevolucao, dataEntrega)).thenReturn(false);
-        when(veiculoRepository.findFirstDisponivelSemReserva(
+        when(veiculoRepository.findFirstDisponiveisSemReserva(
                 usuarioLogado.getOperador().getFilial().getId(),
                 request.getModeloId(),
                 dataEntrega,
                 dataDevolucao))
-                .thenReturn(Optional.of(veiculo));
+                .thenReturn(List.of(veiculo));
 
         reservaService.criarReserva(request);
 
@@ -184,8 +185,8 @@ public class ReservaServiceTest {
         when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
         when(reservaRepository.clientePossuiReservaNoPeriodo(any(Integer.class), any(LocalDate.class), any(LocalDate.class)))
                 .thenReturn(false);
-        when(veiculoRepository.findFirstDisponivelSemReserva(any(Integer.class), any(Integer.class), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Optional.empty());
+        when(veiculoRepository.findFirstDisponiveisSemReserva(any(Integer.class), any(Integer.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(List.of());
 
         CreateReservaRequest request = new CreateReservaRequest();
         request.setClienteId(cliente.getId());
@@ -219,8 +220,8 @@ public class ReservaServiceTest {
         Veiculo veiculo = new Veiculo();
         veiculo.setModelo(modelo);
 
-        when(veiculoRepository.findFirstDisponivelSemReserva(any(Integer.class), any(Integer.class), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(Optional.of(veiculo));
+        when(veiculoRepository.findFirstDisponiveisSemReserva(any(Integer.class), any(Integer.class), any(LocalDate.class), any(LocalDate.class)))
+                .thenReturn(List.of(veiculo));
 
         CreateReservaRequest request = new CreateReservaRequest();
         request.setClienteId(cliente.getId());
@@ -264,8 +265,8 @@ public class ReservaServiceTest {
         when(usuarioService.usuarioLogado()).thenReturn(usuarioLogado);
         when(clienteRepository.findById(cliente.getId())).thenReturn(Optional.of(cliente));
         when(reservaRepository.clientePossuiReservaNoPeriodo(cliente.getId(), dataDevolucao, hoje)).thenReturn(false);
-        when(veiculoRepository.findFirstDisponivelSemReserva(operador.getFilial().getId(), request.getModeloId(), hoje, dataDevolucao))
-                .thenReturn(Optional.of(veiculo));
+        when(veiculoRepository.findFirstDisponiveisSemReserva(operador.getFilial().getId(), request.getModeloId(), hoje, dataDevolucao))
+                .thenReturn(List.of(veiculo));
 
         reservaService.criarReserva(request);
 
