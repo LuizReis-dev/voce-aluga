@@ -40,6 +40,14 @@ public class Reserva {
 	@Column(name = "origem", nullable = true)
 	private String origem;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status", nullable = false)
+	private StatusReserva status = StatusReserva.CRIADA;
+
+	@ManyToOne
+	@JoinColumn(name = "veiculo_original_id")
+	private Veiculo veiculoOriginal;
+
 	public Reserva() {
 	}
 
@@ -126,5 +134,21 @@ public class Reserva {
 
 	public void setOrigem(String origem) {
 		this.origem = origem;
+	}
+
+	public StatusReserva getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusReserva status) {
+		this.status = status;
+	}
+
+	public Veiculo getVeiculoOriginal() {
+		return veiculoOriginal;
+	}
+
+	public void setVeiculoOriginal(Veiculo veiculoOriginal) {
+		this.veiculoOriginal = veiculoOriginal;
 	}
 }
