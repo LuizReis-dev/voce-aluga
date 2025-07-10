@@ -59,7 +59,9 @@ public class ReservaService {
 		}
 
 		Veiculo veiculo = this.veiculoRepository
-				.findFirstDisponivelSemReserva(operador.getFilial().getId(), request.getModeloId(), dataEntrega, dataDevolucao)
+				.findFirstDisponiveisSemReserva(operador.getFilial().getId(), request.getModeloId(), dataEntrega, dataDevolucao)
+				.stream()
+				.findFirst()
 				.orElseThrow(() -> new WebserviceException("Nenhum veículo encontrado, selecione outro modelo!", false));
 
 		Grupo grupo = veiculo.getModelo().getGrupo();
@@ -82,6 +84,7 @@ public class ReservaService {
 		reserva.setDataEntrega(dataEntrega);
 		reserva.setValor(valorReserva);
 
+		reserva.setOrigem("PRESENCIAL");
 		if (dataEntrega.equals(hoje)) {
 			veiculo.setEstadoVeiculo(EstadoVeiculo.RESERVADO);
 			veiculoRepository.save(veiculo);
@@ -138,7 +141,9 @@ public class ReservaService {
 		}
 
 		Veiculo veiculo = this.veiculoRepository
-				.findFirstDisponivelSemReserva(dto.getFilialId(), dto.getModeloId(), dataEntrega, dataDevolucao)
+				.findFirstDisponiveisSemReserva(dto.getFilialId(), dto.getModeloId(), dataEntrega, dataDevolucao)
+				.stream()
+				.findFirst()
 				.orElseThrow(() -> new WebserviceException("Nenhum veículo encontrado, selecione outro modelo!", false));
 
 		Grupo grupo = veiculo.getModelo().getGrupo();
@@ -160,6 +165,7 @@ public class ReservaService {
 		reserva.setDataEntrega(dataEntrega);
 		reserva.setValor(valorReserva);
 
+		reserva.setOrigem("ONLINE");
 		if (dataEntrega.equals(hoje)) {
 			veiculo.setEstadoVeiculo(EstadoVeiculo.RESERVADO);
 			veiculoRepository.save(veiculo);

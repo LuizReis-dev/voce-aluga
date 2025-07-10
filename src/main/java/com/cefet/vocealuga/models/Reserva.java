@@ -37,11 +37,14 @@ public class Reserva {
 	@Column(nullable = false)
 	private BigDecimal valor;
 
+	@Column(name = "origem", nullable = true)
+	private String origem;
+
 	public Reserva() {
 	}
 
 	public Reserva(Integer id, Veiculo veiculo, Cliente cliente, Operador operador, LocalDate dataEntrega,
-			LocalDate dataDevolucao, BigDecimal valor, Filial filial) {
+                   LocalDate dataDevolucao, BigDecimal valor, Filial filial, String origem) {
 		this.id = id;
 		this.veiculo = veiculo;
 		this.cliente = cliente;
@@ -50,7 +53,8 @@ public class Reserva {
 		this.dataDevolucao = dataDevolucao;
 		this.valor = valor;
 		this.filial = filial;
-	}
+        this.origem = origem;
+    }
 
 	public Integer getId() {
 		return id;
@@ -114,5 +118,13 @@ public class Reserva {
 
 	public void setFilial(Filial filial) {
 		this.filial = filial;
+	}
+
+	public String getOrigem() {
+		return origem;
+	}
+
+	public void setOrigem(String origem) {
+		this.origem = origem;
 	}
 }
