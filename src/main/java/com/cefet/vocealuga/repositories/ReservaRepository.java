@@ -34,4 +34,19 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
             @Param("dataEntrega") LocalDate dataEntrega
     );
 
+    @Query("""
+        SELECT DATE(r.dataEntrega), COUNT(r)
+        FROM Reserva r
+        WHERE r.dataEntrega >= :inicioSemana AND r.dataEntrega <= :fimSemana
+        GROUP BY DATE(r.dataEntrega)
+        ORDER BY DATE(r.dataEntrega)
+    """)
+    List<Object[]> contarReservasPorDia(@Param("inicioSemana") LocalDate inicio, @Param("fimSemana") LocalDate fim);
+
+    @Query("""
+        SELECT r.origem, COUNT(r)
+        FROM Reserva r
+        GROUP BY r.origem
+    """)
+    List<Object[]> contarReservasPorOrigem();
 }
