@@ -5,10 +5,15 @@ import com.cefet.vocealuga.models.Grupo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.GrupoService;
 import com.cefet.vocealuga.services.UsuarioService;
+import com.cefet.vocealuga.tasks.ReservaTask;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -17,10 +22,11 @@ public class ReservaController {
 
     private final UsuarioService usuarioService;
     private final GrupoService grupoService;
-
-    public ReservaController(UsuarioService usuarioService, GrupoService grupoService) {
+    private final ReservaTask reservaTask;
+    public ReservaController(UsuarioService usuarioService, GrupoService grupoService, ReservaTask reservaTask) {
         this.usuarioService = usuarioService;
         this.grupoService = grupoService;
+        this.reservaTask = reservaTask;
     }
 
     @GetMapping("/admin/reservas/cadastro")
@@ -32,5 +38,24 @@ public class ReservaController {
         model.addAttribute("formasPagamento", FormaPagamento.values());
         model.addAttribute("conteudo", "/admin/reservas/cadastro");
         return "/admin/layout";
+    }
+
+    @GetMapping("/admin/reservas/virada-de-dia")
+    public String viradaDeDia(Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("conteudo", "/admin/reservas/virada-de-dia");
+        return "/admin/layout";
+    }
+
+
+    @PostMapping("/admin/simular-virada-dia")
+    public String simularVirada(
+            @RequestParam("dataVirada")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVirada) {
+        System.out.println("Data de virada recebida: " + dataVirada);
+
+       reservaTask.atualizaVeiculosReservados(dataVirada);
+        return "redirect:/admin/reservas/virada-de-dia";
     }
 }

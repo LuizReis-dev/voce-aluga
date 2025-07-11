@@ -42,7 +42,7 @@
 						<select th:field="*{filialId}" class="mt-1 w-full rounded-md border border-zinc-300 px-4 py-2 bg-white"
 							required>
 							<option value="" disabled>Selecione uma filial</option>
-							<option th:each="filial : ${filiais}" th:value="${filial.id}" th:text="${filial.nome}"></option>
+							<option th:each="filial : ${filiais}" th:value="${filial.id}" th:text="|${filial.enderecoCompleto} (${filial.nome})|"></option>
 						</select>
 					</div>
 

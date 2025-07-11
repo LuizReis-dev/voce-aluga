@@ -1,11 +1,13 @@
 package com.cefet.vocealuga.repositories;
 
 import com.cefet.vocealuga.models.Reserva;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
 
@@ -20,6 +22,16 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
             @Param("clienteId") Integer clienteId,
             @Param("dataEntrega") LocalDate dataEntrega,
             @Param("dataDevolucao") LocalDate dataDevolucao
+    );
+
+    @Query("""
+        SELECT r
+        FROM Reserva r
+        WHERE
+          r.dataEntrega = :dataEntrega
+    """)
+    List<Reserva> buscaReservasPorDiaDeEntrega(
+            @Param("dataEntrega") LocalDate dataEntrega
     );
 
 }

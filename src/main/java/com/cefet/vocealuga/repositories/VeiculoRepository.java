@@ -43,7 +43,7 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 			      )
 			    ORDER BY v.id ASC
 			""")
-	Optional<Veiculo> findFirstDisponivelSemReserva(
+	List<Veiculo>findFirstDisponiveisSemReserva(
 			@Param("filialId") Integer filialId,
 			@Param("modeloId") Integer modeloId,
 			@Param("dataEntrega") LocalDate dataEntrega,
@@ -54,4 +54,23 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 	com.cefet.vocealuga.dtos.veiculos.GrupoDTO findGrupoNomeAndIdByModeloVeiculoId(@Param("id") Integer id);
 
 	boolean existsByModeloId(Integer modeloId);
+
+	@Query("""
+			    SELECT v FROM Veiculo v
+			    WHERE v.filial.id = :filialId
+			      AND v.estadoVeiculo = com.cefet.vocealuga.models.EstadoVeiculo.DISPONIVEL
+			      AND v.modelo.grupo.nome = :grupoNome
+			      AND NOT EXISTS (
+			          SELECT 1 FROM Reserva r
+			          WHERE r.veiculo.id = v.id
+			            AND r.dataEntrega <= :dataDevolucao
+			            AND r.dataDevolucao >= :dataEntrega
+			      )
+			    ORDER BY v.id ASC
+			""")
+	List<Veiculo>findFirstDisponiveiGrupo(
+			@Param("filialId") Integer filialId,
+			@Param("grupoNome") String grupoNome,
+			@Param("dataEntrega") LocalDate dataEntrega,
+			@Param("dataDevolucao") LocalDate dataDevolucao);
 }

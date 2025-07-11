@@ -70,9 +70,10 @@
 				</div>
 
 				<p th:text="${modelo.grupo}"></p>
-				<div>
-					<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6fVh4DuRVp6f4LA4JsaG9ptF1lHnTbx4jMQ&s"
-						alt="Imagem" width="100" class="w-full rounded-lg border border-zinc-700" />
+				<div class="w-[300px]">
+					<img th:src="@{'../uploads/' + ${modelo.imagem}}"
+						 alt="Imagem"
+						 class="w-full h-full object-cover rounded-lg border border-zinc-700" />
 				</div>
 
 				<p th:text="${modelo.ano}"></p>
