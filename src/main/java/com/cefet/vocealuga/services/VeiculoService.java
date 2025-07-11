@@ -240,4 +240,10 @@ public class VeiculoService {
 		return gerenciamentoTransacaoVeiculoRepository
 				.existeSolicitacaoTransferencia(usuarioLogado.getOperador().getFilial());
 	}
+
+	public Long quantidadeVeiculosDisponiveis () {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+
+		return veiculoRepository.contarVeiculosDisponiveis(usuarioLogado.getOperador().getFilial().getId());
+	}
 }

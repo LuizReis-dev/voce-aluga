@@ -3,6 +3,7 @@ package com.cefet.vocealuga.controllers;
 import com.cefet.vocealuga.dtos.veiculos.ModeloVeiculoDTO;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.ModeloVeiculoService;
+import com.cefet.vocealuga.services.ReservaService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.services.VeiculoService;
 
@@ -24,13 +25,15 @@ public class HomeController {
 	private final UsuarioService usuarioService;
 	private final VeiculoService veiculoService;
 	private final ModeloVeiculoService modeloVeiculoService;
+	private final ReservaService reservaService;
 
 	public HomeController(UsuarioService usuarioService, VeiculoService veiculoService,
-			ModeloVeiculoService modeloVeiculoService) {
+                          ModeloVeiculoService modeloVeiculoService, ReservaService reservaService) {
 		this.usuarioService = usuarioService;
 		this.modeloVeiculoService = modeloVeiculoService;
 		this.veiculoService = veiculoService;
-	}
+        this.reservaService = reservaService;
+    }
 
 	@GetMapping("/admin/home")
 	public String homeFuncionario(Model model, Principal principal) {
@@ -38,6 +41,13 @@ public class HomeController {
 		boolean existeSolicitacaoTransferencia = veiculoService.existeSolicitacaoTransferencia();
 		model.addAttribute("usuarioLogado", usuarioLogado);
 		model.addAttribute("notificacaoTransferencia", existeSolicitacaoTransferencia);
+		var reservasPorDia = reservaService.quantidadeReservaDiaDaSemana();
+		var reservasPorOrigem = reservaService.contarReservaPorOrigem();
+		var veiculosDisponiveis = veiculoService.quantidadeVeiculosDisponiveis();
+
+		model.addAttribute("reservasPorDia", reservasPorDia);
+		model.addAttribute("reservasPorOrigem", reservasPorOrigem);
+		model.addAttribute("veiculosDisponiveis", veiculosDisponiveis);
 		model.addAttribute("conteudo", "/admin/home");
 		return "/admin/layout";
 	}

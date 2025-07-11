@@ -12,9 +12,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -179,5 +181,17 @@ public class ReservaService {
 		pagamento.setNotaFiscal(UUID.randomUUID().toString());
 		pagamento.setFormaPagamento(dto.getFormaPagamento());
 		pagamentoRepository.save(pagamento);
+	}
+
+
+	public List<Object[]> quantidadeReservaDiaDaSemana() {
+		LocalDate hoje = LocalDate.now();
+		LocalDate inicioSemana = hoje.with(DayOfWeek.MONDAY);
+		LocalDate fimSemana = hoje.with(DayOfWeek.SUNDAY);
+		return reservaRepository.contarReservasPorDia(inicioSemana, fimSemana);
+	}
+
+	public List<Object[]> contarReservaPorOrigem() {
+		return reservaRepository.contarReservasPorOrigem();
 	}
 }

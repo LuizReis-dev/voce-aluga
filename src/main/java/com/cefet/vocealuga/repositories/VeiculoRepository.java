@@ -73,4 +73,12 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 			@Param("grupoNome") String grupoNome,
 			@Param("dataEntrega") LocalDate dataEntrega,
 			@Param("dataDevolucao") LocalDate dataDevolucao);
+
+	@Query("""
+		SELECT COUNT(v)
+		FROM Veiculo v
+		WHERE v.estadoVeiculo = com.cefet.vocealuga.models.EstadoVeiculo.DISPONIVEL
+		  AND v.filial.id = :filialId
+	""")
+	long contarVeiculosDisponiveis(@Param("filialId") Integer filialId);
 }
