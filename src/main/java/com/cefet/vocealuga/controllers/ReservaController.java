@@ -1,9 +1,11 @@
 package com.cefet.vocealuga.controllers;
 
+import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
 import com.cefet.vocealuga.models.FormaPagamento;
 import com.cefet.vocealuga.models.Grupo;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.GrupoService;
+import com.cefet.vocealuga.services.ReservaService;
 import com.cefet.vocealuga.services.UsuarioService;
 import com.cefet.vocealuga.tasks.ReservaTask;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,12 +21,14 @@ import java.util.List;
 
 @Controller
 public class ReservaController {
-
     private final UsuarioService usuarioService;
+    private final ReservaService reservaService;
     private final GrupoService grupoService;
     private final ReservaTask reservaTask;
-    public ReservaController(UsuarioService usuarioService, GrupoService grupoService, ReservaTask reservaTask) {
+
+    public ReservaController(UsuarioService usuarioService, ReservaService reservaService, GrupoService grupoService, ReservaTask reservaTask) {
         this.usuarioService = usuarioService;
+        this.reservaService = reservaService;
         this.grupoService = grupoService;
         this.reservaTask = reservaTask;
     }
@@ -48,14 +52,24 @@ public class ReservaController {
         return "/admin/layout";
     }
 
-
     @PostMapping("/admin/simular-virada-dia")
-    public String simularVirada(
-            @RequestParam("dataVirada")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVirada) {
+    public String simularVirada(@RequestParam("dataVirada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVirada) {
         System.out.println("Data de virada recebida: " + dataVirada);
 
        reservaTask.atualizaVeiculosReservados(dataVirada);
         return "redirect:/admin/reservas/virada-de-dia";
+    }
+
+    @GetMapping("/admin/reservas")
+    public String reservas(Model model) {
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        List<ReservaDTO> reservas = reservaService.findAll();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("reservas", reservas);
+
+        model.addAttribute("conteudo", "/admin/reservas/listagem");
+
+
+        return "/admin/layout";
     }
 }

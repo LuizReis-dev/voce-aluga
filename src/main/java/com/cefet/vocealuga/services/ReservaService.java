@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
 import com.cefet.vocealuga.dtos.veiculos.ReservaClienteDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.*;
@@ -193,5 +194,11 @@ public class ReservaService {
 
 	public List<Object[]> contarReservaPorOrigem() {
 		return reservaRepository.contarReservasPorOrigem();
+	}
+
+	public List<ReservaDTO> findAll() {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+
+		return reservaRepository.findAll(usuarioLogado.getOperador().getFilial());
 	}
 }

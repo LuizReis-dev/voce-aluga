@@ -1,5 +1,7 @@
 package com.cefet.vocealuga.repositories;
 
+import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
+import com.cefet.vocealuga.models.Filial;
 import com.cefet.vocealuga.models.Reserva;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,4 +51,19 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
         GROUP BY r.origem
     """)
     List<Object[]> contarReservasPorOrigem();
+
+
+    @Query("""
+        SELECT new com.cefet.vocealuga.dtos.reservas.ReservaDTO(
+         r.id, c.usuario.nome, c.usuario.cpf, CONCAT(m.marca, ' ',m.modelo,' ',m.ano) , r.valor, r.status, r.origem,
+         r.dataEntrega, r.dataDevolucao
+     )
+     FROM Reserva r
+     JOIN r.cliente c
+     JOIN r.veiculo v
+     JOIN r.veiculo.modelo m
+     WHERE v.filial = :filial
+     ORDER BY r.dataEntrega DESC
+    """)
+    List<ReservaDTO> findAll(@Param("filial") Filial filial);
 }
