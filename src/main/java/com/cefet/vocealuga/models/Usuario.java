@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,14 +28,12 @@ public class Usuario implements UserDetails {
 	private LocalDate dataNascimento;
 	@Column(length = 20)
 	private String telefone;
-
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
 	private Operador operador;
-
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
 	private Cliente cliente;
 
-	public Usuario() {
+    public Usuario() {
 	}
 
 	public Usuario(Integer id, String nome, String cpf, String email, String senha, LocalDate dataNascimento,
@@ -145,5 +144,10 @@ public class Usuario implements UserDetails {
 	@Override
 	public String getUsername() {
 		return this.email;
+	}
+
+	public int getIdade() {
+		LocalDate hoje = LocalDate.now();
+        return Period.between(dataNascimento, hoje).getYears();
 	}
 }

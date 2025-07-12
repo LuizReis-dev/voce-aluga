@@ -99,4 +99,8 @@ public class Endereco {
     public void setCep(String cep) {
         this.cep = cep;
     }
+
+    public String enderecoCompleto() {
+        return this.logradouro + " " + this.numero + ", " + this.cidade + " - " + this.estado;
+    }
 }

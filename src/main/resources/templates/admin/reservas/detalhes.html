@@ -1,0 +1,98 @@
+<div th:fragment="content">
+    <!-- Card com informações do cliente -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-700">Detalhes do Cliente</h3>
+        </div>
+        <div class="grid grid-cols-4 gap-4 text-sm text-gray-800">
+            <div>
+                <span class="font-semibold">Nome:</span>
+                <p th:text="${reserva.cliente.usuario.nome}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">CPF:</span>
+                <p th:text="${reserva.cliente.usuario.cpf}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Email:</span>
+                <p th:text="${reserva.cliente.usuario.email}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Telefone:</span>
+                <p th:text="${reserva.cliente.usuario.telefone}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Idade:</span>
+                <p th:text="${reserva.cliente.usuario.idade}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">CNH:</span>
+                <p th:text="${reserva.cliente.cnh}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Apólice:</span>
+                <p th:text="${reserva.cliente.apolice}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Endereço:</span>
+                <p th:text="${reserva.cliente.endereco.enderecoCompleto}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card com informações da reserva -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-700">Detalhes da Reserva</h3>
+        </div>
+        <div class="grid grid-cols-4 gap-4 text-sm text-gray-800">
+            <div>
+                <span class="font-semibold">Modelo:</span>
+                <p th:text="${reserva.veiculo.modelo.modeloCompleto}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Valor:</span>
+                <p th:text="|R$ ${#numbers.formatDecimal(reserva.valor, 2, 2)}|">></p>
+            </div>
+            <div>
+                <span class="font-semibold">Data de entrega:</span>
+                <p th:text="${#temporals.format(reserva.dataEntrega, 'dd/MM/yyyy')}">></p>
+            </div>
+            <div>
+                <span class="font-semibold">Data de devolução:</span>
+                <p th:text="${#temporals.format(reserva.dataDevolucao, 'dd/MM/yyyy')}">></p>
+            </div>
+            <div>
+                <span class="font-semibold">Origem:</span>
+                <p th:text="${reserva.origem}"></p>
+            </div>
+            <div>
+                <span class="font-semibold">Status:</span>
+                <p th:text="${reserva.status.descricao}"></p>
+            </div>
+            <div th:if="${reserva.veiculoOriginal != null}">
+                <span class="font-semibold">Upgrade:</span>
+                <p th:text="|Sim (Original: ${reserva.veiculoOriginal.modelo.modeloCompleto})|"></p>
+            </div>
+            <div th:unless="${reserva.veiculoOriginal != null}">
+                <span class="font-semibold">Upgrade:</span>
+                <p>Sem upgrade</p>
+            </div>
+            <div th:if="${reserva.operador != null}">
+                <span class="font-semibold">Operador:</span>
+                <p th:text="${reserva.operador.usuario.nome}"></p>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-100 flex items-center justify-center"
+         th:if="${reserva.status !=  T(com.cefet.vocealuga.models.StatusReserva).FINALIZADA && reserva.status != T(com.cefet.vocealuga.models.StatusReserva).CRIADA }">
+        <form th:action="@{/admin/reservas/{id}/alterar-status}" method="post" class="flex flex-col items-center">
+            <button type="submit"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+                    th:text="${reserva.status == T(com.cefet.vocealuga.models.StatusReserva).AGUARDANDO_ENTREGA ? 'Confirmar Entrega' :
+                 reserva.status == T(com.cefet.vocealuga.models.StatusReserva).ENTREGUE ? 'Finalizar' :
+                 'Enviar'}">
+            </button>
+        </form>
+    </div>
+</div>

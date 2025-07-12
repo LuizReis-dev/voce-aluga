@@ -8,6 +8,7 @@ import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.requests.CalculoValorReservaRequest;
 import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import com.cefet.vocealuga.webservices.responses.CalculoValorReservaResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -200,5 +201,10 @@ public class ReservaService {
 		Usuario usuarioLogado = usuarioService.usuarioLogado();
 
 		return reservaRepository.findAll(usuarioLogado.getOperador().getFilial());
+	}
+
+	public Reserva findById(Integer id) {
+		return reservaRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
 	}
 }

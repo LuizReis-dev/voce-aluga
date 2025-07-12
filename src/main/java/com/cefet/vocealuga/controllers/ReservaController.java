@@ -3,6 +3,7 @@ package com.cefet.vocealuga.controllers;
 import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
 import com.cefet.vocealuga.models.FormaPagamento;
 import com.cefet.vocealuga.models.Grupo;
+import com.cefet.vocealuga.models.Reserva;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.services.GrupoService;
 import com.cefet.vocealuga.services.ReservaService;
@@ -12,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -69,6 +71,17 @@ public class ReservaController {
 
         model.addAttribute("conteudo", "/admin/reservas/listagem");
 
+        return "/admin/layout";
+    }
+
+    @GetMapping("/admin/reservas/{id}/detalhes")
+    public String detalhes(@PathVariable Integer id, Model model) {
+        Reserva reserva = reservaService.findById(id);
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("reserva", reserva);
+
+        model.addAttribute("conteudo", "/admin/reservas/detalhes");
 
         return "/admin/layout";
     }
