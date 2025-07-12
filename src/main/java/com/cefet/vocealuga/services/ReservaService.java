@@ -1,5 +1,6 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
 import com.cefet.vocealuga.dtos.veiculos.ReservaClienteDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.*;
@@ -7,6 +8,7 @@ import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.requests.CalculoValorReservaRequest;
 import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import com.cefet.vocealuga.webservices.responses.CalculoValorReservaResponse;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -193,5 +195,36 @@ public class ReservaService {
 
 	public List<Object[]> contarReservaPorOrigem() {
 		return reservaRepository.contarReservasPorOrigem();
+	}
+
+	public List<ReservaDTO> findAll() {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+
+		return reservaRepository.findAll(usuarioLogado.getOperador().getFilial());
+	}
+
+	public Reserva findById(Integer id) {
+		return reservaRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
+	}
+
+	@Transactional
+	public String alterarStatusReserva(Integer id) {
+		Reserva reserva =  reservaRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
+		String mensagem = "";
+
+		if(StatusReserva.ENTREGUE.equals(reserva.getStatus())) {
+			reserva.getVeiculo().setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);
+			reserva.setStatus(StatusReserva.FINALIZADA);
+			mensagem = "Cliente retornou o veículo. Reserva finalizada com sucesso!";
+		}
+
+		if(StatusReserva.AGUARDANDO_ENTREGA.equals(reserva.getStatus())) {
+			reserva.setStatus(StatusReserva.ENTREGUE);
+			mensagem = "Veículo entregue ao cliente";
+		}
+		reservaRepository.save(reserva);
+		return mensagem;
 	}
 }

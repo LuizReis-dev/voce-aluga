@@ -88,4 +88,8 @@ public class ModeloVeiculo {
         this.grupo = grupo;
         return this;
     }
+
+    public String modeloCompleto() {
+        return marca + " " + modelo + " " + ano;
+    }
 }

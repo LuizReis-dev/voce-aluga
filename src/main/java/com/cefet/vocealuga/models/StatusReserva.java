@@ -1,5 +1,18 @@
 package com.cefet.vocealuga.models;
 
 public enum StatusReserva {
-    CRIADA, AGUARDANDO_ENTREGA, ENTREGUE, FINALIZADA
+    CRIADA("Criada"),
+    AGUARDANDO_ENTREGA("Aguardando Entrega"),
+    ENTREGUE("Entregue"),
+    FINALIZADA("Finalizada");
+
+    private String descricao;
+
+    StatusReserva(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
 }
