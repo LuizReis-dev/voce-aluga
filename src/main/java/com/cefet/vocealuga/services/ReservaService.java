@@ -207,4 +207,24 @@ public class ReservaService {
 		return reservaRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
 	}
+
+	@Transactional
+	public String alterarStatusReserva(Integer id) {
+		Reserva reserva =  reservaRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
+		String mensagem = "";
+
+		if(StatusReserva.ENTREGUE.equals(reserva.getStatus())) {
+			reserva.getVeiculo().setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);
+			reserva.setStatus(StatusReserva.FINALIZADA);
+			mensagem = "Cliente retornou o veículo. Reserva finalizada com sucesso!";
+		}
+
+		if(StatusReserva.AGUARDANDO_ENTREGA.equals(reserva.getStatus())) {
+			reserva.setStatus(StatusReserva.ENTREGUE);
+			mensagem = "Veículo entregue ao cliente";
+		}
+		reservaRepository.save(reserva);
+		return mensagem;
+	}
 }

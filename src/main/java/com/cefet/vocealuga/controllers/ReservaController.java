@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -84,5 +85,19 @@ public class ReservaController {
         model.addAttribute("conteudo", "/admin/reservas/detalhes");
 
         return "/admin/layout";
+    }
+
+    @PostMapping("/admin/reservas/{id}/alterar-status")
+    public String alterarStatus(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            String mensagem = reservaService.alterarStatusReserva(id);
+
+            redirectAttributes.addFlashAttribute("success", mensagem);
+            return "redirect:/admin/reservas/"+id+"/detalhes";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erro ao alterar status: " + e.getMessage());
+
+            return "redirect:/admin/reservas/"+id+"/detalhes";
+        }
     }
 }

@@ -86,7 +86,7 @@
     </div>
     <div class="bg-gray-100 flex items-center justify-center"
          th:if="${reserva.status !=  T(com.cefet.vocealuga.models.StatusReserva).FINALIZADA && reserva.status != T(com.cefet.vocealuga.models.StatusReserva).CRIADA }">
-        <form th:action="@{/admin/reservas/{id}/alterar-status}" method="post" class="flex flex-col items-center">
+        <form th:action="@{/admin/reservas/{id}/alterar-status(id=${reserva.id})}" method="post" class="flex flex-col items-center">
             <button type="submit"
                     class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
                     th:text="${reserva.status == T(com.cefet.vocealuga.models.StatusReserva).AGUARDANDO_ENTREGA ? 'Confirmar Entrega' :
