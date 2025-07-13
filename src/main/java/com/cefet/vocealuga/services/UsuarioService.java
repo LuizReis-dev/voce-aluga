@@ -4,6 +4,7 @@ import com.cefet.vocealuga.models.CargoOperador;
 import com.cefet.vocealuga.models.Cliente;
 import com.cefet.vocealuga.models.Operador;
 import com.cefet.vocealuga.models.Usuario;
+import com.cefet.vocealuga.repositories.ClienteRepository;
 import com.cefet.vocealuga.repositories.UsuarioRepository;
 import com.cefet.vocealuga.utils.CPFValidator;
 import jakarta.persistence.EntityExistsException;
@@ -23,11 +24,13 @@ public class UsuarioService implements UserDetailsService {
 
 	private static Usuario usuarioLogado;
 	private final UsuarioRepository usuarioRepository;
+	private final ClienteRepository clienteRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+	public UsuarioService(UsuarioRepository usuarioRepository, ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
 		this.usuarioRepository = usuarioRepository;
-		this.passwordEncoder = passwordEncoder;
+        this.clienteRepository = clienteRepository;
+        this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -50,6 +53,10 @@ public class UsuarioService implements UserDetailsService {
 
 	public List<Usuario> findAll() {
 		return usuarioRepository.buscaOperadores();
+	}
+
+	public List<Cliente> findAllClientes() {
+		return clienteRepository.findAll();
 	}
 
 	public Usuario findById(Integer id) {
