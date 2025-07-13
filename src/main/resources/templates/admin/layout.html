@@ -19,7 +19,6 @@
 <body class="flex h-screen bg-gray-100">
 
 <!-- Sidebar -->
-<!-- Sidebar -->
 <div id="sidebar" class="bg-white w-64 h-screen flex flex-col justify-between shadow-md transition-all duration-300">
 
     <!-- Parte de cima: logo, menus -->
@@ -110,7 +109,7 @@
         <button type="submit"
                 class="w-full flex items-center gap-2 p-2 rounded text-red-600 hover:bg-red-100 font-semibold">
             <i data-lucide="log-out" class="w-5 h-5 flex-shrink-0"></i>
-            <span>Sair</span>
+            <span class="sidebar-label">Sair</span>
         </button>
     </form>
 
@@ -160,6 +159,8 @@
 <script src="/js/masks.js"></script>
 
 <script>
+    lucide.createIcons();
+
     function toggleDropdown(menuId, iconId) {
         const menu = document.getElementById(menuId);
         const icon = document.getElementById(iconId);
@@ -170,6 +171,5 @@
 </script>
 </body>
 <script>
-    lucide.createIcons();
 </script>
 </html>

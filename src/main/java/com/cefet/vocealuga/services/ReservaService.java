@@ -227,4 +227,8 @@ public class ReservaService {
 		reservaRepository.save(reserva);
 		return mensagem;
 	}
+
+	public List<ReservaDTO> findByClienteId(Integer clienteId) {
+		return reservaRepository.findAllByClienteId(clienteId);
+	}
 }

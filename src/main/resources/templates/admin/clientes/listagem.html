@@ -27,7 +27,7 @@
                     <td class="px-4 py-2" th:text="${cliente.usuario.idade}"></td>
 
                     <td class="px-4 py-2 space-x-2">
-                        <a th:href="@{/admin/reservas/{id}/cliente(id=${cliente.usuario.id})}"
+                        <a th:href="@{/admin/reservas/{id}/cliente(id=${cliente.id})}"
                            class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">
                             Ver Reservas
                         </a>

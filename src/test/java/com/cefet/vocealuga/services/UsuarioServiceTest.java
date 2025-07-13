@@ -8,6 +8,7 @@ import com.cefet.vocealuga.models.CargoOperador;
 import com.cefet.vocealuga.models.Filial;
 import com.cefet.vocealuga.models.Operador;
 import com.cefet.vocealuga.models.Usuario;
+import com.cefet.vocealuga.repositories.ClienteRepository;
 import com.cefet.vocealuga.repositories.UsuarioRepository;
 import com.cefet.vocealuga.utils.CPFValidator;
 import jakarta.persistence.EntityExistsException;
@@ -27,10 +28,13 @@ public class UsuarioServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ClienteRepository clienteRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        usuarioService = spy(new UsuarioService(usuarioRepository, passwordEncoder));
+        usuarioService = spy(new UsuarioService(usuarioRepository, clienteRepository, passwordEncoder));
     }
 
     @Test

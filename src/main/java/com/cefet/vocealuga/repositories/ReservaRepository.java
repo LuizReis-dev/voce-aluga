@@ -66,4 +66,18 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
      ORDER BY r.dataEntrega DESC
     """)
     List<ReservaDTO> findAll(@Param("filial") Filial filial);
+
+    @Query("""
+        SELECT new com.cefet.vocealuga.dtos.reservas.ReservaDTO(
+         r.id, c.usuario.nome, c.usuario.cpf, CONCAT(m.marca, ' ',m.modelo,' ',m.ano) , r.valor, r.status, r.origem,
+         r.dataEntrega, r.dataDevolucao
+     )
+     FROM Reserva r
+     JOIN r.cliente c
+     JOIN r.veiculo v
+     JOIN r.veiculo.modelo m
+     WHERE r.cliente.id = :clienteId
+     ORDER BY r.dataEntrega DESC
+    """)
+    List<ReservaDTO> findAllByClienteId(Integer clienteId);
 }
