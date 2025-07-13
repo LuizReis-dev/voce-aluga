@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,7 +43,7 @@
 
         <div>
             <!-- Administração -->
-            <button onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+            <button sec:authorize="hasAnyRole('ADMINISTRADOR')" onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
                 <div class="flex items-center gap-2">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,10 +57,9 @@
                           d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            <div id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
+            <div sec:authorize="hasAnyRole('ADMINISTRADOR')"  id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
                 <a href="/admin/usuarios" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Usuários</a>
                 <a href="/admin/filiais" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Filiais</a>
-
             </div>
 
             <!-- Veículos -->
