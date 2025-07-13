@@ -1,4 +1,4 @@
-package com.cefet.vocealuga.controllers;
+package com.cefet.vocealuga.webservices;
 
 import com.cefet.vocealuga.dtos.filial.FilialDTO;
 import com.cefet.vocealuga.services.FilialService;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-public class FilialController {
+public class FilialWebservice {
     private final FilialService filialService;
-    public FilialController(FilialService filialService) {
+    public FilialWebservice(FilialService filialService) {
         this.filialService = filialService;
     }
 
