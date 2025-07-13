@@ -97,6 +97,8 @@ public class ReservaService {
 		reservaRepository.save(reserva);
 
 		Pagamento pagamento = new Pagamento();
+		pagamento.setReserva(reserva);
+
 		pagamento.setDataPagamento(LocalDate.now());
 		pagamento.setValor(valorReserva);
 		pagamento.setNotaFiscal(UUID.randomUUID().toString());
@@ -178,6 +180,7 @@ public class ReservaService {
 		reservaRepository.save(reserva);
 
 		Pagamento pagamento = new Pagamento();
+		pagamento.setReserva(reserva);
 		pagamento.setDataPagamento(LocalDate.now());
 		pagamento.setValor(valorReserva);
 		pagamento.setNotaFiscal(UUID.randomUUID().toString());
@@ -213,6 +216,13 @@ public class ReservaService {
 		Reserva reserva =  reservaRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Reserva não encontrada!"));
 		String mensagem = "";
+
+		if(StatusReserva.CRIADA.equals(reserva.getStatus())) {
+			reserva.getVeiculo().setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);
+			reserva.setStatus(StatusReserva.CANCELADA);
+			reserva.getPagamento().setReembolsado(true);
+			mensagem = "Reserva cancelada com sucesso.";
+		}
 
 		if(StatusReserva.ENTREGUE.equals(reserva.getStatus())) {
 			reserva.getVeiculo().setEstadoVeiculo(EstadoVeiculo.DISPONIVEL);

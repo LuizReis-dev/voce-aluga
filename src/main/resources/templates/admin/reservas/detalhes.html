@@ -82,17 +82,24 @@
                 <span class="font-semibold">Operador:</span>
                 <p th:text="${reserva.operador.usuario.nome}"></p>
             </div>
+
+            <div th:if="${reserva.pagamento != null}">
+                <span class="font-semibold">Pagamento:</span>
+                <p th:text="${reserva.pagamento.reembolsado != null && reserva.pagamento.reembolsado ? 'Reembolsado' : 'Realizado'}"></p>
+            </div>
         </div>
     </div>
     <div class="bg-gray-100 flex items-center justify-center"
-         th:if="${reserva.status !=  T(com.cefet.vocealuga.models.StatusReserva).FINALIZADA && reserva.status != T(com.cefet.vocealuga.models.StatusReserva).CRIADA }">
+         th:if="${reserva.status != T(com.cefet.vocealuga.models.StatusReserva).FINALIZADA }">
         <form th:action="@{/admin/reservas/{id}/alterar-status(id=${reserva.id})}" method="post" class="flex flex-col items-center">
             <button type="submit"
                     class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-                    th:text="${reserva.status == T(com.cefet.vocealuga.models.StatusReserva).AGUARDANDO_ENTREGA ? 'Confirmar Entrega' :
-                 reserva.status == T(com.cefet.vocealuga.models.StatusReserva).ENTREGUE ? 'Finalizar' :
-                 'Enviar'}">
+                    th:text="${reserva.status == T(com.cefet.vocealuga.models.StatusReserva).CRIADA ? 'Cancelar' :
+                  reserva.status == T(com.cefet.vocealuga.models.StatusReserva).AGUARDANDO_ENTREGA ? 'Confirmar Entrega' :
+                  reserva.status == T(com.cefet.vocealuga.models.StatusReserva).ENTREGUE ? 'Finalizar' :
+                  'Enviar'}">
             </button>
+
         </form>
     </div>
 </div>

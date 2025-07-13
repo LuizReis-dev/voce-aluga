@@ -3,6 +3,7 @@ package com.cefet.vocealuga.models;
 public enum StatusReserva {
     CRIADA("Criada"),
     AGUARDANDO_ENTREGA("Aguardando Entrega"),
+    CANCELADA("Cancelada"),
     ENTREGUE("Entregue"),
     FINALIZADA("Finalizada");
 

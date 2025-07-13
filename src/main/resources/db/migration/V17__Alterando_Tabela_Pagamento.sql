@@ -1,0 +1,2 @@
+ALTER TABLE pagamento
+    ADD COLUMN reembolsado BOOLEAN DEFAULT FALSE;

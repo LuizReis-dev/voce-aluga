@@ -12,7 +12,7 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reserva_id")
     private Reserva reserva;
 
@@ -29,6 +29,7 @@ public class Pagamento {
     @Column(name = "nota_fiscal", nullable = false)
     private String notaFiscal;
 
+    private Boolean reembolsado;
     public Pagamento() {
     }
 
@@ -86,5 +87,13 @@ public class Pagamento {
 
     public void setNotaFiscal(String notaFiscal) {
         this.notaFiscal = notaFiscal;
+    }
+
+    public Boolean getReembolsado() {
+        return reembolsado;
+    }
+
+    public void setReembolsado(Boolean reembolsado) {
+        this.reembolsado = reembolsado;
     }
 }

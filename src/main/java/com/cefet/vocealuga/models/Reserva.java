@@ -48,6 +48,9 @@ public class Reserva {
 	@JoinColumn(name = "veiculo_original_id")
 	private Veiculo veiculoOriginal;
 
+	@OneToOne(mappedBy = "reserva", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Pagamento pagamento;
+
 	public Reserva() {
 	}
 
@@ -150,5 +153,13 @@ public class Reserva {
 
 	public void setVeiculoOriginal(Veiculo veiculoOriginal) {
 		this.veiculoOriginal = veiculoOriginal;
+	}
+
+	public Pagamento getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
 	}
 }
