@@ -19,101 +19,101 @@
 <body class="flex h-screen bg-gray-100">
 
 <!-- Sidebar -->
-<div id="sidebar" class="bg-white w-64 transition-all duration-300 shadow-md flex flex-col">
-    <div class="flex items-center justify-between p-4 border-b">
-        <span class="text-xl font-semibold sidebar-label" th:text="${usuarioLogado.operador.filial.nome}"></span>
-        <button onclick="toggleSidebar()" class="focus:outline-none">
-            <!-- Ícone menu -->
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-    </div>
-    <nav class="flex-1 p-4 space-y-2">
+<div id="sidebar" class="bg-white w-64 h-screen flex flex-col justify-between shadow-md transition-all duration-300">
 
-        <!-- Dashboard -->
-        <a href="/admin/home" class="flex items-center gap-2 p-2 rounded hover:bg-gray-200">
-            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3h6v6H3V3zm0 12h6v6H3v-6zm12-12h6v6h-6V3zm0 12h6v6h-6v-6z" />
-            </svg>
-            <span class="sidebar-label">Dashboard</span>
-        </a>
-
-        <div>
-            <!-- Administração -->
-            <button sec:authorize="hasAnyRole('ADMINISTRADOR')" onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 15.5A3.5 3.5 0 1012 8a3.5 3.5 0 000 7.5zm0 0v1.75m0-9.25V6m5.303 10.303l1.237 1.237m-11.08-11.08l1.237 1.237M18 12h1.75M4.25 12H6m11.08-5.303l1.237-1.237m-11.08 11.08l1.237-1.237" />
-                    </svg>
-                    <span class="sidebar-label">Administração</span>
-                </div>
-                <svg id="dropdown-icon" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Parte de cima: logo, menus -->
+    <div>
+        <!-- Cabeçalho -->
+        <div class="flex items-center justify-between p-4 border-b">
+            <span class="text-xl font-semibold sidebar-label" th:text="${usuarioLogado.operador.filial.nome}"></span>
+            <button onclick="toggleSidebar()" class="focus:outline-none">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 9l-7 7-7-7" />
+                          d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <div sec:authorize="hasAnyRole('ADMINISTRADOR')"  id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
-                <a href="/admin/usuarios" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Usuários</a>
-                <a href="/admin/filiais" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Filiais</a>
-            </div>
-
-            <!-- Veículos -->
-            <button onclick="toggleDropdown('dropdown-menu-veiculos', 'dropdown-icon-veiculos')"
-                    class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M3 13l2-5h14l2 5v6a1 1 0 01-1 1h-1a2 2 0 01-4 0H8a2 2 0 01-4 0H3a1 1 0 01-1-1v-6z" />
-                    </svg>
-                    <span class="sidebar-label">Veículos</span>
-                </div>
-                <svg id="dropdown-icon-veiculos" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div id="dropdown-menu-veiculos" class="ml-7 mt-2 space-y-1 hidden">
-                <a href="/admin/modelos-veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Modelos de Veículos</a>
-                <a href="/admin/veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Veículos</a>
-                <a href="/admin/grupos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Grupos (Preços)</a>
-                <a href="/admin/veiculos/compra" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Compra</a>
-                <a href="/admin/veiculos/venda" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Venda</a>
-                <a href="/admin/veiculos/solicitar-transferencia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Solicitar Transferência</a>
-                <a href="/admin/veiculos/solicitacoes-transferencia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Solicitações de Transferência</a>
-                <a href="/admin/veiculos/historico-transacoes" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Histórico de Transações</a>
-            </div>
-
-            <!-- Reservas -->
-            <button onclick="toggleDropdown('dropdown-menu-reserva', 'dropdown-icon-reservas')"
-                    class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M8 7V3m8 4V3m-9 8h10m2 10H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2z" />
-                    </svg>
-                    <span class="sidebar-label">Reservas</span>
-                </div>
-                <svg id="dropdown-icon-reservas" class="w-4 h-4 text-gray-600 transition-transform duration-200" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div id="dropdown-menu-reserva" class="ml-7 mt-2 space-y-1 hidden">
-                <a href="/admin/reservas" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Reservas</a>
-                <a href="/admin/reservas/cadastro" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Nova Reserva</a>
-                <a href="/admin/reservas/virada-de-dia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Simular virada de dia</a>
-            </div>
         </div>
-    </nav>
-</div>
 
+        <!-- Menu (o seu <nav> vai aqui dentro normalmente) -->
+        <nav class="p-4 space-y-2">
+            <!-- Dashboard -->
+            <a href="/admin/home" class="flex items-center gap-2 p-2 rounded hover:bg-gray-200">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-gray-700 flex-shrink-0"></i>
+                <span class="sidebar-label">Dashboard</span>
+            </a>
+
+            <div>
+                <!-- Administração -->
+                <button sec:authorize="hasAnyRole('ADMINISTRADOR')" onclick="toggleDropdown('dropdown-menu', 'dropdown-icon')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="settings" class="w-5 h-5 text-gray-700 flex-shrink-0"></i>
+                        <span class="sidebar-label">Administração</span>
+                    </div>
+                    <i id="dropdown-icon" data-lucide="chevron-down" class="w-4 h-4 text-gray-600 transition-transform duration-200"></i>
+                </button>
+                <div sec:authorize="hasAnyRole('ADMINISTRADOR')" id="dropdown-menu" class="ml-7 mt-2 space-y-1 hidden">
+                    <a href="/admin/usuarios" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Usuários</a>
+                    <a href="/admin/filiais" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Filiais</a>
+                </div>
+
+                <!-- Veículos -->
+                <button onclick="toggleDropdown('dropdown-menu-veiculos', 'dropdown-icon-veiculos')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="car" class="w-5 h-5 text-gray-700 flex-shrink-0"></i>
+                        <span class="sidebar-label">Veículos</span>
+                    </div>
+                    <i id="dropdown-icon-veiculos" data-lucide="chevron-down" class="w-4 h-4 text-gray-600 transition-transform duration-200"></i>
+                </button>
+                <div id="dropdown-menu-veiculos" class="ml-7 mt-2 space-y-1 hidden">
+                    <a href="/admin/modelos-veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Modelos de Veículos</a>
+                    <a href="/admin/veiculos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Veículos</a>
+                    <a href="/admin/grupos" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Grupos (Preços)</a>
+                    <a href="/admin/veiculos/compra" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Compra</a>
+                    <a href="/admin/veiculos/venda" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Venda</a>
+                    <a href="/admin/veiculos/solicitar-transferencia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Solicitar Transferência</a>
+                    <a href="/admin/veiculos/solicitacoes-transferencia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Solicitações de Transferência</a>
+                    <a href="/admin/veiculos/historico-transacoes" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Histórico de Transações</a>
+                </div>
+
+                <!-- Reservas -->
+                <button onclick="toggleDropdown('dropdown-menu-reserva', 'dropdown-icon-reservas')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="calendar-days" class="w-5 h-5 text-gray-700 flex-shrink-0"></i>
+                        <span class="sidebar-label">Reservas</span>
+                    </div>
+                    <i id="dropdown-icon-reservas" data-lucide="chevron-down" class="w-4 h-4 text-gray-600 transition-transform duration-200"></i>
+                </button>
+                <div id="dropdown-menu-reserva" class="ml-7 mt-2 space-y-1 hidden">
+                    <a href="/admin/reservas" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Reservas</a>
+                    <a href="/admin/reservas/cadastro" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Nova Reserva</a>
+                    <a href="/admin/reservas/virada-de-dia" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Simular virada de dia</a>
+                </div>
+
+                <!-- Clientes -->
+                <button onclick="toggleDropdown('dropdown-menu-clientes', 'dropdown-icon-clientes')" class="w-full flex items-center justify-between p-2 rounded hover:bg-gray-200 focus:outline-none">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="users" class="w-5 h-5 text-gray-700 flex-shrink-0"></i>
+                        <span class="sidebar-label">Clientes</span>
+                    </div>
+                    <i id="dropdown-icon-clientes" data-lucide="chevron-down" class="w-4 h-4 text-gray-600 transition-transform duration-200"></i>
+                </button>
+                <div id="dropdown-menu-clientes" class="ml-7 mt-2 space-y-1 hidden">
+                    <a href="/admin/clientes" class="block p-2 rounded hover:bg-gray-100 text-sm text-gray-700">Listagem</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Parte de baixo: botão de logout -->
+    <form th:action="@{/admin/logout}" method="post" class="p-4">
+        <button type="submit"
+                class="w-full flex items-center gap-2 p-2 rounded text-red-600 hover:bg-red-100 font-semibold">
+            <i data-lucide="log-out" class="w-5 h-5 flex-shrink-0"></i>
+            <span class="sidebar-label">Sair</span>
+        </button>
+    </form>
+
+</div>
 <!-- Main Content -->
 <div class="flex flex-col flex-1 overflow-hidden">
     <!-- Header -->
@@ -153,11 +153,14 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://unpkg.com/imask"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <script src="/js/table.js"></script>
 <script src="/js/masks.js"></script>
 
 <script>
+    lucide.createIcons();
+
     function toggleDropdown(menuId, iconId) {
         const menu = document.getElementById(menuId);
         const icon = document.getElementById(iconId);
@@ -167,4 +170,6 @@
     }
 </script>
 </body>
+<script>
+</script>
 </html>

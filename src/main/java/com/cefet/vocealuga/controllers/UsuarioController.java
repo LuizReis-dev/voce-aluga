@@ -104,4 +104,13 @@ public class UsuarioController {
 		}
 	}
 
+	@GetMapping("/admin/clientes")
+	public String listagemClientes(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("clientes", usuarioService.findAllClientes());
+		model.addAttribute("conteudo", "admin/clientes/listagem");
+		return "/admin/layout";
+	}
+
 }

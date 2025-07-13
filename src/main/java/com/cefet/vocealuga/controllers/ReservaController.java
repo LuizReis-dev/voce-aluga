@@ -100,4 +100,16 @@ public class ReservaController {
             return "redirect:/admin/reservas/"+id+"/detalhes";
         }
     }
+
+    @GetMapping("/admin/reservas/{id}/cliente")
+    public String listarPorCliente(@PathVariable Integer id, Model model) {
+        List<ReservaDTO> reservas = reservaService.findByClienteId(id);
+        Usuario usuarioLogado = usuarioService.usuarioLogado();
+        model.addAttribute("usuarioLogado", usuarioLogado);
+        model.addAttribute("reservas", reservas);
+
+        model.addAttribute("conteudo", "/admin/reservas/listagem");
+
+        return "/admin/layout";
+    }
 }
