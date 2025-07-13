@@ -1,6 +1,7 @@
 package com.cefet.vocealuga.services;
 
 import com.cefet.vocealuga.dtos.filial.FilialDTO;
+import com.cefet.vocealuga.models.Filial;
 import com.cefet.vocealuga.models.Usuario;
 import com.cefet.vocealuga.repositories.FilialRepository;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,9 @@ public class FilialService {
 
 	public List<FilialDTO> buscarFiliaisComVeiculoDisponivelDoModelo(Integer modeloId) {
 		return filialRepository.buscarFiliaisComVeiculoDisponivel(modeloId);
+	}
+
+	public List<Filial> findAll() {
+		return filialRepository.findAll();
 	}
 }
