@@ -49,7 +49,7 @@ public class UsuarioService implements UserDetailsService {
 	}
 
 	public List<Usuario> findAll() {
-		return usuarioRepository.findAll();
+		return usuarioRepository.buscaOperadores();
 	}
 
 	public Usuario findById(Integer id) {
@@ -71,14 +71,9 @@ public class UsuarioService implements UserDetailsService {
 			throw new RuntimeException("CPF inválido");
 		}
 
-		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-
-		Operador operador = new Operador();
-		operador.setCargo(CargoOperador.OPERADOR);
-		operador.setFilial(usuarioLogado().getOperador().getFilial());
+		Operador operador = usuario.getOperador();
 		operador.setUsuario(usuario);
-
-		usuario.setOperador(operador);
+		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
 		return usuarioRepository.save(usuario);
 	}
@@ -116,6 +111,8 @@ public class UsuarioService implements UserDetailsService {
 		existente.setNome(usuario.getNome());
 		existente.setEmail(usuario.getEmail());
 		existente.setCpf(usuario.getCpf());
+		existente.getOperador().setCargo(usuario.getOperador().getCargo());
+		existente.getOperador().setFilial(usuario.getOperador().getFilial());
 
 		if (usuario.getSenha() != null && !usuario.getSenha().isBlank() &&
 				!passwordEncoder.matches(usuario.getSenha(), existente.getSenha())) {

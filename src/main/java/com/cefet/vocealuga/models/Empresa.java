@@ -27,6 +27,10 @@ public class Empresa {
     @OneToMany(mappedBy = "empresa")
     private List<Filial> filiais  = new ArrayList<>();
 
+    public Empresa(Integer id) {
+        this.id = id;
+    }
+
     public Empresa(Integer id, String razaoSocial, String nomeFantasia, String cnpj, String telefone, Endereco endereco) {
         this.id = id;
         this.razaoSocial = razaoSocial;

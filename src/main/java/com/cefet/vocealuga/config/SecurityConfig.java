@@ -22,6 +22,7 @@ public class SecurityConfig {
 				.securityMatcher("/admin/**", "/admin/login")
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/admin/login").permitAll()
+						.requestMatchers("/admin/usuarios/**", "/admin/filiais/**").hasRole("ADMINISTRADOR")
 						.anyRequest().hasAnyRole("OPERADOR", "ADMINISTRADOR"))
 				.csrf(csrf -> csrf
 						.ignoringRequestMatchers("/admin/api/**")

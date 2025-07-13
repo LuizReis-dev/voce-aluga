@@ -1,6 +1,8 @@
 package com.cefet.vocealuga.controllers;
 
+import com.cefet.vocealuga.models.CargoOperador;
 import com.cefet.vocealuga.models.Usuario;
+import com.cefet.vocealuga.services.FilialService;
 import com.cefet.vocealuga.services.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +14,11 @@ import java.util.List;
 @Controller
 public class UsuarioController {
 	private final UsuarioService usuarioService;
-
-	public UsuarioController(UsuarioService usuarioService) {
+	private final FilialService filialService;
+	public UsuarioController(UsuarioService usuarioService, FilialService filialService) {
 		this.usuarioService = usuarioService;
-	}
+        this.filialService = filialService;
+    }
 
 	@GetMapping("/admin/usuarios")
 	public String listarUsuarios(Model model) {
@@ -30,6 +33,8 @@ public class UsuarioController {
 	@GetMapping("/admin/usuarios/cadastro")
 	public String novoUsuario(Model model) {
 		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("cargos", CargoOperador.values());
+		model.addAttribute("filiais", filialService.findAll());
 		model.addAttribute("usuarioLogado", usuarioLogado);
 		model.addAttribute("usuario", new Usuario());
 		model.addAttribute("conteudo", "/admin/usuarios/cadastro");
@@ -43,6 +48,8 @@ public class UsuarioController {
 		Usuario usuario = usuarioService.findById(id);
 		System.out.println(usuario.getDataNascimento());
 		model.addAttribute("usuario", usuario);
+		model.addAttribute("filiais", filialService.findAll());
+		model.addAttribute("cargos", CargoOperador.values());
 		model.addAttribute("conteudo", "/admin/usuarios/cadastro");
 		return "/admin/layout";
 	}
