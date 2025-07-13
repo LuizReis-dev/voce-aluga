@@ -40,6 +40,7 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 			          WHERE r.veiculo.id = v.id
 			            AND r.dataEntrega <= :dataDevolucao
 			            AND r.dataDevolucao >= :dataEntrega
+			            AND r.status != com.cefet.vocealuga.models.StatusReserva.CANCELADA
 			      )
 			    ORDER BY v.id ASC
 			""")
@@ -65,6 +66,7 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
 			          WHERE r.veiculo.id = v.id
 			            AND r.dataEntrega <= :dataDevolucao
 			            AND r.dataDevolucao >= :dataEntrega
+        			    AND r.status != com.cefet.vocealuga.models.StatusReserva.CANCELADA
 			      )
 			    ORDER BY v.id ASC
 			""")

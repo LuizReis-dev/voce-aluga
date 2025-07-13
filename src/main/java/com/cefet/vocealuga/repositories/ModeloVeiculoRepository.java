@@ -45,6 +45,7 @@ public interface ModeloVeiculoRepository extends JpaRepository<ModeloVeiculo, In
 			        WHERE r.veiculo.id = v.id
 			          AND r.dataEntrega <= :dataDevolucao
 			          AND r.dataDevolucao >= :dataEntrega
+      			      AND r.status != com.cefet.vocealuga.models.StatusReserva.CANCELADA
 			    )
 			WHERE mv.grupo.id = :grupoId
 			GROUP BY mv.id, mv.modelo, mv.marca, mv.ano, g.nome
