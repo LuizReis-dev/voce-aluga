@@ -17,6 +17,8 @@
                 <th class="px-4 py-3">Nome</th>
                 <th class="px-4 py-3">Email</th>
                 <th class="px-4 py-3">CPF</th>
+                <th class="px-4 py-3">Cargo</th>
+                <th class="px-4 py-3">Filial</th>
                 <th class="px-4 py-3 text-center">Ações</th>
             </tr>
             </thead>
@@ -25,6 +27,9 @@
                 <td class="px-4 py-2" th:text="${usuario.nome}"></td>
                 <td class="px-4 py-2" th:text="${usuario.email}"></td>
                 <td class="px-4 py-2" th:text="${usuario.cpf}"></td>
+                <td class="px-4 py-2" th:text="${usuario.operador?.cargo ?: 'Não informado'}"></td>
+                <td class="px-4 py-2" th:text="${usuario.operador?.filial?.nome ?: 'Sem filial'}"></td>
+
                 <td class="px-4 py-2 space-x-2">
                     <a th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"
                        class="inline-block bg-blue-400 hover:bg-yellow-500 text-white font-semibold px-3 py-1 rounded shadow">

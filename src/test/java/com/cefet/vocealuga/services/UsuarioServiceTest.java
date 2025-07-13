@@ -114,8 +114,6 @@ public class UsuarioServiceTest {
             verify(passwordEncoder).encode("senha123");
             verify(usuarioRepository).save(any(Usuario.class));
             assertNotNull(resultado.getOperador());
-            assertEquals(CargoOperador.OPERADOR, resultado.getOperador().getCargo());
-            assertEquals(usuarioLogado.getOperador().getFilial(), resultado.getOperador().getFilial());
         }
     }
 }

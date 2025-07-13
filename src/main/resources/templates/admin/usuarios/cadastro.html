@@ -35,11 +35,29 @@
                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2" />
         </div>
 
-        <!-- CPF -->
+        <!-- TELEFONE -->
         <div>
             <label for="telefone" class="block text-sm font-medium text-gray-700">Telefone (Somente números)</label>
             <input type="text" id="telefone" th:field="*{telefone}"
                    class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500" />
+        </div>
+
+        <!-- CARGOS -->
+        <div th:text="*{operador.cargo}">cargo atual</div>
+
+        <div>
+            <label for="cargo" class="block text-sm font-medium text-gray-700">Cargo</label>
+            <select th:field="*{operador.cargo}" id="cargo"  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+                <option th:each="cargo : ${cargos}" th:value="${cargo}" th:text="${cargo}"></option>
+            </select>
+        </div>
+
+        <!-- CARGOS -->
+        <div>
+            <label for="filial" class="block text-sm font-medium text-gray-700">filial</label>
+            <select th:field="*{operador.filial.id}" id="filial"   class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-500">
+                <option th:each="filial : ${filiais}" th:value="${filial.id}" th:text="${filial.nome}"></option>
+            </select>
         </div>
 
         <!-- SENHA -->
