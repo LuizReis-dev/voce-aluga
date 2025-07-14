@@ -273,6 +273,7 @@ public class VeiculoController {
 		dto.setClienteId(usuario.getId());
 
 		model.addAttribute("reserva", dto);
+		model.addAttribute("usuario", usuario);
 		model.addAttribute("filiais", filiais);
 		model.addAttribute("formasPagamento", FormaPagamento.values());
 		model.addAttribute("modeloMarca", modeloMarca);
