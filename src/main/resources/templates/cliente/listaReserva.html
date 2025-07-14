@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+
+<body>
+	<header class="h-24 bg-zinc-200 flex justify-between items-center md:px-96 px-10 shadow-md">
+		<div class="flex-1 flex justify-center">
+			<a th:href="@{/}" class="text-4xl font-bold text-zinc-700 text-center">Você Aluga</a>
+		</div>
+	</header>
+
+	<main class="max-w-6xl mx-auto py-10 px-4">
+		<h2 class="text-2xl font-semibold text-zinc-800 mb-6 mx-auto w-fit">Minhas Reservas</h2>
+
+		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<div th:each="reserva : ${reservas}" class="bg-white rounded-2xl shadow-md p-6 border border-zinc-200">
+				<h3 class="text-xl font-bold text-zinc-700 mb-2" th:text="'Reserva #' + ${reserva.id}"></h3>
+				<p class="text-zinc-600"><span class="font-semibold">Modelo:</span> <span th:text="${reserva.modelo}"></span>
+				</p>
+				<p class="text-zinc-600"><span class="font-semibold">Valor:</span> R$ <span th:text="${reserva.valor}"></span>
+				</p>
+				<p class="text-zinc-600"><span class="font-semibold">Status:</span> <span th:text="${reserva.status}"></span>
+				</p>
+				<p class="text-zinc-600"><span class="font-semibold">Origem:</span> <span th:text="${reserva.origem}"></span>
+				</p>
+				<p class="text-zinc-600"><span class="font-semibold">Entrega:</span> <span
+						th:text="${#temporals.format(reserva.dataEntrega, 'dd/MM/yyyy')}"></span></p>
+				<p class="text-zinc-600"><span class="font-semibold">Devolução:</span> <span
+						th:text="${#temporals.format(reserva.dataDevolucao, 'dd/MM/yyyy')}"></span></p>
+			</div>
+		</div>
+
+		<div th:if="${#lists.isEmpty(reservas)}" class="text-center text-zinc-500 mt-10">
+			Nenhuma reserva encontrada.
+		</div>
+	</main>
+
+</body>
+
+</html>

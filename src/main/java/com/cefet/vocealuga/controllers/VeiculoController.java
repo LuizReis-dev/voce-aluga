@@ -269,9 +269,10 @@ public class VeiculoController {
 		ReservaClienteDTO dto = new ReservaClienteDTO();
 		dto.setModeloId(modeloId);
 		dto.setGrupoId(grupo.getId());
-		dto.setClienteId(usuario.getId());
+		dto.setClienteId(usuario.getCliente().getId());
 
 		model.addAttribute("reserva", dto);
+		model.addAttribute("clienteId", usuario.getCliente().getId());
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("filiais", filiais);
 		model.addAttribute("formasPagamento", FormaPagamento.values());
@@ -284,7 +285,6 @@ public class VeiculoController {
 	@PostMapping("/reserva")
 	public String criaReserva(@ModelAttribute @Valid ReservaClienteDTO dto,
 			RedirectAttributes redirectAttributes) {
-		System.out.println("dot: \n" + dto);
 		try {
 			reservaService.criarReservaCliente(dto);
 

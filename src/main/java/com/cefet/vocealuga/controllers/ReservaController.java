@@ -21,101 +21,104 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Controller
 public class ReservaController {
-    private final UsuarioService usuarioService;
-    private final ReservaService reservaService;
-    private final GrupoService grupoService;
-    private final ReservaTask reservaTask;
+	private final UsuarioService usuarioService;
+	private final ReservaService reservaService;
+	private final GrupoService grupoService;
+	private final ReservaTask reservaTask;
 
-    public ReservaController(UsuarioService usuarioService, ReservaService reservaService, GrupoService grupoService, ReservaTask reservaTask) {
-        this.usuarioService = usuarioService;
-        this.reservaService = reservaService;
-        this.grupoService = grupoService;
-        this.reservaTask = reservaTask;
-    }
+	public ReservaController(UsuarioService usuarioService, ReservaService reservaService, GrupoService grupoService,
+			ReservaTask reservaTask) {
+		this.usuarioService = usuarioService;
+		this.reservaService = reservaService;
+		this.grupoService = grupoService;
+		this.reservaTask = reservaTask;
+	}
 
-    @GetMapping("/admin/reservas/cadastro")
-    public String cadastrarReserva(Model model) {
-        List<Grupo> grupos = grupoService.findAll();
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("grupos", grupos);
-        model.addAttribute("formasPagamento", FormaPagamento.values());
-        model.addAttribute("conteudo", "/admin/reservas/cadastro");
-        return "/admin/layout";
-    }
+	@GetMapping("/admin/reservas/cadastro")
+	public String cadastrarReserva(Model model) {
+		List<Grupo> grupos = grupoService.findAll();
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("grupos", grupos);
+		model.addAttribute("formasPagamento", FormaPagamento.values());
+		model.addAttribute("conteudo", "/admin/reservas/cadastro");
+		return "/admin/layout";
+	}
 
-    @GetMapping("/admin/reservas/virada-de-dia")
-    public String viradaDeDia(Model model) {
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("conteudo", "/admin/reservas/virada-de-dia");
-        return "/admin/layout";
-    }
+	@GetMapping("/admin/reservas/virada-de-dia")
+	public String viradaDeDia(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/reservas/virada-de-dia");
+		return "/admin/layout";
+	}
 
-    @PostMapping("/admin/simular-virada-dia")
-    public String simularVirada(@RequestParam("dataVirada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVirada) {
-        System.out.println("Data de virada recebida: " + dataVirada);
+	@PostMapping("/admin/simular-virada-dia")
+	public String simularVirada(
+			@RequestParam("dataVirada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataVirada) {
+		System.out.println("Data de virada recebida: " + dataVirada);
 
-       reservaTask.atualizaVeiculosReservados(dataVirada);
-        return "redirect:/admin/reservas/virada-de-dia";
-    }
+		reservaTask.atualizaVeiculosReservados(dataVirada);
+		return "redirect:/admin/reservas/virada-de-dia";
+	}
 
-    @GetMapping("/admin/reservas")
-    public String reservas(Model model) {
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        List<ReservaDTO> reservas = reservaService.findAll();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("reservas", reservas);
+	@GetMapping("/admin/reservas")
+	public String reservas(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<ReservaDTO> reservas = reservaService.findAll();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("reservas", reservas);
 
-        model.addAttribute("conteudo", "/admin/reservas/listagem");
+		model.addAttribute("conteudo", "/admin/reservas/listagem");
 
-        return "/admin/layout";
-    }
+		return "/admin/layout";
+	}
 
-    @GetMapping("/admin/reservas/{id}/detalhes")
-    public String detalhes(@PathVariable Integer id, Model model) {
-        Reserva reserva = reservaService.findById(id);
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("reserva", reserva);
+	@GetMapping("/admin/reservas/{id}/detalhes")
+	public String detalhes(@PathVariable Integer id, Model model) {
+		Reserva reserva = reservaService.findById(id);
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("reserva", reserva);
 
-        model.addAttribute("conteudo", "/admin/reservas/detalhes");
+		model.addAttribute("conteudo", "/admin/reservas/detalhes");
 
-        return "/admin/layout";
-    }
+		return "/admin/layout";
+	}
 
-    @PostMapping("/admin/reservas/{id}/alterar-status")
-    public String alterarStatus(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        try {
-            String mensagem = reservaService.alterarStatusReserva(id);
+	@PostMapping("/admin/reservas/{id}/alterar-status")
+	public String alterarStatus(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+		try {
+			String mensagem = reservaService.alterarStatusReserva(id);
 
-            redirectAttributes.addFlashAttribute("success", mensagem);
-            return "redirect:/admin/reservas/"+id+"/detalhes";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erro ao alterar status: " + e.getMessage());
+			redirectAttributes.addFlashAttribute("success", mensagem);
+			return "redirect:/admin/reservas/" + id + "/detalhes";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao alterar status: " + e.getMessage());
 
-            return "redirect:/admin/reservas/"+id+"/detalhes";
-        }
-    }
+			return "redirect:/admin/reservas/" + id + "/detalhes";
+		}
+	}
 
-    @GetMapping("/admin/reservas/{id}/cliente")
-    public String listarPorCliente(@PathVariable Integer id, Model model) {
-        List<ReservaDTO> reservas = reservaService.findByClienteId(id);
-        Usuario usuarioLogado = usuarioService.usuarioLogado();
-        model.addAttribute("usuarioLogado", usuarioLogado);
-        model.addAttribute("reservas", reservas);
+	@GetMapping("/admin/reservas/{id}/cliente")
+	public String listarPorCliente(@PathVariable Integer id, Model model) {
+		List<ReservaDTO> reservas = reservaService.findByClienteId(id);
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("reservas", reservas);
 
-        model.addAttribute("conteudo", "/admin/reservas/listagem");
+		model.addAttribute("conteudo", "/admin/reservas/listagem");
 
 		return "/admin/layout";
 	}
 
 	@GetMapping("/reservas/{id}")
-	public String ListaReservaCliente() {
-		Usuario usuarioLogado = usuarioService.usuarioLogado();
+	public String ListaReservaCliente(@PathVariable Integer id, Model model) {
+		List<ReservaDTO> reservas = reservaService.findByClienteId(id);
+		model.addAttribute("reservas", reservas);
+
 		return "/cliente/listaReserva";
 	}
 }

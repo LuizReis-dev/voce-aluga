@@ -28,12 +28,12 @@ public class HomeController {
 	private final ReservaService reservaService;
 
 	public HomeController(UsuarioService usuarioService, VeiculoService veiculoService,
-                          ModeloVeiculoService modeloVeiculoService, ReservaService reservaService) {
+			ModeloVeiculoService modeloVeiculoService, ReservaService reservaService) {
 		this.usuarioService = usuarioService;
 		this.modeloVeiculoService = modeloVeiculoService;
 		this.veiculoService = veiculoService;
-        this.reservaService = reservaService;
-    }
+		this.reservaService = reservaService;
+	}
 
 	@GetMapping("/admin/home")
 	public String homeFuncionario(Model model, Principal principal) {
@@ -92,6 +92,7 @@ public class HomeController {
 		Set<String> grupos = todos.stream().map(ModeloVeiculoDTO::getGrupo).collect(Collectors.toSet());
 
 		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("clienteId", usuarioLogado.getCliente().getId());
 		model.addAttribute("modelos", filtrados);
 		model.addAttribute("marcas", marcas);
 		model.addAttribute("modelosDisponiveis", modelos);
