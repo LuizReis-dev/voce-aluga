@@ -1,9 +1,9 @@
 package com.cefet.vocealuga.controllers;
 
 import com.cefet.vocealuga.dtos.filial.FilialDTO;
+import com.cefet.vocealuga.dtos.reservas.ReservaClienteDTO;
 import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
 import com.cefet.vocealuga.dtos.veiculos.ModeloMarcaDTO;
-import com.cefet.vocealuga.dtos.veiculos.ReservaClienteDTO;
 import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
 import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
 import com.cefet.vocealuga.models.FormaPagamento;
@@ -266,13 +266,14 @@ public class VeiculoController {
 		ModeloMarcaDTO modeloMarca = modeloVeiculoService.findModeloById(modeloId);
 
 		Usuario usuario = usuarioService.usuarioLogado();
-
 		ReservaClienteDTO dto = new ReservaClienteDTO();
 		dto.setModeloId(modeloId);
 		dto.setGrupoId(grupo.getId());
-		dto.setClienteId(usuario.getId());
+		dto.setClienteId(usuario.getCliente().getId());
 
 		model.addAttribute("reserva", dto);
+		model.addAttribute("clienteId", usuario.getCliente().getId());
+		model.addAttribute("usuario", usuario);
 		model.addAttribute("filiais", filiais);
 		model.addAttribute("formasPagamento", FormaPagamento.values());
 		model.addAttribute("modeloMarca", modeloMarca);
@@ -282,8 +283,8 @@ public class VeiculoController {
 	}
 
 	@PostMapping("/reserva")
-	public String criaReserva(@ModelAttribute @Valid ReservaClienteDTO dto, RedirectAttributes redirectAttributes) {
-		System.out.println("dot: \n" + dto);
+	public String criaReserva(@ModelAttribute @Valid ReservaClienteDTO dto,
+			RedirectAttributes redirectAttributes) {
 		try {
 			reservaService.criarReservaCliente(dto);
 

@@ -1,7 +1,7 @@
 package com.cefet.vocealuga.services;
 
+import com.cefet.vocealuga.dtos.reservas.ReservaClienteDTO;
 import com.cefet.vocealuga.dtos.reservas.ReservaDTO;
-import com.cefet.vocealuga.dtos.veiculos.ReservaClienteDTO;
 import com.cefet.vocealuga.models.*;
 import com.cefet.vocealuga.repositories.*;
 import com.cefet.vocealuga.webservices.exceptions.WebserviceException;

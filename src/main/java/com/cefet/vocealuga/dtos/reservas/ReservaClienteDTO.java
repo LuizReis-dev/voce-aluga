@@ -1,4 +1,4 @@
-package com.cefet.vocealuga.dtos.veiculos;
+package com.cefet.vocealuga.dtos.reservas;
 
 import com.cefet.vocealuga.models.FormaPagamento;
 

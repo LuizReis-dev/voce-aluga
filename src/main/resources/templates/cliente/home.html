@@ -10,8 +10,22 @@
 </head>
 
 <body class="bg-zinc-100 h-screen">
-	<header class="h-24 bg-zinc-200 flex justify-center items-center md:px-96 px-10 shadow-md">
-		<h1 class="text-center text-4xl font-bold text-zinc-700">Você Aluga</h1>
+	<header class="h-24 bg-zinc-200 flex justify-between items-center md:px-96 px-10 shadow-md">
+		<div class="flex-1 flex justify-center">
+			<a th:href="@{/}" class="text-4xl font-bold text-zinc-700 text-center">Você Aluga</a>
+		</div>
+		<div x-data="{ open: false }" class="relative">
+			<button @click="open = !open" class="text-2xl font-bold text-zinc-700">
+				&#8942;
+			</button>
+
+			<div x-show="open" @click.outside="open = false"
+				class="absolute right-0 mt-2 bg-white border border-zinc-300 rounded shadow-md p-2">
+				<a th:href="@{/reservas/{id}(id=${clienteId})}" class="block px-4 py-2 text-zinc-700 hover:bg-zinc-100">
+					Reservas
+				</a>
+			</div>
+		</div>
 	</header>
 
 	<div class="p-10 flex flex-col items-center justify-center">
@@ -71,9 +85,8 @@
 
 				<p th:text="${modelo.grupo}"></p>
 				<div class="w-[300px]">
-					<img th:src="@{'../uploads/' + ${modelo.imagem}}"
-						 alt="Imagem"
-						 class="w-full h-full object-cover rounded-lg border border-zinc-700" />
+					<img th:src="@{'../uploads/' + ${modelo.imagem}}" alt="Imagem"
+						class="w-full h-full object-cover rounded-lg border border-zinc-700" />
 				</div>
 
 				<p th:text="${modelo.ano}"></p>
