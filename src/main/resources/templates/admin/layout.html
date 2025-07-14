@@ -161,12 +161,68 @@
 <script>
     lucide.createIcons();
 
+    function isSidebarOpen() {
+        const sidebar = document.getElementById("sidebar");
+        return sidebar.classList.contains("w-64");
+    }
+
+    function openSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.remove("w-16");
+        sidebar.classList.add("w-64");
+        document.querySelectorAll(".sidebar-label").forEach(label => label.classList.remove("hidden"));
+    }
+
+    function closeSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.remove("w-64");
+        sidebar.classList.add("w-16");
+        document.querySelectorAll(".sidebar-label").forEach(label => label.classList.add("hidden"));
+
+        // Fechar todos os dropdowns abertos
+        document.querySelectorAll('[id^="dropdown-menu"]').forEach(menu => {
+            if (!menu.classList.contains("hidden")) {
+                menu.classList.add("hidden");
+            }
+        });
+
+        // Resetar rotação dos ícones
+        document.querySelectorAll('[id^="dropdown-icon"]').forEach(icon => {
+            icon.classList.remove("rotate-180");
+        });
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        if (sidebar.classList.contains("w-64")) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+
     function toggleDropdown(menuId, iconId) {
         const menu = document.getElementById(menuId);
         const icon = document.getElementById(iconId);
         if (!menu || !icon) return;
-        menu.classList.toggle('hidden');
-        icon.classList.toggle('rotate-180');
+
+        const wasHidden = menu.classList.contains("hidden");
+
+        // Fecha todos os outros dropdowns antes de abrir um
+        document.querySelectorAll('[id^="dropdown-menu"]').forEach(m => m.classList.add("hidden"));
+        document.querySelectorAll('[id^="dropdown-icon"]').forEach(i => i.classList.remove("rotate-180"));
+
+        // Se o menu estava oculto, vamos mostrar
+        if (wasHidden) {
+            if (!isSidebarOpen()) {
+                openSidebar(); // Garante que a sidebar estará aberta
+            }
+            menu.classList.remove("hidden");
+            icon.classList.add("rotate-180");
+        } else {
+            menu.classList.add("hidden");
+            icon.classList.remove("rotate-180");
+        }
     }
 </script>
 </body>
