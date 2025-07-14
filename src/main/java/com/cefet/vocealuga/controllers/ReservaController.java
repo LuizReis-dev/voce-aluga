@@ -110,6 +110,12 @@ public class ReservaController {
 
         model.addAttribute("conteudo", "/admin/reservas/listagem");
 
-        return "/admin/layout";
-    }
+		return "/admin/layout";
+	}
+
+	@GetMapping("/reservas/{id}")
+	public String ListaReservaCliente() {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		return "/cliente/listaReserva";
+	}
 }
