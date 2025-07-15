@@ -90,34 +90,47 @@ public class UsuarioServiceTest {
 
     @Test
     void salvarDeveSalvarUsuarioQuandoTudoEstiverCorreto() {
+        // Arrange
         Usuario usuario = new Usuario();
         usuario.setId(null);
         usuario.setEmail("email@test.com");
         usuario.setCpf("12345678900");
         usuario.setSenha("senha123");
 
+        // O operador precisa estar definido para simular corretamente o método salvar
+        Operador operador = new Operador();
+        usuario.setOperador(operador);
+
+        // Mock para verificar se já existe email ou CPF
         when(usuarioRepository.existsByEmailOrCpf(usuario.getEmail(), usuario.getCpf())).thenReturn(false);
 
+        // Mock do validador de CPF
         try (MockedStatic<CPFValidator> mockedCpfValidator = mockStatic(CPFValidator.class)) {
             mockedCpfValidator.when(() -> CPFValidator.validarCPF(usuario.getCpf())).thenReturn(true);
 
+            // Mock do encode da senha
             when(passwordEncoder.encode(usuario.getSenha())).thenReturn("senhaCodificada");
 
-            // Mockando usuarioLogado()
+            // Mock do método usuarioLogado() caso necessário no método
             Usuario usuarioLogado = new Usuario();
             Operador operadorLogado = new Operador();
             operadorLogado.setFilial(new Filial());
             usuarioLogado.setOperador(operadorLogado);
-
             doReturn(usuarioLogado).when(usuarioService).usuarioLogado();
 
+            // Mock do save
             when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
+            // Act
             Usuario resultado = usuarioService.salvar(usuario);
 
+            // Assert
             verify(passwordEncoder).encode("senha123");
             verify(usuarioRepository).save(any(Usuario.class));
             assertNotNull(resultado.getOperador());
+            assertEquals("senhaCodificada", resultado.getSenha());
+            assertEquals(usuario, resultado);
+            assertEquals(usuario, operador.getUsuario()); // relação bidirecional
         }
     }
 }
