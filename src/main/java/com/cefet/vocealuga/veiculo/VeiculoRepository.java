@@ -1,0 +1,85 @@
+package com.cefet.vocealuga.veiculo;
+
+import com.cefet.vocealuga.filial.Filial;
+import com.cefet.vocealuga.veiculo.dtos.GrupoDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+public interface VeiculoRepository extends JpaRepository<Veiculo, Integer> {
+
+	@Query("SELECT v FROM Veiculo v JOIN FETCH v.modelo WHERE v.filial = :filial AND v.estadoVeiculo <> com.cefet.vocealuga.veiculo.EstadoVeiculo.VENDIDO")
+	List<Veiculo> findAllByFilial(@Param("filial") Filial filial);
+
+	@Query("SELECT v FROM Veiculo v JOIN FETCH v.modelo WHERE v.filial = :filial AND v.modelo.id = :modeloId AND v.estadoVeiculo <> com.cefet.vocealuga.veiculo.EstadoVeiculo.VENDIDO")
+	List<Veiculo> findAllByFilialAndModeloId(@Param("filial") Filial filial, @Param("modeloId") Integer modeloId);
+
+	boolean existsByPlaca(String placa);
+
+	boolean existsByChassi(String chassi);
+
+	Optional<Veiculo> findByPlacaAndFilialAndModeloId(String placa, Filial filial, Integer modeloId);
+
+	Optional<Veiculo> findFirstByFilialIdAndModeloIdAndEstadoVeiculoOrderByIdAsc(
+			Integer filialId,
+			Integer modeloId,
+			EstadoVeiculo estadoVeiculo);
+
+	@Query("""
+			    SELECT v FROM Veiculo v
+			    WHERE v.filial.id = :filialId
+			      AND v.modelo.id = :modeloId
+			      AND v.estadoVeiculo = com.cefet.vocealuga.veiculo.EstadoVeiculo.DISPONIVEL
+			      AND NOT EXISTS (
+			          SELECT 1 FROM Reserva r
+			          WHERE r.veiculo.id = v.id
+			            AND r.dataEntrega <= :dataDevolucao
+			            AND r.dataDevolucao >= :dataEntrega
+			            AND r.status != com.cefet.vocealuga.reserva.StatusReserva.CANCELADA
+			      )
+			    ORDER BY v.id ASC
+			""")
+	List<Veiculo>findFirstDisponiveisSemReserva(
+			@Param("filialId") Integer filialId,
+			@Param("modeloId") Integer modeloId,
+			@Param("dataEntrega") LocalDate dataEntrega,
+			@Param("dataDevolucao") LocalDate dataDevolucao);
+
+	@Query("SELECT new com.cefet.vocealuga.veiculo.dtos.GrupoDTO(g.id, g.nome) " +
+			"FROM ModeloVeiculo mv LEFT JOIN mv.grupo g WHERE mv.id = :id")
+	GrupoDTO findGrupoNomeAndIdByModeloVeiculoId(@Param("id") Integer id);
+
+	boolean existsByModeloId(Integer modeloId);
+
+	@Query("""
+			    SELECT v FROM Veiculo v
+			    WHERE v.filial.id = :filialId
+			      AND v.estadoVeiculo = com.cefet.vocealuga.veiculo.EstadoVeiculo.DISPONIVEL
+			      AND v.modelo.grupo.nome = :grupoNome
+			      AND NOT EXISTS (
+			          SELECT 1 FROM Reserva r
+			          WHERE r.veiculo.id = v.id
+			            AND r.dataEntrega <= :dataDevolucao
+			            AND r.dataDevolucao >= :dataEntrega
+        			    AND r.status != com.cefet.vocealuga.reserva.StatusReserva.CANCELADA
+			      )
+			    ORDER BY v.id ASC
+			""")
+	List<Veiculo>findFirstDisponiveiGrupo(
+			@Param("filialId") Integer filialId,
+			@Param("grupoNome") String grupoNome,
+			@Param("dataEntrega") LocalDate dataEntrega,
+			@Param("dataDevolucao") LocalDate dataDevolucao);
+
+	@Query("""
+		SELECT COUNT(v)
+		FROM Veiculo v
+		WHERE v.estadoVeiculo = com.cefet.vocealuga.veiculo.EstadoVeiculo.DISPONIVEL
+		  AND v.filial.id = :filialId
+	""")
+	long contarVeiculosDisponiveis(@Param("filialId") Integer filialId);
+}

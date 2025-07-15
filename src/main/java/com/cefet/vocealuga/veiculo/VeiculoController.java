@@ -1,0 +1,297 @@
+package com.cefet.vocealuga.veiculo;
+
+import com.cefet.vocealuga.filial.FilialDTO;
+import com.cefet.vocealuga.reserva.dtos.ReservaClienteDTO;
+import com.cefet.vocealuga.veiculo.dtos.CompraVeiculoDTO;
+import com.cefet.vocealuga.veiculo.dtos.ModeloMarcaDTO;
+import com.cefet.vocealuga.veiculo.dtos.SolicitacaoTransferenciaDTO;
+import com.cefet.vocealuga.veiculo.dtos.VendaVeiculoDTO;
+import com.cefet.vocealuga.pagamento.FormaPagamento;
+import com.cefet.vocealuga.veiculo.modelo.ModeloVeiculo;
+import com.cefet.vocealuga.usuario.Usuario;
+import com.cefet.vocealuga.filial.FilialService;
+import com.cefet.vocealuga.veiculo.dtos.GrupoDTO;
+import com.cefet.vocealuga.veiculo.modelo.ModeloVeiculoService;
+import com.cefet.vocealuga.reserva.ReservaService;
+import com.cefet.vocealuga.usuario.UsuarioService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+public class VeiculoController {
+
+	private final UsuarioService usuarioService;
+	private final ModeloVeiculoService modeloVeiculoService;
+	private final VeiculoService veiculoService;
+	private final ReservaService reservaService;
+	private final FilialService filialService;
+
+	public VeiculoController(UsuarioService usuarioService, ModeloVeiculoService modeloVeiculoService,
+			VeiculoService veiculoService, ReservaService reservaService, FilialService filialService) {
+		this.usuarioService = usuarioService;
+		this.modeloVeiculoService = modeloVeiculoService;
+		this.veiculoService = veiculoService;
+		this.reservaService = reservaService;
+		this.filialService = filialService;
+	}
+
+	@GetMapping("/admin/veiculos")
+	public String listarVeiculos(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<Veiculo> veiculos = this.veiculoService.findAll();
+		model.addAttribute("veiculos", veiculos);
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/listagem");
+
+		return "/admin/layout";
+	}
+
+	@GetMapping("/admin/veiculos/compra")
+	public String compra(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<ModeloVeiculo> modelos = this.modeloVeiculoService.findAll();
+		model.addAttribute("modelos", modelos);
+		model.addAttribute("compraVeiculoDTO", new CompraVeiculoDTO());
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/compra");
+
+		return "/admin/layout";
+	}
+
+	@GetMapping("/admin/veiculos/{id}/modelo")
+	public String listarPorModelo(Model model, @PathVariable Integer id) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<Veiculo> veiculos = this.veiculoService.findAllByModelo(id);
+		model.addAttribute("veiculos", veiculos);
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/listagem");
+
+		return "/admin/layout";
+	}
+
+	@PostMapping("/admin/veiculos/compra")
+	public String registrarCompra(@ModelAttribute @Valid CompraVeiculoDTO compraVeiculoDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: verifique os dados informados.");
+			redirectAttributes.addFlashAttribute("compraVeiculoDTO", compraVeiculoDTO);
+
+			List<String> mensagensErro = result.getAllErrors().stream()
+					.map(DefaultMessageSourceResolvable::getDefaultMessage)
+					.toList();
+
+			redirectAttributes.addFlashAttribute("erros", mensagensErro);
+
+			return "redirect:/admin/veiculos/compra";
+		}
+
+		try {
+			veiculoService.compra(compraVeiculoDTO);
+			redirectAttributes.addFlashAttribute("success", "Veículo salvo com sucesso!");
+			return "redirect:/admin/veiculos";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao salvar o veículo: " + e.getMessage());
+			return "redirect:/admin/veiculos/compra";
+		}
+	}
+
+	@GetMapping("/admin/veiculos/venda")
+	public String venda(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<ModeloVeiculo> modelos = this.modeloVeiculoService.findAll();
+		model.addAttribute("modelos", modelos);
+		model.addAttribute("vendaVeiculoDTO", new VendaVeiculoDTO());
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/venda");
+
+		return "/admin/layout";
+	}
+
+	@PostMapping("/admin/veiculos/venda")
+	public String registrarVenda(@ModelAttribute @Valid VendaVeiculoDTO vendaVeiculoDTO, BindingResult result,
+			RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao vender o veículo: verifique os dados informados.");
+			redirectAttributes.addFlashAttribute("vendaVeiculoDTO", vendaVeiculoDTO);
+
+			List<String> mensagensErro = result.getAllErrors().stream()
+					.map(DefaultMessageSourceResolvable::getDefaultMessage)
+					.toList();
+
+			redirectAttributes.addFlashAttribute("erros", mensagensErro);
+
+			return "redirect:/admin/veiculos/venda";
+		}
+
+		try {
+			veiculoService.venda(vendaVeiculoDTO);
+			redirectAttributes.addFlashAttribute("success", "Veículo vendido com sucesso!");
+			return "redirect:/admin/veiculos";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao vender o veículo: " + e.getMessage());
+			return "redirect:/admin/veiculos/venda";
+		}
+	}
+
+	@GetMapping("/admin/veiculos/historico-transacoes")
+	public String historicoTransacoes(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<GerenciamentoTransacaoVeiculo> transacoes = veiculoService.historicoTransacoes();
+
+		model.addAttribute("transacoes", transacoes);
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/historico-transacoes");
+
+		return "/admin/layout";
+	}
+
+	@GetMapping("/admin/veiculos/{id}/detalhes")
+	public String detalhes(Model model, @PathVariable Integer id) {
+		Veiculo veiculo = veiculoService.findById(id);
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<GerenciamentoTransacaoVeiculo> transacoes = veiculoService.historicoTransacoesPorVeiculo(veiculo);
+
+		model.addAttribute("veiculo", veiculo);
+		model.addAttribute("transacoes", transacoes);
+
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("conteudo", "/admin/veiculos/detalhes");
+
+		return "/admin/layout";
+	}
+
+	@PostMapping("/admin/veiculos/{id}/solicitar-manutencao")
+	public String solicitarManutencao(@PathVariable Integer id, RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+		String referer = request.getHeader("Referer");
+		try {
+			veiculoService.solicitarManutencao(id);
+			redirectAttributes.addFlashAttribute("success", "Veículo colocado em manutenção!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao colocar veículo em manutenção: " + e.getMessage());
+		}
+		return "redirect:" + (referer != null ? referer : "/admin/veiculos");
+	}
+
+	@PostMapping("/admin/veiculos/{id}/finalizar-manutencao")
+	public String finalizarManutencao(@PathVariable Integer id, RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+		String referer = request.getHeader("Referer");
+		try {
+			veiculoService.finalizarManutencao(id);
+			redirectAttributes.addFlashAttribute("success", "Manutenção finalizada com sucesso!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao finalizar manutenção: " + e.getMessage());
+		}
+		return "redirect:" + (referer != null ? referer : "/admin/veiculos");
+	}
+
+	@GetMapping("/admin/veiculos/solicitar-transferencia")
+	public String solicitarTransferencia(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<ModeloVeiculo> modelos = modeloVeiculoService.findAll();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("modelos", modelos);
+
+		model.addAttribute("conteudo", "/admin/veiculos/solicitar-transferencia");
+		return "/admin/layout";
+	}
+
+	@PostMapping("/admin/veiculos/solicitar-transferencia")
+	public String registrarSolicitacaoTransferencia(@Valid SolicitacaoTransferenciaDTO solicitacaoTransferenciaDTO,
+			RedirectAttributes redirectAttributes) {
+		try {
+			veiculoService.solicitarTransferencia(solicitacaoTransferenciaDTO);
+			redirectAttributes.addFlashAttribute("success", "Solicitação realizada com sucesso!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao solicitar transferência: " + e.getMessage());
+		}
+		return "redirect:/admin/veiculos/solicitar-transferencia";
+	}
+
+	@GetMapping("/admin/veiculos/solicitacoes-transferencia")
+	public String solicitacoesTransferencia(Model model) {
+		Usuario usuarioLogado = usuarioService.usuarioLogado();
+		List<GerenciamentoTransacaoVeiculo> solicitacoes = veiculoService.listarSolicitacoesTransferencia();
+		model.addAttribute("usuarioLogado", usuarioLogado);
+		model.addAttribute("solicitacoes", solicitacoes);
+		model.addAttribute("conteudo", "/admin/veiculos/solicitacoes-transferencia");
+		return "/admin/layout";
+	}
+
+	@PostMapping("/admin/veiculos/{id}/aprovar-solicitacao-transferencia")
+	public String aprovarSolicitacaoTransferencia(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+		try {
+			veiculoService.aprovarSolicitacaoTransferencia(id);
+			redirectAttributes.addFlashAttribute("success", "Transferência realizada com sucesso!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao confirmar transferência: " + e.getMessage());
+		}
+		return "redirect:/admin/veiculos/solicitacoes-transferencia";
+
+	}
+
+	@PostMapping("/admin/veiculos/{id}/negar-solicitacao-transferencia")
+	public String negarSolicitacaoTransferencia(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+		try {
+			veiculoService.negarSolicitacaoTransferencia(id);
+			redirectAttributes.addFlashAttribute("success", "Transferência negada com sucesso!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao negar transferência: " + e.getMessage());
+		}
+		return "redirect:/admin/veiculos/solicitacoes-transferencia";
+
+	}
+
+	@GetMapping("/reserva/{modeloId:\\d+}")
+	public String Reserva(Model model, @PathVariable Integer modeloId) {
+		GrupoDTO grupo = veiculoService.findGrupoNomeByModeloVeiculo(modeloId);
+		List<FilialDTO> filiais = filialService.buscarFiliaisComVeiculoDisponivelDoModelo(modeloId);
+		ModeloMarcaDTO modeloMarca = modeloVeiculoService.findModeloById(modeloId);
+
+		Usuario usuario = usuarioService.usuarioLogado();
+		ReservaClienteDTO dto = new ReservaClienteDTO();
+		dto.setModeloId(modeloId);
+		dto.setGrupoId(grupo.getId());
+		dto.setClienteId(usuario.getCliente().getId());
+
+		model.addAttribute("reserva", dto);
+		model.addAttribute("clienteId", usuario.getCliente().getId());
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("filiais", filiais);
+		model.addAttribute("formasPagamento", FormaPagamento.values());
+		model.addAttribute("modeloMarca", modeloMarca);
+		model.addAttribute("grupo", grupo);
+
+		return "/cliente/reserva";
+	}
+
+	@PostMapping("/reserva")
+	public String criaReserva(@ModelAttribute @Valid ReservaClienteDTO dto,
+			RedirectAttributes redirectAttributes) {
+		try {
+			reservaService.criarReservaCliente(dto);
+
+			redirectAttributes.addFlashAttribute("success", "Reserva criada com sucesso!");
+			return "redirect:/";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("error", "Erro ao criar reserva: " + e.getMessage());
+
+			return "redirect:/reserva/" + dto.getModeloId();
+		}
+	}
+}

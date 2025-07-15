@@ -1,7 +1,21 @@
 package com.cefet.vocealuga.services;
 
-import com.cefet.vocealuga.models.*;
-import com.cefet.vocealuga.repositories.*;
+import com.cefet.vocealuga.cliente.Cliente;
+import com.cefet.vocealuga.cliente.ClienteRepository;
+import com.cefet.vocealuga.filial.Filial;
+import com.cefet.vocealuga.pagamento.*;
+import com.cefet.vocealuga.reserva.Reserva;
+import com.cefet.vocealuga.reserva.ReservaRepository;
+import com.cefet.vocealuga.reserva.ReservaService;
+import com.cefet.vocealuga.usuario.Operador;
+import com.cefet.vocealuga.usuario.Usuario;
+import com.cefet.vocealuga.usuario.UsuarioService;
+import com.cefet.vocealuga.veiculo.EstadoVeiculo;
+import com.cefet.vocealuga.veiculo.Veiculo;
+import com.cefet.vocealuga.veiculo.VeiculoRepository;
+import com.cefet.vocealuga.veiculo.grupo.Grupo;
+import com.cefet.vocealuga.veiculo.grupo.GrupoRepository;
+import com.cefet.vocealuga.veiculo.modelo.ModeloVeiculo;
 import com.cefet.vocealuga.webservices.exceptions.WebserviceException;
 import com.cefet.vocealuga.webservices.requests.CreateReservaRequest;
 import org.junit.jupiter.api.BeforeEach;

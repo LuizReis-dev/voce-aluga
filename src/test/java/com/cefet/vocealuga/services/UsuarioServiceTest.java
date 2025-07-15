@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-import com.cefet.vocealuga.models.CargoOperador;
-import com.cefet.vocealuga.models.Filial;
-import com.cefet.vocealuga.models.Operador;
-import com.cefet.vocealuga.models.Usuario;
-import com.cefet.vocealuga.repositories.ClienteRepository;
-import com.cefet.vocealuga.repositories.UsuarioRepository;
+import com.cefet.vocealuga.filial.Filial;
+import com.cefet.vocealuga.usuario.Operador;
+import com.cefet.vocealuga.usuario.Usuario;
+import com.cefet.vocealuga.cliente.ClienteRepository;
+import com.cefet.vocealuga.usuario.UsuarioRepository;
+import com.cefet.vocealuga.usuario.UsuarioService;
 import com.cefet.vocealuga.utils.CPFValidator;
 import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.BeforeEach;

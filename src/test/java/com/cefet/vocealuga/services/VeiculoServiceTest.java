@@ -1,12 +1,21 @@
 package com.cefet.vocealuga.services;
 
-import com.cefet.vocealuga.dtos.veiculos.CompraVeiculoDTO;
-import com.cefet.vocealuga.dtos.veiculos.SolicitacaoTransferenciaDTO;
-import com.cefet.vocealuga.dtos.veiculos.VendaVeiculoDTO;
-import com.cefet.vocealuga.models.*;
-import com.cefet.vocealuga.repositories.GerenciamentoTransacaoVeiculoRepository;
-import com.cefet.vocealuga.repositories.VeiculoRepository;
+import com.cefet.vocealuga.veiculo.EstadoVeiculo;
+import com.cefet.vocealuga.veiculo.GerenciamentoTransacaoVeiculo;
+import com.cefet.vocealuga.veiculo.Veiculo;
+import com.cefet.vocealuga.veiculo.VeiculoService;
+import com.cefet.vocealuga.veiculo.dtos.CompraVeiculoDTO;
+import com.cefet.vocealuga.veiculo.dtos.SolicitacaoTransferenciaDTO;
+import com.cefet.vocealuga.veiculo.dtos.VendaVeiculoDTO;
+import com.cefet.vocealuga.filial.Filial;
+import com.cefet.vocealuga.veiculo.GerenciamentoTransacaoVeiculoRepository;
+import com.cefet.vocealuga.veiculo.VeiculoRepository;
 
+import com.cefet.vocealuga.usuario.Operador;
+import com.cefet.vocealuga.usuario.Usuario;
+import com.cefet.vocealuga.usuario.UsuarioService;
+import com.cefet.vocealuga.veiculo.modelo.ModeloVeiculo;
+import com.cefet.vocealuga.veiculo.modelo.ModeloVeiculoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.cefet.vocealuga.webservices.requests;
 
-import com.cefet.vocealuga.models.FormaPagamento;
+import com.cefet.vocealuga.pagamento.FormaPagamento;
 
 import java.time.LocalDate;
 
