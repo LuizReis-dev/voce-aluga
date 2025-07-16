@@ -27,6 +27,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Integer> {
     @Query("""
         SELECT r
         FROM Reserva r
+        JOIN FETCH r.cliente
         WHERE
           r.dataEntrega = :dataEntrega
     """)
